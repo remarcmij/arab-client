@@ -1,5 +1,10 @@
 {
-  "extends": ["tslint:recommended", "tslint-react"],
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-standard",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
   "rules": {
     "arrow-parens": false,
     "arrow-return-shorthand": [false],
@@ -30,7 +35,7 @@
     "prefer-method-signature": false,
     "prefer-template": [true, "allow-single-concat"],
     "quotemark": [true, "single", "jsx-double"],
-    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "semicolon": [true, "never"],
     "trailing-comma": [
       true,
       {
@@ -45,7 +50,7 @@
       }
     ],
     "triple-equals": [true, "allow-null-check"],
-    "type-literal-delimiter": true,
+    "type-literal-delimiter": false,
     "typedef": [true, "parameter", "property-declaration"],
     "variable-name": [
       true,

@@ -1,38 +1,37 @@
-import AppBar from '@material-ui/core/AppBar';
-import { withStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import React, { Component } from 'react';
-import FlashcardController from './components/FlashcardController';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core'
+import * as React from 'react'
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
+import AboutPage from './components/AboutPage'
+import ChapterListPage from './containers/ChapterListPage'
+import ContentPage from './containers/ContentPage'
+import LemmaListPage from './containers/LemmaListPage'
 
-interface Props {
-  classes: {
-    root: string;
-  };
-}
-
-const styles = {
+const styles = createStyles({
   root: {
     flexGrow: 1,
   },
-};
+})
 
-class App extends Component<Props> {
+interface Props extends WithStyles<typeof styles> {}
+
+class App extends React.Component<Props> {
   render() {
-    const { classes } = this.props;
+    const { classes } = this.props
     return (
-      <div className={classes.root}>
-        <AppBar position="static" color="default">
-          <Toolbar>
-            <Typography variant="title" color="inherit">
-              Arabic
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <FlashcardController />
-      </div>
-    );
+      <Router>
+        <div className={classes.root}>
+          <Switch>
+            <Redirect exact={true} from="/" to="/content" />
+            <Route path="/content/:publication/index" component={ChapterListPage} />
+            <Route path="/content/:publication/:chapter" component={LemmaListPage} />
+            <Route path="/content" component={ContentPage} />
+            <Route path="/about" component={AboutPage} />
+            <Route render={() => <div>404</div>} />
+          </Switch>
+        </div>
+      </Router>
+    )
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(App)
