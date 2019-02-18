@@ -4,10 +4,11 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Transcoder from '../services/Transcoder';
 
-interface Props {
-  lemma: Lemma;
+interface IProps {
+  lemma: ILemma;
   classes: {
     root: string;
+    arabic: string;
   };
 }
 
@@ -19,19 +20,24 @@ const styles = {
     alignItems: 'center',
     height: 200,
   },
+  arabic: {
+    fontFamily: 'Arial',
+  },
 };
 
-const Flashcard: React.FunctionComponent<Props> = props => {
+const Flashcard: React.FunctionComponent<IProps> = props => {
   const { lemma, classes } = props;
   return (
     <Paper className={classes.root}>
-      <Typography variant="h5" component="h3">
-        {lemma.nl}
+      <Typography variant="h3" component="h3" lang="foreign" dir="rtl">
+        {Transcoder.stripTashkeel(lemma.foreign)}
       </Typography>
-      <div lang="ar" dir="rtl">
-        {Transcoder.stripTashkeel(lemma.ar)}
-      </div>
-      <div>{Transcoder.applyRomanization(lemma.trans, 'deMoor')}</div>
+      <Typography variant="h5" component="h3">
+        {lemma.base}
+      </Typography>
+      <Typography variant="h5" component="h3">
+        <div>{Transcoder.applyRomanization(lemma.trans, 'deMoor')}</div>
+      </Typography>
     </Paper>
   );
 };
