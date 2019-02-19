@@ -1,16 +1,12 @@
-import * as React from 'react';
+import * as React from 'react'
 
-interface Props {
-  lemmas: ILemma[];
+type Props = {
+  lemmas: Lemma[]
 }
 
-export default class WordList extends React.Component<Props> {
-  public render() {
-    return <ul>{this.renderWords()}</ul>;
-  }
-
-  private renderWords() {
-    const { lemmas } = this.props;
+const WordList: React.FC<Props> = props => {
+  const renderWords = () => {
+    const { lemmas } = props
     return lemmas.map((lemma, index) => (
       <li key={index}>
         <span>{lemma.base}</span>
@@ -19,6 +15,10 @@ export default class WordList extends React.Component<Props> {
         {', '}
         <span>{lemma.trans}</span>
       </li>
-    ));
+    ))
   }
+
+  return <ul>{renderWords()}</ul>
 }
+
+export default WordList

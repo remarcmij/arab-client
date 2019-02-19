@@ -1,35 +1,28 @@
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import { Theme, withStyles } from '@material-ui/core/styles';
-import * as React from 'react';
+import Button from '@material-ui/core/Button'
+import Paper from '@material-ui/core/Paper'
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
+import * as React from 'react'
 
-interface Props {
-  onNext: () => void;
-  onPrev: () => void;
-  classes: {
-    root: string;
-    button: string;
-  };
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    button: {
+      margin: theme.spacing.unit,
+    },
+  })
+
+interface Props extends WithStyles<typeof styles> {
+  onNext: () => void
+  onPrev: () => void
 }
 
 interface State {}
 
-const styles = (theme: Theme) => ({
-  root: {},
-  button: {
-    margin: theme.spacing.unit,
-  },
-});
-
-class FlashcardButtonBar extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {};
-  }
+class FlashcardButtonBar extends React.Component<Props> {
+  state = {}
 
   public render() {
-    const { classes, onNext, onPrev } = this.props;
+    const { classes, onNext, onPrev } = this.props
     return (
       <Paper className={classes.root}>
         <Button variant="contained" className={classes.button} onClick={onPrev}>
@@ -39,8 +32,8 @@ class FlashcardButtonBar extends React.Component<Props, State> {
           Next
         </Button>
       </Paper>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(FlashcardButtonBar);
+export default withStyles(styles)(FlashcardButtonBar)

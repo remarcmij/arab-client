@@ -1,16 +1,16 @@
 import * as React from 'react'
-import ChapterListItem from './ChapterListItem'
+import ContentListItem from './ContentListItem'
 
 type Props = {
   publications: Publication[]
 }
 
-const ChapterList: React.FC<Props> = props => {
+const ContentList: React.FC<Props> = props => {
   const { publications } = props
   return (
     <ul>
       {publications.map(publication => (
-        <ChapterListItem
+        <ContentListItem
           key={`${publication.publication}.${publication.chapter}`}
           publication={publication}
         />
@@ -19,4 +19,4 @@ const ChapterList: React.FC<Props> = props => {
   )
 }
 
-export default ChapterList
+export default ContentList

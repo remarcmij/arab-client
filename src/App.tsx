@@ -1,50 +1,37 @@
-import AppBar from '@material-ui/core/AppBar';
-import { withStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import React, { Component } from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
-import AboutPage from './Pages/AboutPage';
-import ChapterListPage from './Pages/ChapterListPage';
-import PublicationListPage from './Pages/PublicationListPage';
-import WordListPage from './Pages/WordListPage';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core'
+import * as React from 'react'
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
+import AboutPage from './components/AboutPage'
+import ChapterListPage from './containers/ChapterListPage'
+import ContentPage from './containers/ContentPage'
+import LemmaListPage from './containers/LemmaListPage'
 
-interface Props {
-  classes: {
-    root: string;
-  };
-}
-
-const styles = {
+const styles = createStyles({
   root: {
     flexGrow: 1,
   },
-};
+})
 
-class App extends Component<Props> {
+interface Props extends WithStyles<typeof styles> {}
+
+class App extends React.Component<Props> {
   render() {
-    const { classes } = this.props;
+    const { classes } = this.props
     return (
-      <HashRouter>
+      <Router>
         <div className={classes.root}>
-          <AppBar position="static" color="default">
-            <Toolbar>
-              <Typography variant="title" color="inherit">
-                Arabic
-              </Typography>
-            </Toolbar>
-          </AppBar>
           <Switch>
-            <Route exact={true} path="/" component={PublicationListPage} />
-            <Route path="/pub/:publication/:chapter" component={WordListPage} />
-            <Route path="/pub/:publication" component={ChapterListPage} />
+            <Redirect exact={true} from="/" to="/content" />
+            <Route path="/content/:publication/index" component={ChapterListPage} />
+            <Route path="/content/:publication/:chapter" component={LemmaListPage} />
+            <Route path="/content" component={ContentPage} />
             <Route path="/about" component={AboutPage} />
             <Route render={() => <div>404</div>} />
           </Switch>
         </div>
-      </HashRouter>
-    );
+      </Router>
+    )
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(App)

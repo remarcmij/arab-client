@@ -5,11 +5,11 @@ type Props = {
   publication: Publication
 }
 
-const ChapterListItem: React.FC<Props> = props => {
+const ContentListItem: React.FC<Props> = props => {
   const { publication, chapter, title, description } = props.publication
   return (
     <li>
-      <Link to={`/content/${publication}/${chapter}`}>
+      <Link to={`/content/${publication}/index`}>
         <h2>{title}</h2>
         <span dangerouslySetInnerHTML={{ __html: description || 'No description provided' }} />
       </Link>
@@ -17,4 +17,4 @@ const ChapterListItem: React.FC<Props> = props => {
   )
 }
 
-export default ChapterListItem
+export default ContentListItem
