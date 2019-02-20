@@ -3,6 +3,7 @@ import { match } from 'react-router'
 import Flashcard from '../components/Flashcard'
 import FlashcardButtonBar from '../components/FlashcardButtonBar'
 import Fetcher from '../services/Fetcher'
+import Types from 'Types'
 
 type Params = {
   publication: string
@@ -14,19 +15,19 @@ type Props = {
 }
 
 type State = {
-  lemmas: Lemma[]
+  lemmas: Types.Lemma[]
   index: number
 }
 
 class FlashcardPage extends React.Component<Props, State> {
-  state: State = {
+  readonly state: State = {
     lemmas: [],
     index: 0,
   }
 
   async componentDidMount() {
     const { publication, chapter } = this.props.match.params
-    const doc: IWordList = await Fetcher.fetchJSON(
+    const doc: Types.LemmaDocument = await Fetcher.fetchJSON(
       `${process.env.REACT_APP_API_URL}/${publication}/${chapter}`,
     )
     this.setState({ lemmas: doc.data })

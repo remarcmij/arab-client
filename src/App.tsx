@@ -1,4 +1,4 @@
-import { createStyles, withStyles, WithStyles } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import AboutPage from './components/AboutPage'

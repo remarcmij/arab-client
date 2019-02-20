@@ -1,8 +1,9 @@
 import * as React from 'react'
 import ChapterListItem from './ChapterListItem'
+import Types from 'Types'
 
 type Props = {
-  publications: Publication[]
+  publications: Types.Document[]
 }
 
 const ChapterList: React.FC<Props> = props => {

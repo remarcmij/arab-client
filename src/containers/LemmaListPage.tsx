@@ -4,6 +4,7 @@ import GridContainer from '../components/GridContainer'
 import LemmaList from '../components/LemmaList'
 import NavBar from '../components/NavBar'
 import Fetcher from '../services/Fetcher'
+import Types from 'Types'
 
 interface Params {
   publication: string
@@ -15,13 +16,13 @@ type Props = {
 }
 
 type State = {
-  lemmas: Lemma[]
+  lemmas: Types.Lemma[]
   error: Error | null
   goBack: boolean
 }
 
 class LemmaListPage extends React.Component<Props, State> {
-  state: State = {
+  readonly state: State = {
     lemmas: [],
     error: null,
     goBack: false,

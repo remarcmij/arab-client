@@ -3,6 +3,7 @@ import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import * as React from 'react'
 import Transcoder from '../services/Transcoder'
+import Types from 'Types'
 
 const styles = createStyles({
   root: {
@@ -18,7 +19,7 @@ const styles = createStyles({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  lemma: Lemma
+  lemma: Types.Lemma
 }
 
 const Flashcard: React.FC<Props> = props => {

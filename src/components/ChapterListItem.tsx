@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import Types from 'Types'
 
 type Props = {
-  publication: Publication
+  publication: Types.Document
 }
 
 const ChapterListItem: React.FC<Props> = props => {

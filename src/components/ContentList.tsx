@@ -1,8 +1,9 @@
 import * as React from 'react'
 import ContentListItem from './ContentListItem'
+import Types from 'Types'
 
 type Props = {
-  publications: Publication[]
+  publications: Types.Document[]
 }
 
 const ContentList: React.FC<Props> = props => {

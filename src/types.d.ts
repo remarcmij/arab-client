@@ -1,16 +1,18 @@
-interface Lemma {
-  base: string;
-  foreign: string;
-  trans: string;
-}
+declare module 'Types' {
+  export interface Lemma {
+    base: string
+    foreign: string
+    trans: string
+  }
 
-interface Publication {
-  publication: string;
-  chapter: string;
-  title: string;
-  description: string | null;
-}
+  export interface Document {
+    publication: string
+    chapter: string
+    title: string
+    description: string | null
+  }
 
-interface IWordList extends Publication {
-  data: Lemma[];
+  export interface LemmaDocument extends Document {
+    data: Lemma[]
+  }
 }
