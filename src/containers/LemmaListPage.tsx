@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { match, Redirect } from 'react-router'
 import GridContainer from '../components/GridContainer'
-import LemmaList from '../components/LemmaList'
+import LemmaTable from '../components/LemmaTable'
 import NavBar from '../components/NavBar'
 import Fetcher from '../services/Fetcher'
 import Types from 'Types'
@@ -61,7 +61,7 @@ class LemmaListPage extends React.Component<Props, State> {
       <React.Fragment>
         <NavBar title="Arabisch" onBack={this.handleBack} />
         <GridContainer>
-          <LemmaList lemmas={lemmas} />
+          <LemmaTable lemmas={lemmas} />
         </GridContainer>
       </React.Fragment>
     )

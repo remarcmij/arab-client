@@ -25,7 +25,6 @@ const styles = (theme: Theme) =>
     foreign: {
       marginTop: theme.spacing.unit,
       marginBottom: theme.spacing.unit / 2,
-      // fontFamily: 'Arial',
     },
   })
 
@@ -33,34 +32,34 @@ interface Props extends WithStyles<typeof styles> {
   lemmas: Types.Lemma[]
 }
 
-const LemmaList: React.FC<Props> = ({ lemmas, classes }) => {
+const LemmaTable: React.FC<Props> = ({ lemmas, classes }) => {
+  const renderLemma = (lemma: Types.Lemma, index: number) => (
+    <TableRow key={index}>
+      <TableCell align="right">
+        <Typography variant="h6" classes={{ h6: classes.base }}>
+          {lemma.base}
+        </Typography>
+      </TableCell>
+      <TableCell align="right" dir={'rtl'}>
+        <Typography variant="h4" classes={{ h4: classes.foreign }}>
+          {lemma.foreign}
+        </Typography>
+      </TableCell>
+      <TableCell align="right">
+        <Typography variant="h6" classes={{ h6: classes.trans }}>
+          {lemma.trans}
+        </Typography>
+      </TableCell>
+    </TableRow>
+  )
+
   return (
     <Paper className={classes.root}>
       <Table>
-        <TableBody>
-          {lemmas.map((lemma, index) => (
-            <TableRow key={index}>
-              <TableCell align="right">
-                <Typography variant="h6" classes={{ h6: classes.base }}>
-                  {lemma.base}
-                </Typography>
-              </TableCell>
-              <TableCell align="right" dir={'rtl'}>
-                <Typography variant="h4" classes={{ h4: classes.foreign }}>
-                  {lemma.foreign}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="h6" classes={{ h6: classes.trans }}>
-                  {lemma.trans}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+        <TableBody>{lemmas.map(renderLemma)}</TableBody>
       </Table>
     </Paper>
   )
 }
 
-export default withStyles(styles)(LemmaList)
+export default withStyles(styles)(LemmaTable)

@@ -1,13 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-// tslint:disable-next-line no-import-side-effect
-import './index.css';
-import * as serviceWorker from './serviceWorker';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+import { Provider } from 'react-redux'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// tslint:disable-next-line no-import-side-effect
+import './index.css'
+import * as serviceWorker from './serviceWorker'
+
+import store from './store'
+
+const Root = (
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
+
+ReactDOM.render(Root, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.unregister()
