@@ -37,9 +37,9 @@ class ArticleListPage extends React.Component<Props, State> {
   renderContent() {
     const { documents, isLoading, error } = this.props
 
-    if (isLoading) {
-      return <p>Loading...</p>
-    }
+    // if (isLoading) {
+    //   return <p>Loading...</p>
+    // }
 
     if (error) {
       return <div>Error: {error.message}</div>

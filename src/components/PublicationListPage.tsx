@@ -3,6 +3,7 @@ import Types from 'Types'
 import PublicationListItem from './PublicationListItem'
 import GridContainer from '../components/GridContainer'
 import NavBar from '../components/NavBar'
+import * as S from './strings'
 
 interface IParams {
   publication: string
@@ -24,9 +25,9 @@ class PublicationListPage extends React.Component<Props> {
   renderContent() {
     const { isLoading, error, documents } = this.props
 
-    if (isLoading) {
-      return <p>Loading...</p>
-    }
+    // if (isLoading) {
+    //   return <p>Loading...</p>
+    // }
 
     if (error) {
       return <p>Error: {error.message}</p>
@@ -44,7 +45,7 @@ class PublicationListPage extends React.Component<Props> {
   render() {
     return (
       <React.Fragment>
-        <NavBar title="Arabisch" onLeftMenu={() => undefined} />
+        <NavBar title={S.APP_TITLE} onLeftMenu={() => undefined} />
         <GridContainer>{this.renderContent()}</GridContainer>
       </React.Fragment>
     )

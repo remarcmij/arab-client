@@ -1,18 +1,28 @@
 import { combineReducers } from 'redux'
 import { ActionType } from 'typesafe-actions'
 import * as settings from './actions'
-import { TOGGLE_HIDE_VOCALIZATION } from './constants'
+import { TOGGLE_VOCALIZATION, TOGGLE_TRANSCRIPTION } from './constants'
 
 export type SettingsAction = ActionType<typeof settings>
 
 export type SettingsState = {
-  readonly hideVocalization: boolean
+  readonly showVocalization: boolean
+  readonly showTranscription: boolean
 }
 
 export default combineReducers<SettingsState, SettingsAction>({
-  hideVocalization: (state = false, action) => {
+  showTranscription: (state = true, action) => {
     switch (action.type) {
-      case TOGGLE_HIDE_VOCALIZATION:
+      case TOGGLE_TRANSCRIPTION:
+        return !state
+
+      default:
+        return state
+    }
+  },
+  showVocalization: (state = true, action) => {
+    switch (action.type) {
+      case TOGGLE_VOCALIZATION:
         return !state
 
       default:

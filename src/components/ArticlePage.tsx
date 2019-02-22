@@ -16,6 +16,8 @@ type Props = {
   document: Types.AppDocument | null
   isLoading: boolean
   error: Error | null
+  showVocalization: boolean
+  showTranscription: boolean
   fetchArticle: (publication: string, article: string) => void
 }
 
@@ -36,17 +38,26 @@ class ArticlePage extends React.Component<Props, State> {
   handleBack = () => void this.setState({ goBack: true })
 
   renderContent() {
-    const { document, isLoading, error } = this.props
+    const { document, isLoading, error, showVocalization, showTranscription } = this.props
 
-    if (isLoading) {
-      return <div>Loading...</div>
-    }
+    // if (isLoading) {
+    //   return <div>Loading...</div>
+    // }
 
     if (error) {
       return <div>Error: {error.message}</div>
     }
 
-    return document && document.kind === 'csv' && <LemmaTable lemmas={document.data} />
+    return (
+      document &&
+      document.kind === 'csv' && (
+        <LemmaTable
+          lemmas={document.data}
+          showVocalization={showVocalization}
+          showTranscription={showTranscription}
+        />
+      )
+    )
   }
 
   render() {

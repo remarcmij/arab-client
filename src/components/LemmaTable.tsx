@@ -7,6 +7,8 @@ import TableRow from '@material-ui/core/TableRow'
 import Typography from '@material-ui/core/Typography'
 import * as React from 'react'
 import Types from 'Types'
+import Transcoder from '../services/Transcoder'
+import { getShowTranscription } from '../features/settings/selectors'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,9 +32,11 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
   lemmas: Types.Lemma[]
+  showVocalization: boolean
+  showTranscription: boolean
 }
 
-const LemmaTable: React.FC<Props> = ({ lemmas, classes }) => {
+const LemmaTable: React.FC<Props> = ({ lemmas, showVocalization, showTranscription, classes }) => {
   const renderLemma = (lemma: Types.Lemma, index: number) => (
     <TableRow key={index}>
       <TableCell align="right">
@@ -42,14 +46,16 @@ const LemmaTable: React.FC<Props> = ({ lemmas, classes }) => {
       </TableCell>
       <TableCell align="right" dir={'rtl'}>
         <Typography variant="h4" classes={{ h4: classes.foreign }}>
-          {lemma.foreign}
+          {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
         </Typography>
       </TableCell>
-      <TableCell align="right">
-        <Typography variant="h6" classes={{ h6: classes.trans }}>
-          {lemma.trans}
-        </Typography>
-      </TableCell>
+      {showTranscription && (
+        <TableCell align="right">
+          <Typography variant="h6" classes={{ h6: classes.trans }}>
+            {lemma.trans}
+          </Typography>
+        </TableCell>
+      )}
     </TableRow>
   )
 

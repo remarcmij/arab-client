@@ -1,4 +1,5 @@
 import { action } from 'typesafe-actions'
-import { TOGGLE_HIDE_VOCALIZATION } from './constants'
+import * as C from './constants'
 
-export const toggleHideVocalization = () => action(TOGGLE_HIDE_VOCALIZATION)
+export const toggleVocalization = () => action(C.TOGGLE_VOCALIZATION)
+export const toggleTranscription = () => action(C.TOGGLE_TRANSCRIPTION)

@@ -3,6 +3,7 @@
     "Arabisch",
     "Romanization",
     "Transcoder",
+    "labelledby",
     "middlewares",
     "onvoiceschanged",
     "strip",

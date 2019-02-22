@@ -3,12 +3,15 @@ import { Dispatch } from 'redux'
 import Types from 'Types'
 import ArticlePage from '../components/ArticlePage'
 import { articleActions, articleSelectors } from '../features/article'
+import { settingsSelectors } from '../features/settings'
 import { FetchActions } from '../features/article/actions'
 
 const mapStateToProps = (state: Types.RootState) => ({
   document: articleSelectors.getDocument(state),
   isLoading: articleSelectors.getIsLoading(state),
   error: articleSelectors.getError(state),
+  showVocalization: settingsSelectors.getShowVocalization(state),
+  showTranscription: settingsSelectors.getShowTranscription(state),
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<FetchActions>) => ({
