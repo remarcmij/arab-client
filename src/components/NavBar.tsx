@@ -18,11 +18,11 @@ const styles = createStyles({
 interface Props extends WithStyles<typeof styles> {
   title: string
   onBack?: () => void
-  onMenu?: () => void
+  onLeftMenu?: () => void
 }
 
 const NavBar: React.FC<Props> = props => {
-  const { title, onBack, onMenu, classes } = props
+  const { title, onBack, onLeftMenu, classes } = props
 
   return (
     <AppBar position="fixed">
@@ -33,8 +33,8 @@ const NavBar: React.FC<Props> = props => {
               <ArrowBackIcon />
             </IconButton>
           )}
-          {onMenu && (
-            <IconButton className={classes.leftButton} onClick={onMenu} color="inherit">
+          {onLeftMenu && (
+            <IconButton className={classes.leftButton} onClick={onLeftMenu} color="inherit">
               <MenuIcon />
             </IconButton>
           )}

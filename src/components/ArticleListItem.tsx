@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 import Types from 'Types'
 
 type Props = {
-  publication: Types.Document
+  publication: Types.AppDocument
 }
 
-const ChapterListItem: React.FC<Props> = props => {
+const ArticleListItem: React.FC<Props> = props => {
   const { publication, chapter, title, description } = props.publication
   return (
     <li>
@@ -18,4 +18,4 @@ const ChapterListItem: React.FC<Props> = props => {
   )
 }
 
-export default ChapterListItem
+export default ArticleListItem

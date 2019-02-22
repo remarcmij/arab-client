@@ -5,14 +5,26 @@ declare module 'Types' {
     trans: string
   }
 
-  export interface Document {
+  interface DocumentBase {
     publication: string
     chapter: string
     title: string
     description: string | null
   }
 
-  export interface LemmaDocument extends Document {
+  export interface MetaDocument extends DocumentBase {
+    kind: 'meta'
+  }
+
+  export interface LemmaDocument extends DocumentBase {
+    kind: 'csv'
     data: Lemma[]
   }
+
+  export interface MarkdownDocument extends DocumentBase {
+    kind: 'md'
+    data: string
+  }
+
+  export type AppDocument = LemmaDocument | MarkdownDocument | MetaDocument
 }

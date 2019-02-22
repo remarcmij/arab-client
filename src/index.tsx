@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import { Provider } from 'react-redux'
 
-// tslint:disable-next-line no-import-side-effect
+// tslint:disable no-import-side-effect
 import './index.css'
+import 'isomorphic-fetch'
 import * as serviceWorker from './serviceWorker'
 
 import store from './store'

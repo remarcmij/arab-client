@@ -2,9 +2,9 @@ import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import AboutPage from './components/AboutPage'
-import ChapterListPage from './containers/ChapterListPage'
-import ContentPage from './containers/ContentPage'
-import LemmaListPage from './containers/LemmaListPage'
+import ArticleListPageContainer from './containers/ArticleListPageContainer'
+import PublicationListPageContainer from './containers/PublicationListPageContainer'
+import ArticlePageContainer from './containers/ArticlePageContainer'
 
 const styles = createStyles({
   root: {
@@ -22,9 +22,9 @@ class App extends React.Component<Props> {
         <div className={classes.root}>
           <Switch>
             <Redirect exact={true} from="/" to="/content" />
-            <Route path="/content/:publication/index" component={ChapterListPage} />
-            <Route path="/content/:publication/:chapter" component={LemmaListPage} />
-            <Route path="/content" component={ContentPage} />
+            <Route path="/content/:publication/index" component={ArticleListPageContainer} />
+            <Route path="/content/:publication/:article" component={ArticlePageContainer} />
+            <Route path="/content" component={PublicationListPageContainer} />
             <Route path="/about" component={AboutPage} />
             <Route render={() => <div>404</div>} />
           </Switch>
