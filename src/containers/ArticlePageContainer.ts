@@ -12,6 +12,7 @@ const mapStateToProps = (state: Types.RootState) => ({
   error: articleSelectors.getError(state),
   showVocalization: settingsSelectors.getShowVocalization(state),
   showTranscription: settingsSelectors.getShowTranscription(state),
+  romanization: settingsSelectors.getRomanization(state),
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<FetchActions>) => ({

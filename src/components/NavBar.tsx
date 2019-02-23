@@ -79,10 +79,7 @@ class NavBar extends React.Component<Props> {
               >
                 <Settings />
               </IconButton>
-              <SettingsDialogContainer
-                isOpen={settingsDialogOpen}
-                onClose={this.handleCloseDialog}
-              />
+              <SettingsDialogContainer open={settingsDialogOpen} onClose={this.handleCloseDialog} />
             </div>
           </Toolbar>
         </GridContainer>

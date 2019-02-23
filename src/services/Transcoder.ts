@@ -1,13 +1,16 @@
 /* cSpell:disable */
 type RomanizationSubstitution = [RegExp, string]
 
+const iso = null
 const deMoor: RomanizationSubstitution[] = [[/ʿ/g, 'ع'], [/ʾ/g, 'ʼ'], [/ḫ/g, 'ẖ'], [/ǧ/g, 'j']]
 
-interface RomanizationSystems {
+export type RomanizationSystems = {
+  iso: null
   deMoor: RomanizationSubstitution[]
 }
 
 const romanizationSystems = {
+  iso,
   deMoor,
 }
 
@@ -16,9 +19,12 @@ const CHARCODE_TATWEEL = 1600
 
 class Transcoder {
   static applyRomanization(text: string, standardName: keyof RomanizationSystems) {
+    if (standardName === 'iso') {
+      return text
+    }
     const substitutions = romanizationSystems[standardName]
-    return substitutions.reduce((acc, [pattern, subst]) => {
-      return acc.replace(pattern, subst)
+    return substitutions.reduce((acc, [regex, replaceWith]) => {
+      return acc.replace(regex, replaceWith)
     }, text)
   }
 

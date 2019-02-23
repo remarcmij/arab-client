@@ -1,23 +1,27 @@
 import React from 'react'
-import Types from 'Types'
 import { match, Redirect } from 'react-router'
-import NavBar from './NavBar'
+import Types from 'Types'
+import { RomanizationSystems } from '../services/Transcoder'
 import GridContainer from './GridContainer'
 import LemmaTable from './LemmaTable'
-import LemmaTabs from './LemmaTabs'
+import LemmaList from './LemmaList'
+import NavBar from './NavBar'
+import MediaQuery from 'react-responsive'
+import { withTheme, WithTheme } from '@material-ui/core/styles'
 
 interface Params {
   publication: string
   article: string
 }
 
-type Props = {
+interface Props extends WithTheme {
   match: match<Params>
   document: Types.AppDocument | null
   isLoading: boolean
   error: Error | null
   showVocalization: boolean
   showTranscription: boolean
+  romanization: keyof RomanizationSystems
   fetchArticle: (publication: string, article: string) => void
 }
 
@@ -38,7 +42,15 @@ class ArticlePage extends React.Component<Props, State> {
   handleBack = () => void this.setState({ goBack: true })
 
   renderContent() {
-    const { document, isLoading, error, showVocalization, showTranscription } = this.props
+    const {
+      document,
+      isLoading,
+      error,
+      showVocalization,
+      showTranscription,
+      romanization,
+      theme,
+    } = this.props
 
     // if (isLoading) {
     //   return <div>Loading...</div>
@@ -51,11 +63,24 @@ class ArticlePage extends React.Component<Props, State> {
     return (
       document &&
       document.kind === 'csv' && (
-        <LemmaTable
-          lemmas={document.data}
-          showVocalization={showVocalization}
-          showTranscription={showTranscription}
-        />
+        <React.Fragment>
+          <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
+            <LemmaTable
+              lemmas={document.data}
+              showVocalization={showVocalization}
+              showTranscription={showTranscription}
+              romanization={romanization}
+            />
+          </MediaQuery>
+          <MediaQuery query={`(max-device-width: ${theme.breakpoints.values.sm}px)`}>
+            <LemmaList
+              lemmas={document.data}
+              showVocalization={showVocalization}
+              showTranscription={showTranscription}
+              romanization={romanization}
+            />
+          </MediaQuery>
+        </React.Fragment>
       )
     )
   }
@@ -77,4 +102,4 @@ class ArticlePage extends React.Component<Props, State> {
   }
 }
 
-export default ArticlePage
+export default withTheme()(ArticlePage)

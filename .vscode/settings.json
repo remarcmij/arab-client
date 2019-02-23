@@ -3,6 +3,8 @@
     "Arabisch",
     "Romanization",
     "Transcoder",
+    "appbar",
+    "haspopup",
     "labelledby",
     "middlewares",
     "onvoiceschanged",
