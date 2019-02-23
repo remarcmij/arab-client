@@ -8,6 +8,7 @@ import NavBar from './NavBar'
 import MediaQuery from 'react-responsive'
 import { withTheme, WithTheme } from '@material-ui/core/styles'
 import LemmaFlashcards from './LemmaFlashcards'
+import ArticleTextContent from './ArticleTextContent'
 
 interface Params {
   publication: string
@@ -26,6 +27,7 @@ interface Props extends WithTheme {
   speechEnabled: boolean
   voiceName: string
   fetchArticle: (publication: string, article: string) => void
+  clear: () => void
 }
 
 type State = {
@@ -40,6 +42,10 @@ class ArticlePage extends React.Component<Props, State> {
   componentDidMount() {
     const { publication, article } = this.props.match.params
     this.props.fetchArticle(publication, article)
+  }
+
+  componentWillUnmount() {
+    this.props.clear()
   }
 
   handleBack = () => void this.setState({ goBack: true })
@@ -75,7 +81,6 @@ class ArticlePage extends React.Component<Props, State> {
         return (
           <LemmaFlashcards
             lemmas={document.data}
-            foreignLang={document.foreignLang}
             showVocalization={showVocalization}
             speechEnabled={speechEnabled}
             voiceName={voiceName}
@@ -90,6 +95,7 @@ class ArticlePage extends React.Component<Props, State> {
               showVocalization={showVocalization}
               showTranscription={showTranscription}
               romanizationStandard={romanizationStandard}
+              voiceName={voiceName}
             />
           </MediaQuery>
           <MediaQuery query={`(max-device-width: ${theme.breakpoints.values.sm}px)`}>
@@ -102,6 +108,10 @@ class ArticlePage extends React.Component<Props, State> {
           </MediaQuery>
         </React.Fragment>
       )
+    }
+
+    if (document.kind === 'md') {
+      return <ArticleTextContent htmlText={document.data} />
     }
   }
 
@@ -116,7 +126,11 @@ class ArticlePage extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <NavBar title={document ? document.title : ''} onBack={this.handleBack} />
+        <NavBar
+          title={document ? document.title : ''}
+          onBack={this.handleBack}
+          enableSettingsMenu={document !== null && document.kind === 'csv'}
+        />
         <GridContainer>{this.renderContent()}</GridContainer>
       </React.Fragment>
     )

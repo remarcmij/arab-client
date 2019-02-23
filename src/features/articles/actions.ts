@@ -6,10 +6,13 @@ import * as C from './constants'
 export const fetchStart = () => action(C.FETCH_START)
 export const fetchSuccess = (documents: Types.AppDocument[]) => action(C.FETCH_SUCCESS, documents)
 export const fetchError = (error: Error) => action(C.FETCH_ERROR, error)
+export const clear = () => action(C.CLEAR)
 
-export type FetchActions = ReturnType<typeof fetchStart | typeof fetchSuccess | typeof fetchError>
+export type ArticlesActions = ReturnType<
+  typeof fetchStart | typeof fetchSuccess | typeof fetchError | typeof clear
+>
 
-export const fetchArticleList = (dispatch: Dispatch<FetchActions>) => (publication: string) => {
+export const fetchArticleList = (dispatch: Dispatch<ArticlesActions>) => (publication: string) => {
   dispatch(fetchStart())
   fetch(`${process.env.REACT_APP_API_URL}/${publication}`)
     .then(res => {

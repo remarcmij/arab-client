@@ -1,8 +1,9 @@
+import List from '@material-ui/core/List'
 import * as React from 'react'
 import Types from 'Types'
-import PublicationListItem from './PublicationListItem'
 import GridContainer from '../components/GridContainer'
 import NavBar from '../components/NavBar'
+import PublicationListItem from './PublicationListItem'
 import * as S from './strings'
 
 type Props = {
@@ -29,11 +30,11 @@ class PublicationListPage extends React.Component<Props> {
     }
 
     return (
-      <ul>
+      <List>
         {documents.map(doc => (
           <PublicationListItem key={`${doc.publication}.${doc.chapter}`} publication={doc} />
         ))}
-      </ul>
+      </List>
     )
   }
 

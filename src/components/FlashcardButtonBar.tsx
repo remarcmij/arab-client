@@ -2,10 +2,19 @@ import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import * as React from 'react'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import ArrowBackIos from '@material-ui/icons/ArrowBackIos'
+import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos'
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      margin: theme.spacing.unit,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
     button: {
       margin: theme.spacing.unit,
     },
@@ -25,12 +34,12 @@ class FlashcardButtonBar extends React.Component<Props> {
     const { classes, onNext, onPrev } = this.props
     return (
       <Paper className={classes.root}>
-        <Button variant="contained" className={classes.button} onClick={onPrev}>
-          Prev
-        </Button>
-        <Button variant="contained" className={classes.button} onClick={onNext}>
-          Next
-        </Button>
+        <IconButton className={classes.button} onClick={onPrev}>
+          <ArrowBackIos />
+        </IconButton>
+        <IconButton className={classes.button} onClick={onNext}>
+          <ArrowForwardIos />
+        </IconButton>
       </Paper>
     )
   }

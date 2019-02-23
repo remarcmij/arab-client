@@ -4,7 +4,7 @@ import Types from 'Types'
 import ArticlePage from '../components/ArticlePage'
 import { articleActions, articleSelectors } from '../features/article'
 import { settingsSelectors } from '../features/settings'
-import { FetchActions } from '../features/article/actions'
+import { ArticleActions } from '../features/article/actions'
 
 const mapStateToProps = (state: Types.RootState) => ({
   document: articleSelectors.getDocument(state),
@@ -18,8 +18,9 @@ const mapStateToProps = (state: Types.RootState) => ({
   voiceName: settingsSelectors.getVoiceName(state),
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<FetchActions>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<ArticleActions>) => ({
   fetchArticle: articleActions.fetchArticle(dispatch),
+  clear: () => dispatch(articleActions.clear()),
 })
 
 const ArticlePageContainer = connect(

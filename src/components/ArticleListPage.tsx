@@ -1,3 +1,4 @@
+import List from '@material-ui/core/List'
 import * as React from 'react'
 import { match, Redirect } from 'react-router'
 import Types from 'Types'
@@ -17,6 +18,7 @@ type Props = {
   isLoading: boolean
   error: Error | null
   fetchArticleList: (publication: string) => void
+  clear: () => void
 }
 
 type State = {
@@ -33,6 +35,10 @@ class ArticleListPage extends React.Component<Props, State> {
     this.props.fetchArticleList(publication)
   }
 
+  componentWillUnmount() {
+    this.props.clear()
+  }
+
   handleBack = () => void this.setState({ goBack: true })
 
   renderContent() {
@@ -47,11 +53,11 @@ class ArticleListPage extends React.Component<Props, State> {
     }
 
     return (
-      <ul>
+      <List>
         {documents.map(doc => (
           <ArticleListItem key={`${doc.publication}.${doc.chapter}`} publication={doc} />
         ))}
-      </ul>
+      </List>
     )
   }
 

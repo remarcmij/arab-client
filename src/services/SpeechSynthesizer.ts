@@ -34,7 +34,7 @@ class SpeechSynthesizer {
     return this.voices
   }
 
-  speak(voiceName: string, message: string, rate: number = 0.7) {
+  speak(voiceName: string, message: string, rate: number = 0.8) {
     return new Promise(resolve => {
       this.utterance = new SpeechSynthesisUtterance()
       this.utterance.text = message

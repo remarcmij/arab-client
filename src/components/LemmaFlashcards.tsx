@@ -4,12 +4,16 @@ import Types from 'Types'
 import Flashcard from './Flashcard'
 import FlashcardButtonBar from './FlashcardButtonBar'
 
-const styles = (theme: Theme) => createStyles({})
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      margin: theme.spacing.unit,
+    },
+  })
 
 interface Props extends WithStyles<typeof styles> {
   lemmas: Types.Lemma[]
   showVocalization: boolean
-  foreignLang: string
   speechEnabled: boolean
   voiceName: string
 }
@@ -44,7 +48,7 @@ class LemmaFlashcards extends React.Component<Props, State> {
     this.setState({ index, showTranslation: false })
   }
 
-  renderLemmas() {
+  render() {
     const { index, showTranslation } = this.state
     const { lemmas, showVocalization, speechEnabled, voiceName } = this.props
 
@@ -62,10 +66,6 @@ class LemmaFlashcards extends React.Component<Props, State> {
         <FlashcardButtonBar onNext={this.handleNext} onPrev={this.handlePrev} />
       </React.Fragment>
     )
-  }
-
-  render() {
-    return <ul>{this.renderLemmas()}</ul>
   }
 }
 

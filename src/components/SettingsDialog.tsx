@@ -14,8 +14,21 @@ import React from 'react'
 import { romanizationStandards } from '../services/Transcoder'
 import * as S from './strings'
 import SpeechSynthesizer from '../services/SpeechSynthesizer'
+import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
+import Divider from '@material-ui/core/Divider'
 
-interface Props extends InjectedProps {
+const styles = (theme: Theme) =>
+  createStyles({
+    paper: {
+      minWidth: 400,
+    },
+    divider: {
+      marginTop: theme.spacing.unit * 3,
+      marginBottom: theme.spacing.unit * 3,
+    },
+  })
+
+interface BaseProps extends InjectedProps {
   open: boolean
   onClose: () => void
   showVocalization: boolean
@@ -32,9 +45,12 @@ interface Props extends InjectedProps {
   setVoiceName: (voiceName: string) => void
 }
 
-const ResponsiveDialog: React.FC<Props> = props => {
+interface SettingsDialogProps extends BaseProps, WithStyles<typeof styles> {}
+
+const SettingsDialog: React.FC<SettingsDialogProps> = props => {
   const {
     fullScreen,
+    classes,
     onClose,
     open,
     showVocalization,
@@ -89,7 +105,7 @@ const ResponsiveDialog: React.FC<Props> = props => {
           .filter(voice => voice.lang.startsWith('ar-'))
           .map(voice => (
             <option key={voice.name} value={voice.name}>
-              {voice.name}
+              {`${voice.name} (${voice.lang})`}
             </option>
           ))}
       </Select>
@@ -102,6 +118,7 @@ const ResponsiveDialog: React.FC<Props> = props => {
       open={open}
       onClose={onClose}
       aria-labelledby="responsive-dialog-title"
+      classes={{ paper: classes.paper }}
     >
       <DialogTitle id="responsive-dialog-title">{S.EDIT_SETTINGS}</DialogTitle>
       <DialogContent>
@@ -110,6 +127,7 @@ const ResponsiveDialog: React.FC<Props> = props => {
             control={<Switch checked={showFlashcards} onChange={toggleFlashcards} />}
             label={S.SHOW_FLASHCARDS}
           />
+          <Divider className={classes.divider} />
           <FormControlLabel
             control={<Switch checked={showVocalization} onChange={toggleVocalization} />}
             label={S.SHOW_VOCALIZATION}
@@ -119,6 +137,7 @@ const ResponsiveDialog: React.FC<Props> = props => {
             label={S.SHOW_TRANSCRIPTION}
           />
           {renderRomanizationSelect()}
+          <Divider className={classes.divider} />
           <FormControlLabel
             control={<Switch checked={speechEnabled} onChange={toggleSpeech} />}
             label={S.ENABLE_SPEECH}
@@ -135,4 +154,4 @@ const ResponsiveDialog: React.FC<Props> = props => {
   )
 }
 
-export default withMobileDialog<Props>()(ResponsiveDialog)
+export default withMobileDialog<BaseProps>()(withStyles(styles)(SettingsDialog))

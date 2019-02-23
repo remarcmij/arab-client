@@ -10,3 +10,16 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.markdown-body {
+  box-sizing: border-box;
+  min-width: 200px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+@media (max-width: 767px) {
+  .markdown-body {
+    padding: 8px;
+  }
+}

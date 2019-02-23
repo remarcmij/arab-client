@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import * as React from 'react'
 import Types from 'Types'
 import Transcoder from '../services/Transcoder'
+import SpeechSynthesizer from '../services/SpeechSynthesizer'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -15,6 +16,12 @@ const styles = (theme: Theme) =>
       width: '100%',
       marginTop: theme.spacing.unit,
       overflowX: 'auto',
+    },
+    foreignCell: {
+      cursor: 'pointer',
+      '&:hover': {
+        color: theme.palette.secondary.main,
+      },
     },
     base: {
       fontFamily: 'Georgia',
@@ -34,32 +41,45 @@ interface Props extends WithStyles<typeof styles> {
   showVocalization: boolean
   showTranscription: boolean
   romanizationStandard: string
+  voiceName: string
 }
 
+const handleClick = (voiceName: string, foreign: string) => {
+  if (voiceName !== 'none') {
+    // tslint:disable-next-line:no-floating-promises
+    SpeechSynthesizer.speak(voiceName, foreign)
+  }
+}
 const LemmaTable: React.FC<Props> = ({
   lemmas,
   showVocalization,
   showTranscription,
   romanizationStandard,
+  voiceName,
   classes,
 }) => {
   const renderLemma = (lemma: Types.Lemma, index: number) => (
     <TableRow key={index}>
-      <TableCell align="right">
+      <TableCell align="left">
         <Typography variant="h6" classes={{ h6: classes.base }} color="textPrimary">
           {lemma.base}
         </Typography>
       </TableCell>
 
       {showTranscription && (
-        <TableCell align="right">
+        <TableCell align="left">
           <Typography variant="h6" classes={{ h6: classes.trans }} color="textSecondary">
             {Transcoder.applyRomanization(lemma.trans, romanizationStandard)}
           </Typography>
         </TableCell>
       )}
-      <TableCell align="right" dir={'rtl'}>
-        <Typography variant="h4" classes={{ h4: classes.foreign }} color="textPrimary">
+      <TableCell
+        align="right"
+        dir={'rtl'}
+        classes={{ root: classes.foreignCell }}
+        onClick={() => handleClick(voiceName, lemma.foreign)}
+      >
+        <Typography variant="h4" classes={{ h4: classes.foreign }} color="inherit">
           {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
         </Typography>
       </TableCell>
@@ -68,7 +88,7 @@ const LemmaTable: React.FC<Props> = ({
 
   return (
     <Paper className={classes.root}>
-      <Table>
+      <Table padding="dense">
         <TableBody>{lemmas.map(renderLemma)}</TableBody>
       </Table>
     </Paper>

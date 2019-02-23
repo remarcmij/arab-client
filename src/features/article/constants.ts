@@ -1,3 +1,4 @@
-export const FETCH_START = '@ajar/ARTICLE/FETCH'
-export const FETCH_SUCCESS = '@ajar/ARTICLE/FETCH_SUCCESS'
-export const FETCH_ERROR = '@ajar/ARTICLE/FETCH_ERROR'
+export const FETCH_START = '@arab/ARTICLE/FETCH'
+export const FETCH_SUCCESS = '@arab/ARTICLE/FETCH_SUCCESS'
+export const FETCH_ERROR = '@arab/ARTICLE/FETCH_ERROR'
+export const CLEAR_ARTICLE = '@arab/ARTICLE/CLEAR'

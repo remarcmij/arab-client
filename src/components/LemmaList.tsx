@@ -48,7 +48,7 @@ const LemmaList: React.FC<Props> = ({
   const renderLemma = (lemma: Types.Lemma, index: number) => (
     <li key={index}>
       <Typography variant="h6" classes={{ h6: classes.base }} color="textPrimary">
-        <p>{lemma.base}</p>
+        <p dir="ltr">{lemma.base}</p>
       </Typography>
       <div className={classes.foreignContainer}>
         <Typography variant="h4" classes={{ h4: classes.foreign }} color="textPrimary">

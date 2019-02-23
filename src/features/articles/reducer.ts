@@ -26,6 +26,8 @@ const reducer: Reducer<ArticleListState, ArticleListAction> = (state = initialSt
       return { ...state, isLoading: false, documents: action.payload }
     case C.FETCH_ERROR:
       return { ...state, isLoading: false, error: action.payload }
+    case C.CLEAR:
+      return { isLoading: false, error: null, documents: [] }
     default:
       return state
   }
