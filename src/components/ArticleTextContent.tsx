@@ -6,7 +6,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      marginTop: theme.spacing.unit,
+      margin: theme.spacing.unit,
       overflowX: 'auto',
     },
   })

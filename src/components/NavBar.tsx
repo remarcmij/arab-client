@@ -9,6 +9,7 @@ import Settings from '@material-ui/icons/Settings'
 import * as React from 'react'
 import SettingsDialogContainer from '../containers/SettingsDialogContainer'
 import GridContainer from './GridContainer'
+import MainDrawer from './MainDrawer'
 
 const styles = createStyles({
   root: {
@@ -25,6 +26,7 @@ const styles = createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   title: string
+  showDrawerButton?: boolean
   enableSettingsMenu?: boolean
   onBack?: () => void
   onLeftMenu?: () => void
@@ -32,15 +34,18 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 type State = {
+  mainDrawerOpen: boolean
   settingsDialogOpen: boolean
 }
 
-class NavBar extends React.Component<Props> {
+class NavBar extends React.Component<Props, State> {
   static defaultProps = {
+    showDrawerButton: false,
     enableSettingsMenu: false,
   }
 
   state = {
+    mainDrawerOpen: false,
     settingsDialogOpen: false,
   }
 
@@ -52,9 +57,13 @@ class NavBar extends React.Component<Props> {
     this.setState({ settingsDialogOpen: false })
   }
 
+  handleToggleDrawer = () => {
+    this.setState({ mainDrawerOpen: !this.state.mainDrawerOpen })
+  }
+
   render() {
-    const { title, onBack, onLeftMenu, enableSettingsMenu, classes } = this.props
-    const { settingsDialogOpen } = this.state
+    const { title, onBack, showDrawerButton, enableSettingsMenu, classes } = this.props
+    const { mainDrawerOpen, settingsDialogOpen } = this.state
 
     return (
       <AppBar position="fixed">
@@ -65,8 +74,12 @@ class NavBar extends React.Component<Props> {
                 <ArrowBackIcon />
               </IconButton>
             )}
-            {onLeftMenu && (
-              <IconButton className={classes.leftButton} onClick={onLeftMenu} color="inherit">
+            {showDrawerButton && (
+              <IconButton
+                className={classes.leftButton}
+                onClick={this.handleToggleDrawer}
+                color="inherit"
+              >
                 <MenuIcon />
               </IconButton>
             )}
@@ -90,6 +103,7 @@ class NavBar extends React.Component<Props> {
               </div>
             )}
           </Toolbar>
+          <MainDrawer open={mainDrawerOpen} toggleDrawer={this.handleToggleDrawer} />
         </GridContainer>
       </AppBar>
     )

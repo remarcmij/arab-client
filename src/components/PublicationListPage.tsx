@@ -41,7 +41,7 @@ class PublicationListPage extends React.Component<Props> {
   render() {
     return (
       <React.Fragment>
-        <NavBar title={S.APP_TITLE} onLeftMenu={() => undefined} />
+        <NavBar title={S.APP_TITLE} showDrawerButton={true} />
         <GridContainer>{this.renderContent()}</GridContainer>
       </React.Fragment>
     )
