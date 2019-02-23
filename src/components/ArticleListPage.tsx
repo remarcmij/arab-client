@@ -4,6 +4,7 @@ import Types from 'Types'
 import GridContainer from '../components/GridContainer'
 import NavBar from '../components/NavBar'
 import ArticleListItem from './ArticleListItem'
+import * as C from './strings'
 
 interface IParams {
   publication: string
@@ -63,7 +64,7 @@ class ArticleListPage extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <NavBar title="Arabisch" onBack={this.handleBack} />
+        <NavBar title={C.ARTICLES_TITLE} onBack={this.handleBack} />
         <GridContainer>{this.renderContent()}</GridContainer>
       </React.Fragment>
     )

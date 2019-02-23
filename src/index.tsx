@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 // tslint:disable no-import-side-effect
 import './index.css'
 import 'isomorphic-fetch'
+import './services/SpeechSynthesizer'
 import * as serviceWorker from './serviceWorker'
 
 import store from './store'

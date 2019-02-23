@@ -7,7 +7,7 @@ type Props = {
 }
 
 const PublicationListItem: React.FC<Props> = props => {
-  const { publication, chapter, title, description } = props.publication
+  const { publication, title, description } = props.publication
   return (
     <li>
       <Link to={`/content/${publication}/index`}>

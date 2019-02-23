@@ -2,14 +2,16 @@ import { combineReducers } from 'redux'
 import { ActionType } from 'typesafe-actions'
 import * as settings from './actions'
 import * as C from './constants'
-import { RomanizationSystems } from '../../services/Transcoder'
 
 export type SettingsAction = ActionType<typeof settings>
 
 export type SettingsState = {
   readonly showVocalization: boolean
   readonly showTranscription: boolean
-  readonly romanization: keyof RomanizationSystems
+  readonly showFlashcards: boolean
+  readonly romanizationStandard: string
+  readonly speechEnabled: boolean
+  readonly voiceName: string
 }
 
 export default combineReducers<SettingsState, SettingsAction>({
@@ -29,9 +31,33 @@ export default combineReducers<SettingsState, SettingsAction>({
         return state
     }
   },
-  romanization: (state = 'iso', action) => {
+  showFlashcards: (state = false, action) => {
     switch (action.type) {
-      case C.SET_ROMANIZATION:
+      case C.TOGGLE_FLASHCARDS:
+        return !state
+      default:
+        return state
+    }
+  },
+  romanizationStandard: (state = 'din', action) => {
+    switch (action.type) {
+      case C.SET_ROMANIZATION_STANDARD:
+        return action.payload
+      default:
+        return state
+    }
+  },
+  speechEnabled: (state = false, action) => {
+    switch (action.type) {
+      case C.TOGGLE_SPEECH:
+        return !state
+      default:
+        return state
+    }
+  },
+  voiceName: (state = 'none', action) => {
+    switch (action.type) {
+      case C.SET_VOICE_NAME:
         return action.payload
       default:
         return state

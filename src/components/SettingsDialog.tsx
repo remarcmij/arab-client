@@ -3,17 +3,17 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormGroup from '@material-ui/core/FormGroup'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from '@material-ui/core/Select'
 import Switch from '@material-ui/core/Switch'
 import withMobileDialog, { InjectedProps } from '@material-ui/core/withMobileDialog'
 import React from 'react'
-import { RomanizationSystems } from '../services/Transcoder'
+import { romanizationStandards } from '../services/Transcoder'
 import * as S from './strings'
-import NativeSelect from '@material-ui/core/NativeSelect'
-import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
+import SpeechSynthesizer from '../services/SpeechSynthesizer'
 
 interface Props extends InjectedProps {
   open: boolean
@@ -22,8 +22,14 @@ interface Props extends InjectedProps {
   toggleVocalization: () => void
   showTranscription: boolean
   toggleTranscription: () => void
-  romanization: keyof RomanizationSystems
-  setRomanizationSystem: (romanization: keyof RomanizationSystems) => void
+  showFlashcards: boolean
+  toggleFlashcards: () => void
+  romanizationStandard: string
+  setRomanizationSystem: (romanizationStandard: string) => void
+  speechEnabled: boolean
+  toggleSpeech: () => void
+  voiceName: string
+  setVoiceName: (voiceName: string) => void
 }
 
 const ResponsiveDialog: React.FC<Props> = props => {
@@ -35,28 +41,59 @@ const ResponsiveDialog: React.FC<Props> = props => {
     toggleVocalization,
     showTranscription,
     toggleTranscription,
-    romanization,
+    showFlashcards,
+    toggleFlashcards,
+    romanizationStandard,
     setRomanizationSystem,
+    speechEnabled,
+    toggleSpeech,
+    voiceName,
+    setVoiceName,
   } = props
 
-  const renderSelect = () => (
-    <React.Fragment>
-      <InputLabel htmlFor="romanization-select">{S.ROMANIZATION_SYSTEM}</InputLabel>
+  const renderRomanizationSelect = () => (
+    <FormControl>
+      <InputLabel htmlFor="romanizationStandard-select">{S.ROMANIZATION_SYSTEM}</InputLabel>
       <Select
         native={true}
-        value={romanization}
-        onChange={event =>
-          setRomanizationSystem((event.target.value as unknown) as keyof RomanizationSystems)
-        }
+        value={romanizationStandard}
+        onChange={event => setRomanizationSystem(event.target.value)}
         inputProps={{
           name: 'Romanization',
-          id: 'romanization-select',
+          id: 'romanizationStandard-select',
         }}
       >
-        <option value="iso">ISO</option>
-        <option value="deMoor">de Moor</option>
+        {Object.entries(romanizationStandards).map(([key, value]) => (
+          <option key={key} value={key}>
+            {value.name}
+          </option>
+        ))}
       </Select>
-    </React.Fragment>
+    </FormControl>
+  )
+
+  const renderVoiceSelect = () => (
+    <FormControl>
+      <InputLabel htmlFor="romanizationStandard-select">{S.VOICE_NAME}</InputLabel>
+      <Select
+        native={true}
+        value={voiceName}
+        onChange={event => setVoiceName(event.target.value)}
+        inputProps={{
+          name: 'Romanization',
+          id: 'romanizationStandard-select',
+        }}
+      >
+        <option value="none">{S.NULL_VOICE}</option>
+        {SpeechSynthesizer.getVoices()
+          .filter(voice => voice.lang.startsWith('ar-'))
+          .map(voice => (
+            <option key={voice.name} value={voice.name}>
+              {voice.name}
+            </option>
+          ))}
+      </Select>
+    </FormControl>
   )
 
   return (
@@ -70,6 +107,10 @@ const ResponsiveDialog: React.FC<Props> = props => {
       <DialogContent>
         <FormGroup>
           <FormControlLabel
+            control={<Switch checked={showFlashcards} onChange={toggleFlashcards} />}
+            label={S.SHOW_FLASHCARDS}
+          />
+          <FormControlLabel
             control={<Switch checked={showVocalization} onChange={toggleVocalization} />}
             label={S.SHOW_VOCALIZATION}
           />
@@ -77,7 +118,12 @@ const ResponsiveDialog: React.FC<Props> = props => {
             control={<Switch checked={showTranscription} onChange={toggleTranscription} />}
             label={S.SHOW_TRANSCRIPTION}
           />
-          <FormControl>{renderSelect()}</FormControl>
+          {renderRomanizationSelect()}
+          <FormControlLabel
+            control={<Switch checked={speechEnabled} onChange={toggleSpeech} />}
+            label={S.ENABLE_SPEECH}
+          />
+          {renderVoiceSelect()}
         </FormGroup>
       </DialogContent>
       <DialogActions>

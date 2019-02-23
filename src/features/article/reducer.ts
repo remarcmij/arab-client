@@ -21,11 +21,11 @@ const initialState: ArticleState = {
 const reducer: Reducer<ArticleState, ArticleAction> = (state = initialState, action) => {
   switch (action.type) {
     case C.FETCH_START:
-      return { ...state, isLoading: true, error: null }
+      return { ...state, isLoading: true, error: null, document: null }
     case C.FETCH_SUCCESS:
       return { ...state, isLoading: false, document: action.payload }
     case C.FETCH_ERROR:
-      return { ...state, isLoading: false, error: action.payload, document: null }
+      return { ...state, isLoading: false, error: action.payload }
     default:
       return state
   }

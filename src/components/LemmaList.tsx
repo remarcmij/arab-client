@@ -1,13 +1,9 @@
 import Paper from '@material-ui/core/Paper'
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableRow from '@material-ui/core/TableRow'
 import Typography from '@material-ui/core/Typography'
 import * as React from 'react'
 import Types from 'Types'
-import Transcoder, { RomanizationSystems } from '../services/Transcoder'
+import Transcoder from '../services/Transcoder'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -39,14 +35,14 @@ interface Props extends WithStyles<typeof styles> {
   lemmas: Types.Lemma[]
   showVocalization: boolean
   showTranscription: boolean
-  romanization: keyof RomanizationSystems
+  romanizationStandard: string
 }
 
 const LemmaList: React.FC<Props> = ({
   lemmas,
   showVocalization,
   showTranscription,
-  romanization,
+  romanizationStandard,
   classes,
 }) => {
   const renderLemma = (lemma: Types.Lemma, index: number) => (
@@ -62,7 +58,7 @@ const LemmaList: React.FC<Props> = ({
         </Typography>
         {showTranscription && (
           <Typography variant="h6" classes={{ h6: classes.trans }} color="textSecondary">
-            <span dir="ltr">{Transcoder.applyRomanization(lemma.trans, romanization)}</span>
+            <span dir="ltr">{Transcoder.applyRomanization(lemma.trans, romanizationStandard)}</span>
           </Typography>
         )}
       </div>

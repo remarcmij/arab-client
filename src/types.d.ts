@@ -10,6 +10,8 @@ declare module 'Types' {
     chapter: string
     title: string
     description: string | null
+    baseLang: string
+    foreignLang: string
   }
 
   export interface MetaDocument extends DocumentBase {

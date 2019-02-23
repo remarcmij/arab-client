@@ -1,6 +1,11 @@
 // cSpell: disable
 export const APP_TITLE = 'Arabisch voor beginners'
 export const EDIT_SETTINGS = 'Instellingen'
+export const SHOW_FLASHCARDS = 'Flashcardmodus'
 export const SHOW_VOCALIZATION = 'Vocalisatie'
 export const SHOW_TRANSCRIPTION = 'Transcriptie'
-export const ROMANIZATION_SYSTEM = 'Transcriptiesysteem'
+export const ROMANIZATION_SYSTEM = 'Transcriptienotatie'
+export const ARTICLES_TITLE = 'Artikelen'
+export const ENABLE_SPEECH = 'Spraaksynthese'
+export const VOICE_NAME = 'Stemnaam'
+export const NULL_VOICE = 'Geen'

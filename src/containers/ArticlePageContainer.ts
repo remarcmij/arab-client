@@ -10,9 +10,12 @@ const mapStateToProps = (state: Types.RootState) => ({
   document: articleSelectors.getDocument(state),
   isLoading: articleSelectors.getIsLoading(state),
   error: articleSelectors.getError(state),
+  showFlashcards: settingsSelectors.getShowFlashcards(state),
   showVocalization: settingsSelectors.getShowVocalization(state),
   showTranscription: settingsSelectors.getShowTranscription(state),
-  romanization: settingsSelectors.getRomanization(state),
+  romanizationStandard: settingsSelectors.getRomanization(state),
+  speechEnabled: settingsSelectors.getSpeechEnabled(state),
+  voiceName: settingsSelectors.getVoiceName(state),
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<FetchActions>) => ({

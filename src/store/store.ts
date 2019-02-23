@@ -2,7 +2,6 @@ import { applyMiddleware, createStore } from 'redux'
 import ReduxThunk from 'redux-thunk'
 import rootReducer from './root-reducer'
 import { composeEnhancers } from './utils'
-import { SettingsState } from '../features/settings/reducer'
 
 const AJAR_STORE = '@ajar/store'
 

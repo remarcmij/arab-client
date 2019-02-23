@@ -1,13 +1,13 @@
 import React from 'react'
 import { match, Redirect } from 'react-router'
 import Types from 'Types'
-import { RomanizationSystems } from '../services/Transcoder'
 import GridContainer from './GridContainer'
 import LemmaTable from './LemmaTable'
 import LemmaList from './LemmaList'
 import NavBar from './NavBar'
 import MediaQuery from 'react-responsive'
 import { withTheme, WithTheme } from '@material-ui/core/styles'
+import LemmaFlashcards from './LemmaFlashcards'
 
 interface Params {
   publication: string
@@ -19,9 +19,12 @@ interface Props extends WithTheme {
   document: Types.AppDocument | null
   isLoading: boolean
   error: Error | null
+  showFlashcards: boolean
   showVocalization: boolean
   showTranscription: boolean
-  romanization: keyof RomanizationSystems
+  romanizationStandard: string
+  speechEnabled: boolean
+  voiceName: string
   fetchArticle: (publication: string, article: string) => void
 }
 
@@ -46,9 +49,12 @@ class ArticlePage extends React.Component<Props, State> {
       document,
       isLoading,
       error,
+      showFlashcards,
       showVocalization,
       showTranscription,
-      romanization,
+      romanizationStandard,
+      speechEnabled,
+      voiceName,
       theme,
     } = this.props
 
@@ -60,16 +66,30 @@ class ArticlePage extends React.Component<Props, State> {
       return <div>Error: {error.message}</div>
     }
 
-    return (
-      document &&
-      document.kind === 'csv' && (
+    if (!document) {
+      return null
+    }
+
+    if (document.kind === 'csv') {
+      if (showFlashcards) {
+        return (
+          <LemmaFlashcards
+            lemmas={document.data}
+            foreignLang={document.foreignLang}
+            showVocalization={showVocalization}
+            speechEnabled={speechEnabled}
+            voiceName={voiceName}
+          />
+        )
+      }
+      return (
         <React.Fragment>
           <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
             <LemmaTable
               lemmas={document.data}
               showVocalization={showVocalization}
               showTranscription={showTranscription}
-              romanization={romanization}
+              romanizationStandard={romanizationStandard}
             />
           </MediaQuery>
           <MediaQuery query={`(max-device-width: ${theme.breakpoints.values.sm}px)`}>
@@ -77,15 +97,16 @@ class ArticlePage extends React.Component<Props, State> {
               lemmas={document.data}
               showVocalization={showVocalization}
               showTranscription={showTranscription}
-              romanization={romanization}
+              romanizationStandard={romanizationStandard}
             />
           </MediaQuery>
         </React.Fragment>
       )
-    )
+    }
   }
 
   render() {
+    const { document } = this.props
     const { goBack } = this.state
     const { publication } = this.props.match.params
 
@@ -95,7 +116,7 @@ class ArticlePage extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <NavBar title="Arabisch" onBack={this.handleBack} />
+        <NavBar title={document ? document.title : ''} onBack={this.handleBack} />
         <GridContainer>{this.renderContent()}</GridContainer>
       </React.Fragment>
     )

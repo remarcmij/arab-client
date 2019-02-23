@@ -5,11 +5,6 @@ import GridContainer from '../components/GridContainer'
 import NavBar from '../components/NavBar'
 import * as S from './strings'
 
-interface IParams {
-  publication: string
-  chapter: string
-}
-
 type Props = {
   documents: Types.AppDocument[]
   isLoading: boolean

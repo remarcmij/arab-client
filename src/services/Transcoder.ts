@@ -1,31 +1,49 @@
 /* cSpell:disable */
-type RomanizationSubstitution = [RegExp, string]
+type SubstitutionTuple = [RegExp, string]
 
-const iso = null
-const deMoor: RomanizationSubstitution[] = [[/ʿ/g, 'ع'], [/ʾ/g, 'ʼ'], [/ḫ/g, 'ẖ'], [/ǧ/g, 'j']]
-
-export type RomanizationSystems = {
-  iso: null
-  deMoor: RomanizationSubstitution[]
+type RomanizationStandard = {
+  name: string
+  substitutions?: SubstitutionTuple[]
 }
 
-const romanizationSystems = {
-  iso,
-  deMoor,
+// See: https://en.wikipedia.org/wiki/Romanization_of_Arabic
+// Note: source files are encoded with the DIN romanizationStandard standard
+export const romanizationStandards: { [key: string]: RomanizationStandard } = {
+  ala_lc: {
+    name: 'ALA-LC',
+    substitutions: [
+      [/ḏ/g, 'dh'],
+      [/ġ/g, 'gh'],
+      [/ǧ/g, 'j'],
+      [/ḫ/g, 'kh'],
+      [/š/g, 'sh'],
+      [/ṯ/g, 'th'],
+      [/ʾ/g, 'ʼ'],
+      [/ʿ/g, 'ʻ'],
+    ],
+  },
+  de_moor: {
+    name: 'de Moor/van Pel',
+    substitutions: [[/ʾ/g, 'ʼ'], [/ʿ/g, 'ع'], [/ḫ/g, 'ẖ'], [/ǧ/g, 'j']],
+  },
+  din: {
+    name: 'DIN 31635',
+  },
 }
 
 const CHARCODE_SUPERSCRIPT_ALIF = 1648
 const CHARCODE_TATWEEL = 1600
 
 class Transcoder {
-  static applyRomanization(text: string, standardName: keyof RomanizationSystems) {
-    if (standardName === 'iso') {
+  static applyRomanization(text: string, name: string) {
+    const { substitutions } = romanizationStandards[name]
+    if (!substitutions) {
       return text
     }
-    const substitutions = romanizationSystems[standardName]
-    return substitutions.reduce((acc, [regex, replaceWith]) => {
-      return acc.replace(regex, replaceWith)
-    }, text)
+    return substitutions.reduce(
+      (acc, [regex, replaceWith]) => acc.replace(regex, replaceWith),
+      text,
+    )
   }
 
   static isCharTashkeel(letter: string) {
