@@ -80,7 +80,7 @@ class ArticlePage extends React.Component<Props, State> {
       if (showFlashcards) {
         return (
           <LemmaFlashcards
-            lemmas={document.data}
+            document={document}
             showVocalization={showVocalization}
             speechEnabled={speechEnabled}
             voiceName={voiceName}
@@ -91,7 +91,7 @@ class ArticlePage extends React.Component<Props, State> {
         <React.Fragment>
           <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
             <LemmaTable
-              lemmas={document.data}
+              document={document}
               showVocalization={showVocalization}
               showTranscription={showTranscription}
               romanizationStandard={romanizationStandard}
@@ -100,7 +100,7 @@ class ArticlePage extends React.Component<Props, State> {
           </MediaQuery>
           <MediaQuery query={`(max-device-width: ${theme.breakpoints.values.sm}px)`}>
             <LemmaList
-              lemmas={document.data}
+              document={document}
               showVocalization={showVocalization}
               showTranscription={showTranscription}
               romanizationStandard={romanizationStandard}
@@ -111,12 +111,12 @@ class ArticlePage extends React.Component<Props, State> {
     }
 
     if (document.kind === 'md') {
-      return <ArticleTextContent htmlText={document.data} />
+      return <ArticleTextContent document={document} />
     }
   }
 
   render() {
-    const { document } = this.props
+    const { document, showFlashcards } = this.props
     const { goBack } = this.state
     const { publication } = this.props.match.params
 
@@ -124,10 +124,15 @@ class ArticlePage extends React.Component<Props, State> {
       return <Redirect to={`/content/${publication}/index`} />
     }
 
+    let title = ''
+    if (document) {
+      title = document.kind === 'csv' && showFlashcards ? 'Flashcards' : document.title
+    }
+
     return (
       <React.Fragment>
         <NavBar
-          title={document ? document.title : ''}
+          title={title}
           onBack={this.handleBack}
           enableSettingsMenu={document !== null && document.kind === 'csv'}
         />

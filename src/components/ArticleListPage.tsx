@@ -9,7 +9,7 @@ import * as C from './strings'
 
 interface IParams {
   publication: string
-  chapter: string
+  article: string
 }
 
 type Props = {
@@ -55,7 +55,7 @@ class ArticleListPage extends React.Component<Props, State> {
     return (
       <List>
         {documents.map(doc => (
-          <ArticleListItem key={`${doc.publication}.${doc.chapter}`} publication={doc} />
+          <ArticleListItem key={`${doc.publication}.${doc.article}`} publication={doc} />
         ))}
       </List>
     )

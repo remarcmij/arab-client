@@ -9,7 +9,7 @@ type Props = {
 }
 
 const PublicationListItem: React.FC<Props> = props => {
-  const { publication, title, description } = props.publication
+  const { publication, title, subtitle } = props.publication
 
   const ItemLink = (p: {}) => <Link to={`/content/${publication}/index`} {...p} />
 
@@ -17,7 +17,7 @@ const PublicationListItem: React.FC<Props> = props => {
     <ListItem component={ItemLink}>
       <ListItemText
         primary={title}
-        secondary={<span dangerouslySetInnerHTML={{ __html: description || '' }} />}
+        secondary={<span dangerouslySetInnerHTML={{ __html: subtitle || '' }} />}
       />
     </ListItem>
   )

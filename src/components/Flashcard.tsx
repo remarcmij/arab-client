@@ -5,6 +5,7 @@ import * as React from 'react'
 import Types from 'Types'
 import SpeechSynthesizer from '../services/SpeechSynthesizer'
 import Transcoder from '../services/Transcoder'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -13,9 +14,10 @@ const styles = (theme: Theme) =>
       flexDirection: 'column' as 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: 200,
+      minHeight: 320,
       margin: theme.spacing.unit,
       cursor: 'pointer',
+      userSelect: 'none',
     },
     foreign: {
       fontFamily: 'Arial',
@@ -23,6 +25,16 @@ const styles = (theme: Theme) =>
     },
     native: {
       margin: theme.spacing.unit,
+    },
+    htmlTooltip: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+      '& b': {
+        fontWeight: theme.typography.fontWeightMedium,
+      },
     },
   })
 
@@ -52,9 +64,14 @@ const Flashcard: React.FC<Props> = props => {
 
   return (
     <Paper className={classes.root} onClick={() => handleClick(props)}>
-      <Typography variant="h4" align="center" lang="ar" dir="rtl" className={classes.foreign}>
-        {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
-      </Typography>
+      <Tooltip
+        classes={{ tooltip: classes.htmlTooltip }}
+        title={<Typography color="inherit">{lemma.trans}</Typography>}
+      >
+        <Typography variant="h4" align="center" lang="ar" dir="rtl" className={classes.foreign}>
+          {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
+        </Typography>
+      </Tooltip>
       <Typography variant="h5" align="center" color="textSecondary" className={classes.native}>
         {showTranslation ? lemma.base : '•••'}
       </Typography>

@@ -13,9 +13,15 @@ import SpeechSynthesizer from '../services/SpeechSynthesizer'
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
-      margin: theme.spacing.unit,
-      overflowX: 'auto',
+      [theme.breakpoints.up('md')]: {
+        margin: theme.spacing.unit * 2,
+      },
+      userSelect: 'none',
+    },
+    mdPadding: {
+      paddingTop: theme.spacing.unit * 3,
+      paddingRight: theme.spacing.unit * 3,
+      paddingLeft: theme.spacing.unit * 3,
     },
     foreignCell: {
       cursor: 'pointer',
@@ -37,7 +43,7 @@ const styles = (theme: Theme) =>
   })
 
 interface Props extends WithStyles<typeof styles> {
-  lemmas: Types.Lemma[]
+  document: Types.LemmaDocument
   showVocalization: boolean
   showTranscription: boolean
   romanizationStandard: string
@@ -51,7 +57,7 @@ const handleClick = (voiceName: string, foreign: string) => {
   }
 }
 const LemmaTable: React.FC<Props> = ({
-  lemmas,
+  document,
   showVocalization,
   showTranscription,
   romanizationStandard,
@@ -86,11 +92,32 @@ const LemmaTable: React.FC<Props> = ({
     </TableRow>
   )
 
+  const { subtitle, prolog, epilog, data: lemmas } = document
+
   return (
     <Paper className={classes.root}>
+      {subtitle && (
+        <Typography
+          variant="h5"
+          dangerouslySetInnerHTML={{ __html: subtitle }}
+          className={classes.mdPadding}
+        />
+      )}
+      {prolog && (
+        <section
+          dangerouslySetInnerHTML={{ __html: prolog }}
+          className={`markdown-body ${classes.mdPadding}`}
+        />
+      )}
       <Table padding="dense">
         <TableBody>{lemmas.map(renderLemma)}</TableBody>
       </Table>
+      {epilog && (
+        <section
+          dangerouslySetInnerHTML={{ __html: epilog }}
+          className={`markdown-body ${classes.mdPadding}`}
+        />
+      )}
     </Paper>
   )
 }

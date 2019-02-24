@@ -3,12 +3,17 @@ import * as React from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import AboutPage from './components/AboutPage'
 import ArticleListPageContainer from './containers/ArticleListPageContainer'
-import PublicationListPageContainer from './containers/PublicationListPageContainer'
 import ArticlePageContainer from './containers/ArticlePageContainer'
+import PublicationListPageContainer from './containers/PublicationListPageContainer'
 
+// paddingTop emulates the toolbar's minHeight from the default theme
 const styles = createStyles({
   root: {
     flexGrow: 1,
+    paddingTop: 56,
+    '@media (min-width:600px)': {
+      paddingTop: 64,
+    },
   },
 })
 

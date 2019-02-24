@@ -43,9 +43,10 @@ class AboutPage extends React.Component<Props, State> {
         <GridContainer>
           <Paper className={this.props.classes.root}>
             <Typography variant="h4" component="h1" gutterBottom={true}>
-              Over deze applicatie
+              Overzicht
             </Typography>
             <Typography variant="body1">Bla bla</Typography>
+            <Typography variant="caption">Copyright 2019, Jim Cramer, Amstelveen</Typography>
           </Paper>
         </GridContainer>
       </React.Fragment>

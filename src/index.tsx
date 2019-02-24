@@ -4,6 +4,7 @@ import App from './App'
 import { Provider } from 'react-redux'
 
 // tslint:disable no-import-side-effect
+import 'normalize.css'
 import './index.css'
 import 'github-markdown-css'
 import 'isomorphic-fetch'

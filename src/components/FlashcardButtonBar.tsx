@@ -17,6 +17,8 @@ const styles = (theme: Theme) =>
     },
     button: {
       margin: theme.spacing.unit,
+      flexGrow: 1,
+      maxWidth: 200,
     },
   })
 
@@ -34,12 +36,12 @@ class FlashcardButtonBar extends React.Component<Props> {
     const { classes, onNext, onPrev } = this.props
     return (
       <Paper className={classes.root}>
-        <IconButton className={classes.button} onClick={onPrev}>
+        <Button variant="outlined" className={classes.button} onClick={onPrev}>
           <ArrowBackIos />
-        </IconButton>
-        <IconButton className={classes.button} onClick={onNext}>
+        </Button>
+        <Button variant="outlined" className={classes.button} onClick={onNext} autoFocus={true}>
           <ArrowForwardIos />
-        </IconButton>
+        </Button>
       </Paper>
     )
   }

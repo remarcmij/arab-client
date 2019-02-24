@@ -104,7 +104,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
         {SpeechSynthesizer.getVoices()
           .filter(voice => voice.lang.startsWith('ar-'))
           .map(voice => (
-            <option key={voice.name} value={voice.name}>
+            <option key={voice.voiceURI} value={voice.name}>
               {`${voice.name} (${voice.lang})`}
             </option>
           ))}

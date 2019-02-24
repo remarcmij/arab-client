@@ -7,9 +7,11 @@ declare module 'Types' {
 
   interface DocumentBase {
     publication: string
-    chapter: string
+    article: string
     title: string
-    description: string | null
+    prolog: string
+    epilog: string
+    subtitle: string | null
   }
 
   export interface MetaDocument extends DocumentBase {

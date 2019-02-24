@@ -1,6 +1,7 @@
 import { settingsActions } from '../features/settings'
 import store from '../store'
 import { setVoiceName } from '../features/settings/actions'
+import { string } from 'prop-types'
 
 // tslint:disable:no-console
 
@@ -9,23 +10,37 @@ class SpeechSynthesizer {
   voices: SpeechSynthesisVoice[] = []
 
   constructor() {
-    this.initialize()
-      .then(() => {
-        if (!this.voices.some(v => v.lang.startsWith('ar-'))) {
+    this.loadVoices()
+      .then(voices => {
+        // get unique voices
+        this.voices = Array.from(
+          voices
+            .filter(v => v.lang.startsWith('ar-'))
+            .reduce((map, v) => {
+              map.set(v.name, v)
+              return map
+            }, new Map<string, SpeechSynthesisVoice>())
+            .values(),
+        )
+        if (process.env.NODE_ENV === 'development') {
+          console.table(this.voices)
+        }
+        if (this.voices.length === 0) {
           store.dispatch(setVoiceName('none'))
         }
       })
       .catch(error => console.error(error))
   }
 
-  initialize() {
-    return new Promise(resolve => {
+  loadVoices() {
+    const voices = speechSynthesis.getVoices()
+    if (voices.length !== 0) {
+      return Promise.resolve(voices)
+    }
+
+    return new Promise<SpeechSynthesisVoice[]>(resolve => {
       speechSynthesis.onvoiceschanged = () => {
-        this.voices = speechSynthesis.getVoices()
-        if (process.env.NODE_ENV === 'development') {
-          console.table(this.voices)
-        }
-        resolve()
+        resolve(speechSynthesis.getVoices())
       }
     })
   }
