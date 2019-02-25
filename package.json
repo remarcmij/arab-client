@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "@types/jest": "24.0.6",
+    "@types/lru-cache": "^5.1.0",
     "@types/node": "11.9.4",
     "@types/react": "16.8.4",
     "@types/react-dom": "16.8.2",

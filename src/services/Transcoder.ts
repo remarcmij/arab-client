@@ -1,4 +1,7 @@
 /* cSpell:disable */
+import LRU from 'lru-cache'
+import { string } from 'prop-types'
+
 type SubstitutionTuple = [RegExp, string]
 
 type RomanizationStandard = {
@@ -34,6 +37,8 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
 const CHARCODE_SUPERSCRIPT_ALIF = 1648
 const CHARCODE_TATWEEL = 1600
 
+const tashkeelCache = new LRU<string, string>(500)
+
 class Transcoder {
   static applyRomanization(text: string, name: string) {
     const { substitutions } = romanizationStandards[name]
@@ -58,11 +63,15 @@ class Transcoder {
   }
 
   static stripTashkeel(input: string) {
-    let output = ''
-    for (const letter of input) {
-      if (!this.isCharTashkeel(letter)) {
-        output += letter
+    let output = tashkeelCache.get(input)
+    if (!output) {
+      output = ''
+      for (const letter of input) {
+        if (!this.isCharTashkeel(letter)) {
+          output += letter
+        }
       }
+      tashkeelCache.set(input, output)
     }
     return output
   }
