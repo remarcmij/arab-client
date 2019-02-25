@@ -70,7 +70,11 @@ class ArticleListPage extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <NavBar title={C.ARTICLE_LIST_PAGE_TITLE} onBack={this.handleBack} />
+        <NavBar
+          title={C.ARTICLE_LIST_PAGE_TITLE}
+          onBack={this.handleBack}
+          enableSettingsMenu={true}
+        />
         <GridContainer>{this.renderContent()}</GridContainer>
       </React.Fragment>
     )

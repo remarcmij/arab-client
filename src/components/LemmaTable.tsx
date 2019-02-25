@@ -30,7 +30,7 @@ const styles = (theme: Theme) =>
       },
     },
     base: {
-      fontFamily: 'Georgia',
+      color: theme.palette.primary.main,
     },
     trans: {
       fontFamily: 'Georgia',

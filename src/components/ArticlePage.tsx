@@ -133,20 +133,22 @@ class ArticlePage extends React.Component<Props, State> {
         <NavBar
           title={S.ARTICLE_PAGE_TITLE}
           onBack={this.goBack}
-          enableSettingsMenu={document !== null && document.kind === 'csv'}
+          enableSettingsMenu={true}
           rightHandButtons={
-            <React.Fragment>
-              <VoiceOverButton
-                voiceEnabled={voiceEnabled}
-                voiceName={voiceName}
-                toggleVoice={toggleVoice}
-              />
-              <Tooltip title={S.FLASHCARDS_PAGE_TITLE} aria-label={S.FLASHCARDS_PAGE_TITLE}>
-                <IconButton color="inherit" onClick={this.goFlashcards}>
-                  <Code />
-                </IconButton>
-              </Tooltip>
-            </React.Fragment>
+            document === null || document.kind !== 'csv' ? null : (
+              <React.Fragment>
+                <VoiceOverButton
+                  voiceEnabled={voiceEnabled}
+                  voiceName={voiceName}
+                  toggleVoice={toggleVoice}
+                />
+                <Tooltip title={S.FLASHCARDS_PAGE_TITLE} aria-label={S.FLASHCARDS_PAGE_TITLE}>
+                  <IconButton color="inherit" onClick={this.goFlashcards}>
+                    <Code />
+                  </IconButton>
+                </Tooltip>
+              </React.Fragment>
+            )
           }
         />
         <GridContainer>{this.renderContent()}</GridContainer>

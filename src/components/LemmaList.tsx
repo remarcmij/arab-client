@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
       marginBlockEnd: 0,
     },
     base: {
-      fontFamily: 'Georgia',
+      color: theme.palette.primary.main,
     },
     trans: {
       fontFamily: 'Georgia',
@@ -81,7 +81,7 @@ const LemmaList: React.FC<Props> = ({
         </span>
       </Typography>
       {lemma.trans && showTranscription && (
-        <Typography variant="body1" classes={{ h6: classes.trans }} color="textSecondary">
+        <Typography variant="body1" classes={{ body1: classes.trans }} color="textSecondary">
           <span dir="ltr">{Transcoder.applyRomanization(lemma.trans, romanizationStandard)}</span>
         </Typography>
       )}
