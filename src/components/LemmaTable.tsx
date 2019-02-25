@@ -75,7 +75,7 @@ const LemmaTable: React.FC<Props> = ({
         </Typography>
       </TableCell>
 
-      {showTranscription && (
+      {lemma.trans && showTranscription && (
         <TableCell align="left">
           <Typography variant="h6" classes={{ h6: classes.trans }} color="textSecondary">
             {Transcoder.applyRomanization(lemma.trans, romanizationStandard)}

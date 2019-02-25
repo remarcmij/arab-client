@@ -2,7 +2,7 @@ declare module 'Types' {
   export interface Lemma {
     base: string
     foreign: string
-    trans: string
+    trans?: string
   }
 
   interface DocumentBase {

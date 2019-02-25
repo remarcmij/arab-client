@@ -80,7 +80,7 @@ const LemmaList: React.FC<Props> = ({
           {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
         </span>
       </Typography>
-      {showTranscription && (
+      {lemma.trans && showTranscription && (
         <Typography variant="body1" classes={{ h6: classes.trans }} color="textSecondary">
           <span dir="ltr">{Transcoder.applyRomanization(lemma.trans, romanizationStandard)}</span>
         </Typography>
