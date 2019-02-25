@@ -1,14 +1,18 @@
+import IconButton from '@material-ui/core/IconButton'
+import { withTheme, WithTheme } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
+import Code from '@material-ui/icons/Code'
 import React from 'react'
+import MediaQuery from 'react-responsive'
 import { match, Redirect } from 'react-router'
 import Types from 'Types'
-import GridContainer from './GridContainer'
-import LemmaTable from './LemmaTable'
-import LemmaList from './LemmaList'
-import NavBar from './NavBar'
-import MediaQuery from 'react-responsive'
-import { withTheme, WithTheme } from '@material-ui/core/styles'
-import LemmaFlashcards from './LemmaFlashcards'
 import ArticleTextContent from './ArticleTextContent'
+import GridContainer from './GridContainer'
+import LemmaList from './LemmaList'
+import LemmaTable from './LemmaTable'
+import NavBar from './NavBar'
+import * as S from './strings'
+import VoiceOverButton from './VoiceOverButton'
 
 interface Params {
   publication: string
@@ -24,19 +28,22 @@ interface Props extends WithTheme {
   showVocalization: boolean
   showTranscription: boolean
   romanizationStandard: string
-  speechEnabled: boolean
+  voiceEnabled: boolean
   voiceName: string
   fetchArticle: (publication: string, article: string) => void
   clear: () => void
+  toggleVoice: () => void
 }
 
 type State = {
   goBack: boolean
+  goFlashcards: boolean
 }
 
 class ArticlePage extends React.Component<Props, State> {
   state = {
     goBack: false,
+    goFlashcards: false,
   }
 
   componentDidMount() {
@@ -44,23 +51,23 @@ class ArticlePage extends React.Component<Props, State> {
     this.props.fetchArticle(publication, article)
   }
 
-  componentWillUnmount() {
+  goBack = () => {
+    this.setState({ goBack: true })
     this.props.clear()
   }
 
-  handleBack = () => void this.setState({ goBack: true })
+  goFlashcards = () => void this.setState({ goFlashcards: true })
 
   renderContent() {
     const {
       document,
       isLoading,
       error,
-      showFlashcards,
       showVocalization,
       showTranscription,
       romanizationStandard,
-      speechEnabled,
       voiceName,
+      voiceEnabled,
       theme,
     } = this.props
 
@@ -77,16 +84,6 @@ class ArticlePage extends React.Component<Props, State> {
     }
 
     if (document.kind === 'csv') {
-      if (showFlashcards) {
-        return (
-          <LemmaFlashcards
-            document={document}
-            showVocalization={showVocalization}
-            speechEnabled={speechEnabled}
-            voiceName={voiceName}
-          />
-        )
-      }
       return (
         <React.Fragment>
           <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
@@ -96,6 +93,7 @@ class ArticlePage extends React.Component<Props, State> {
               showTranscription={showTranscription}
               romanizationStandard={romanizationStandard}
               voiceName={voiceName}
+              voiceEnabled={voiceEnabled}
             />
           </MediaQuery>
           <MediaQuery query={`(max-device-width: ${theme.breakpoints.values.sm}px)`}>
@@ -104,6 +102,8 @@ class ArticlePage extends React.Component<Props, State> {
               showVocalization={showVocalization}
               showTranscription={showTranscription}
               romanizationStandard={romanizationStandard}
+              voiceName={voiceName}
+              voiceEnabled={voiceEnabled}
             />
           </MediaQuery>
         </React.Fragment>
@@ -116,25 +116,38 @@ class ArticlePage extends React.Component<Props, State> {
   }
 
   render() {
-    const { document, showFlashcards } = this.props
-    const { goBack } = this.state
-    const { publication } = this.props.match.params
+    const { document, voiceEnabled, voiceName, toggleVoice } = this.props
+    const { goBack, goFlashcards } = this.state
+    const { publication, article } = this.props.match.params
 
     if (goBack) {
       return <Redirect to={`/content/${publication}/index`} />
     }
 
-    let title = ''
-    if (document) {
-      title = document.kind === 'csv' && showFlashcards ? 'Flashcards' : document.title
+    if (goFlashcards) {
+      return <Redirect to={`/content/${publication}/${article}/flashcards`} />
     }
 
     return (
       <React.Fragment>
         <NavBar
-          title={title}
-          onBack={this.handleBack}
+          title={S.ARTICLE_PAGE_TITLE}
+          onBack={this.goBack}
           enableSettingsMenu={document !== null && document.kind === 'csv'}
+          rightHandButtons={
+            <React.Fragment>
+              <VoiceOverButton
+                voiceEnabled={voiceEnabled}
+                voiceName={voiceName}
+                toggleVoice={toggleVoice}
+              />
+              <Tooltip title={S.FLASHCARDS_PAGE_TITLE} aria-label={S.FLASHCARDS_PAGE_TITLE}>
+                <IconButton color="inherit" onClick={this.goFlashcards}>
+                  <Code />
+                </IconButton>
+              </Tooltip>
+            </React.Fragment>
+          }
         />
         <GridContainer>{this.renderContent()}</GridContainer>
       </React.Fragment>

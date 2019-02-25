@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
 interface Props extends WithStyles<typeof styles> {
   document: Types.LemmaDocument
   showVocalization: boolean
-  speechEnabled: boolean
+  voiceEnabled: boolean
   voiceName: string
 }
 
@@ -52,7 +52,7 @@ class LemmaFlashcards extends React.Component<Props, State> {
 
   render() {
     const { index, showTranslation } = this.state
-    const { document, showVocalization, speechEnabled, voiceName } = this.props
+    const { document, showVocalization, voiceEnabled, voiceName } = this.props
     const { data: lemmas } = document
 
     return (
@@ -63,7 +63,7 @@ class LemmaFlashcards extends React.Component<Props, State> {
             lemma={lemmas[index]}
             showTranslation={showTranslation}
             showVocalization={showVocalization}
-            speechEnabled={speechEnabled}
+            voiceEnabled={voiceEnabled}
             voiceName={voiceName}
           />
         )}

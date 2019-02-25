@@ -26,11 +26,10 @@ const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
   const { prolog, epilog, data: bodyText } = document
   return (
     <Paper className={classes.root}>
-      <article className={`markdown-body ${classes.extra}`}>
-        {prolog && <section dangerouslySetInnerHTML={{ __html: prolog }} />}
-        <section dangerouslySetInnerHTML={{ __html: bodyText }} />
-        {epilog && <section dangerouslySetInnerHTML={{ __html: epilog }} />}
-      </article>
+      <article
+        className={`markdown-body ${classes.extra}`}
+        dangerouslySetInnerHTML={{ __html: bodyText }}
+      />
     </Paper>
   )
 }

@@ -42,23 +42,23 @@ interface Props extends WithStyles<typeof styles> {
   lemma: Types.Lemma
   showTranslation: boolean
   showVocalization: boolean
-  speechEnabled: boolean
+  voiceEnabled: boolean
   voiceName: string
 }
 
 // tslint:disable:no-floating-promises
 
 const handleClick = (props: Props) => {
-  const { lemma, showTranslation, voiceName } = props
-  if (voiceName !== 'none') {
+  const { lemma, showTranslation, voiceEnabled, voiceName } = props
+  if (voiceName !== 'none' && voiceEnabled) {
     SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8)
   }
 }
 
 const Flashcard: React.FC<Props> = props => {
-  const { lemma, showTranslation, showVocalization, speechEnabled, voiceName, classes } = props
+  const { lemma, showTranslation, showVocalization, voiceEnabled, voiceName, classes } = props
 
-  if (speechEnabled && voiceName !== 'none') {
+  if (voiceEnabled && voiceName !== 'none') {
     SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8)
   }
 

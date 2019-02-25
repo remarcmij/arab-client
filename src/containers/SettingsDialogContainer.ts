@@ -10,7 +10,7 @@ const mapStateToProps = (state: Types.RootState) => ({
   showTranscription: selectors.getShowTranscription(state),
   showFlashcards: selectors.getShowFlashcards(state),
   romanizationStandard: selectors.getRomanization(state),
-  speechEnabled: selectors.getSpeechEnabled(state),
+  voiceEnabled: selectors.getVoiceEnabled(state),
   voiceName: selectors.getVoiceName(state),
 })
 
@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch: Dispatch<SettingsAction>) => ({
   toggleFlashcards: () => dispatch(actions.toggleFlashcards()),
   setRomanizationSystem: (romanizationStandard: string) =>
     dispatch(actions.setRomanizationSystem(romanizationStandard)),
-  toggleSpeech: () => dispatch(actions.toggleSpeech()),
+  toggleVoice: () => dispatch(actions.toggleVoice()),
   setVoiceName: (voiceName: string) => dispatch(actions.setVoiceName(voiceName)),
 })
 

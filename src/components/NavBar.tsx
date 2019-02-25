@@ -10,6 +10,8 @@ import * as React from 'react'
 import SettingsDialogContainer from '../containers/SettingsDialogContainer'
 import GridContainer from './GridContainer'
 import MainDrawer from './MainDrawer'
+import * as S from './strings'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const styles = createStyles({
   root: {
@@ -28,6 +30,7 @@ interface Props extends WithStyles<typeof styles> {
   title: string
   showDrawerButton?: boolean
   enableSettingsMenu?: boolean
+  rightHandButtons: React.ReactElement<any> | null
   onBack?: () => void
   onLeftMenu?: () => void
   onRightMenu?: () => void
@@ -42,6 +45,7 @@ class NavBar extends React.Component<Props, State> {
   static defaultProps = {
     showDrawerButton: false,
     enableSettingsMenu: false,
+    rightHandButtons: null,
   }
 
   state = {
@@ -62,7 +66,14 @@ class NavBar extends React.Component<Props, State> {
   }
 
   render() {
-    const { title, onBack, showDrawerButton, enableSettingsMenu, classes } = this.props
+    const {
+      title,
+      onBack,
+      showDrawerButton,
+      enableSettingsMenu,
+      rightHandButtons,
+      classes,
+    } = this.props
     const { mainDrawerOpen, settingsDialogOpen } = this.state
 
     return (
@@ -86,8 +97,9 @@ class NavBar extends React.Component<Props, State> {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               {title}
             </Typography>
+            {rightHandButtons}
             {enableSettingsMenu && (
-              <div>
+              <Tooltip title={S.EDIT_SETTINGS} aria-label={S.EDIT_SETTINGS}>
                 <IconButton
                   aria-owns={open ? 'menu-appbar' : undefined}
                   aria-haspopup={true}
@@ -96,13 +108,10 @@ class NavBar extends React.Component<Props, State> {
                 >
                   <Settings />
                 </IconButton>
-                <SettingsDialogContainer
-                  open={settingsDialogOpen}
-                  onClose={this.handleCloseDialog}
-                />
-              </div>
+              </Tooltip>
             )}
           </Toolbar>
+          <SettingsDialogContainer open={settingsDialogOpen} onClose={this.handleCloseDialog} />
           <MainDrawer open={mainDrawerOpen} toggleDrawer={this.handleToggleDrawer} />
         </GridContainer>
       </AppBar>

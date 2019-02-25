@@ -39,8 +39,8 @@ interface BaseProps extends InjectedProps {
   toggleFlashcards: () => void
   romanizationStandard: string
   setRomanizationSystem: (romanizationStandard: string) => void
-  speechEnabled: boolean
-  toggleSpeech: () => void
+  voiceEnabled: boolean
+  toggleVoice: () => void
   voiceName: string
   setVoiceName: (voiceName: string) => void
 }
@@ -57,12 +57,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
     toggleVocalization,
     showTranscription,
     toggleTranscription,
-    showFlashcards,
-    toggleFlashcards,
     romanizationStandard,
     setRomanizationSystem,
-    speechEnabled,
-    toggleSpeech,
     voiceName,
     setVoiceName,
   } = props
@@ -124,11 +120,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
       <DialogContent>
         <FormGroup>
           <FormControlLabel
-            control={<Switch checked={showFlashcards} onChange={toggleFlashcards} />}
-            label={S.SHOW_FLASHCARDS}
-          />
-          <Divider className={classes.divider} />
-          <FormControlLabel
             control={<Switch checked={showVocalization} onChange={toggleVocalization} />}
             label={S.SHOW_VOCALIZATION}
           />
@@ -138,10 +129,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
           />
           {renderRomanizationSelect()}
           <Divider className={classes.divider} />
-          <FormControlLabel
-            control={<Switch checked={speechEnabled} onChange={toggleSpeech} />}
-            label={S.ENABLE_SPEECH}
-          />
           {renderVoiceSelect()}
         </FormGroup>
       </DialogContent>

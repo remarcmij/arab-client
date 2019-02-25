@@ -10,7 +10,7 @@ export type SettingsState = {
   readonly showTranscription: boolean
   readonly showFlashcards: boolean
   readonly romanizationStandard: string
-  readonly speechEnabled: boolean
+  readonly voiceEnabled: boolean
   readonly voiceName: string
 }
 
@@ -47,9 +47,9 @@ export default combineReducers<SettingsState, SettingsAction>({
         return state
     }
   },
-  speechEnabled: (state = false, action) => {
+  voiceEnabled: (state = false, action) => {
     switch (action.type) {
-      case C.TOGGLE_SPEECH:
+      case C.TOGGLE_VOICE:
         return !state
       default:
         return state

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import AboutPage from './components/AboutPage'
 import ArticleListPageContainer from './containers/ArticleListPageContainer'
 import ArticlePageContainer from './containers/ArticlePageContainer'
+import FlashcardPagesContainer from './containers/FlashcardsPageContainer'
 import PublicationListPageContainer from './containers/PublicationListPageContainer'
 
 // paddingTop emulates the toolbar's minHeight from the default theme
@@ -28,6 +29,10 @@ class App extends React.Component<Props> {
           <Switch>
             <Redirect exact={true} from="/" to="/content" />
             <Route path="/content/:publication/index" component={ArticleListPageContainer} />
+            <Route
+              path="/content/:publication/:article/flashcards"
+              component={FlashcardPagesContainer}
+            />
             <Route path="/content/:publication/:article" component={ArticlePageContainer} />
             <Route path="/content" component={PublicationListPageContainer} />
             <Route path="/about" component={AboutPage} />

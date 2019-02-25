@@ -6,5 +6,5 @@ export const toggleTranscription = () => action(C.TOGGLE_TRANSCRIPTION)
 export const toggleFlashcards = () => action(C.TOGGLE_FLASHCARDS)
 export const setRomanizationSystem = (romanizationStandard: string) =>
   action(C.SET_ROMANIZATION_STANDARD, romanizationStandard)
-export const toggleSpeech = () => action(C.TOGGLE_SPEECH)
+export const toggleVoice = () => action(C.TOGGLE_VOICE)
 export const setVoiceName = (voiceName: string) => action(C.SET_VOICE_NAME, voiceName)

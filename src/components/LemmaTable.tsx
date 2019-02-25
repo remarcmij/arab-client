@@ -48,20 +48,23 @@ interface Props extends WithStyles<typeof styles> {
   showTranscription: boolean
   romanizationStandard: string
   voiceName: string
+  voiceEnabled: boolean
 }
 
-const handleClick = (voiceName: string, foreign: string) => {
-  if (voiceName !== 'none') {
+const handleClick = (voiceEnabled: boolean, voiceName: string, foreign: string) => {
+  if (voiceEnabled && voiceName !== 'none') {
     // tslint:disable-next-line:no-floating-promises
     SpeechSynthesizer.speak(voiceName, foreign)
   }
 }
+
 const LemmaTable: React.FC<Props> = ({
   document,
   showVocalization,
   showTranscription,
   romanizationStandard,
   voiceName,
+  voiceEnabled,
   classes,
 }) => {
   const renderLemma = (lemma: Types.Lemma, index: number) => (
@@ -83,7 +86,7 @@ const LemmaTable: React.FC<Props> = ({
         align="right"
         dir={'rtl'}
         classes={{ root: classes.foreignCell }}
-        onClick={() => handleClick(voiceName, lemma.foreign)}
+        onClick={() => handleClick(voiceEnabled, voiceName, lemma.foreign)}
       >
         <Typography variant="h4" classes={{ h4: classes.foreign }} color="inherit">
           {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
@@ -92,13 +95,16 @@ const LemmaTable: React.FC<Props> = ({
     </TableRow>
   )
 
-  const { subtitle, prolog, epilog, data: lemmas } = document
+  const { title, subtitle, prolog, epilog, data: lemmas } = document
 
   return (
     <Paper className={classes.root}>
+      <Typography variant="h5" className={classes.mdPadding}>
+        {title}
+      </Typography>
       {subtitle && (
         <Typography
-          variant="h5"
+          variant="h6"
           dangerouslySetInnerHTML={{ __html: subtitle }}
           className={classes.mdPadding}
         />
