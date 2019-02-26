@@ -31,15 +31,16 @@ class ArticleListPage extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { publication } = this.props.match.params
-    this.props.fetchArticleList(publication)
+    if (this.props.documents.length === 0) {
+      const { publication } = this.props.match.params
+      this.props.fetchArticleList(publication)
+    }
   }
 
-  componentWillUnmount() {
+  handleBack = () => {
+    this.setState({ goBack: true })
     this.props.clear()
   }
-
-  handleBack = () => void this.setState({ goBack: true })
 
   renderContent() {
     const { documents, isLoading, error } = this.props
