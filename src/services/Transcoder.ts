@@ -30,7 +30,15 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
     substitutions: [[/ʾ/g, 'ʼ'], [/ʿ/g, 'ع'], [/ḫ/g, 'ẖ'], [/ǧ/g, 'j']],
   },
   din: {
-    name: 'DIN 31635',
+    name: 'DIN',
+  },
+  iso: {
+    name: 'ISO',
+    substitutions: [[/ḫ/g, 'ẖ']],
+  },
+  wehr: {
+    name: 'Wehr',
+    substitutions: [[/ġ/g, 'ḡ'], [/ǧ/g, 'j'], [/ḫ/g, 'ḵ'], [/ʾ/g, 'ʼ'], [/ʿ/g, 'ʽ']],
   },
 }
 
