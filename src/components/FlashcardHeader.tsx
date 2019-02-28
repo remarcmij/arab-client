@@ -28,7 +28,7 @@ interface Props extends WithStyles<typeof styles> {
 const FlashcardHeader: React.FC<Props> = props => {
   const { document, index, length, classes } = props
   return (
-    <Paper className={classes.root}>
+    <Paper className={classes.root} square={true}>
       <div className={classes.flexContainer}>
         <Typography variant="h5" gutterBottom={true}>
           {document.title}

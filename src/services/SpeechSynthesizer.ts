@@ -1,15 +1,19 @@
-import { settingsActions } from '../features/settings'
-import store from '../store'
 import { setVoiceName } from '../features/settings/actions'
-import { string } from 'prop-types'
+import store from '../store'
 
 // tslint:disable:no-console
 
 class SpeechSynthesizer {
-  utterance: SpeechSynthesisUtterance = new SpeechSynthesisUtterance()
+  utterance: SpeechSynthesisUtterance | undefined
   voices: SpeechSynthesisVoice[] = []
 
   constructor() {
+    if ('SpeechSynthesisUtterance' in window) {
+      this.utterance = new SpeechSynthesisUtterance()
+    } else {
+      return
+    }
+
     this.loadVoices()
       .then(voices => {
         // get unique voices

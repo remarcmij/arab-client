@@ -1,4 +1,6 @@
 import List from '@material-ui/core/List'
+import Paper from '@material-ui/core/Paper'
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { match, Redirect } from 'react-router'
 import Types from 'Types'
@@ -7,12 +9,19 @@ import NavBar from '../components/NavBar'
 import ArticleListItem from './ArticleListItem'
 import * as C from './strings'
 
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      margin: theme.spacing.unit,
+    },
+  })
+
 interface IParams {
   publication: string
   article: string
 }
 
-type Props = {
+interface Props extends WithStyles<typeof styles> {
   match: match<IParams>
   documents: Types.AppDocument[]
   isLoading: boolean
@@ -76,10 +85,12 @@ class ArticleListPage extends React.Component<Props, State> {
           onBack={this.handleBack}
           enableSettingsMenu={true}
         />
-        <GridContainer>{this.renderContent()}</GridContainer>
+        <GridContainer>
+          <Paper classes={{ root: this.props.classes.root }}>{this.renderContent()}</Paper>
+        </GridContainer>
       </React.Fragment>
     )
   }
 }
 
-export default ArticleListPage
+export default withStyles(styles)(ArticleListPage)

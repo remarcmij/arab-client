@@ -7,6 +7,7 @@ import LemmaFlashcards from './LemmaFlashcards'
 import NavBar from './NavBar'
 import * as S from './strings'
 import VoiceOverButton from './VoiceOverButton'
+import Grid from '@material-ui/core/Grid'
 
 interface Params {
   publication: string
@@ -73,12 +74,16 @@ class FlashcardPage extends React.Component<Props, State> {
           }
         />
         <GridContainer>
-          <LemmaFlashcards
-            document={document}
-            showVocalization={showVocalization}
-            voiceEnabled={voiceEnabled}
-            voiceName={voiceName}
-          />
+          <Grid container={true} justify="center">
+            <Grid item={true} xs={12} md={10} lg={8}>
+              <LemmaFlashcards
+                document={document}
+                showVocalization={showVocalization}
+                voiceEnabled={voiceEnabled}
+                voiceName={voiceName}
+              />
+            </Grid>
+          </Grid>
         </GridContainer>
       </React.Fragment>
     )

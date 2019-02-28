@@ -1,9 +1,15 @@
+// tslint:disable no-import-side-effect
+
+/* Start of IE11 polyfills */
+import 'react-app-polyfill/ie11'
+import 'core-js/es7/object'
+/* End of IE11 polyfills */
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import { Provider } from 'react-redux'
 
-// tslint:disable no-import-side-effect
 import 'normalize.css'
 import './index.css'
 import 'github-markdown-css'

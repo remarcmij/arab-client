@@ -88,7 +88,7 @@ const LemmaList: React.FC<Props> = ({
     </li>
   )
 
-  const { title, subtitle, prolog, epilog, data: lemmas } = document
+  const { title, subtitle, prolog, epilog, body: lemmas } = document
 
   return (
     <Paper className={classes.root}>

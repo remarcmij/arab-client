@@ -23,12 +23,12 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
-  const { prolog, epilog, data: bodyText } = document
+  const { prolog, epilog, body } = document
   return (
     <Paper className={classes.root}>
       <article
         className={`markdown-body ${classes.extra}`}
-        dangerouslySetInnerHTML={{ __html: bodyText }}
+        dangerouslySetInnerHTML={{ __html: body }}
       />
     </Paper>
   )

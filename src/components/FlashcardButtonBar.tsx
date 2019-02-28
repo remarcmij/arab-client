@@ -35,7 +35,7 @@ class FlashcardButtonBar extends React.Component<Props> {
   public render() {
     const { classes, onNext, onPrev } = this.props
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.root} square={true} elevation={1}>
         <Button variant="outlined" className={classes.button} onClick={onPrev}>
           <ArrowBackIos />
         </Button>

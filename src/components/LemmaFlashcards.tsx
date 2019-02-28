@@ -3,13 +3,14 @@ import * as React from 'react'
 import Types from 'Types'
 import Flashcard from './Flashcard'
 import FlashcardButtonBar from './FlashcardButtonBar'
-import Paper from '@material-ui/core/Paper'
 import FlashcardHeader from './FlashcardHeader'
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: theme.spacing.unit,
+      // To fix IE11 flex min-height bug
+      display: 'flex',
+      flexDirection: 'column',
     },
   })
 
@@ -37,7 +38,7 @@ class LemmaFlashcards extends React.Component<Props, State> {
       this.setState({ showTranslation: true })
       return
     }
-    if (index < this.props.document.data.length - 1) {
+    if (index < this.props.document.body.length - 1) {
       this.setState({ index: index + 1, showTranslation: false })
     }
   }
@@ -52,12 +53,12 @@ class LemmaFlashcards extends React.Component<Props, State> {
 
   render() {
     const { index, showTranslation } = this.state
-    const { document, showVocalization, voiceEnabled, voiceName } = this.props
-    const { data: lemmas } = document
+    const { document, showVocalization, voiceEnabled, voiceName, classes } = this.props
+    const { body: lemmas } = document
 
     return (
-      <React.Fragment>
-        <FlashcardHeader document={document} index={index} length={document.data.length} />
+      <div className={classes.root}>
+        <FlashcardHeader document={document} index={index} length={document.body.length} />
         {lemmas.length !== 0 && (
           <Flashcard
             lemma={lemmas[index]}
@@ -68,7 +69,7 @@ class LemmaFlashcards extends React.Component<Props, State> {
           />
         )}
         <FlashcardButtonBar onNext={this.handleNext} onPrev={this.handlePrev} />
-      </React.Fragment>
+      </div>
     )
   }
 }

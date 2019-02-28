@@ -83,7 +83,7 @@ class ArticlePage extends React.Component<Props, State> {
       return null
     }
 
-    if (document.kind === 'csv') {
+    if (document.kind === 'table') {
       return (
         <React.Fragment>
           <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
@@ -135,7 +135,7 @@ class ArticlePage extends React.Component<Props, State> {
           onBack={this.goBack}
           enableSettingsMenu={true}
           rightHandButtons={
-            document === null || document.kind !== 'csv' ? null : (
+            document === null || document.kind !== 'table' ? null : (
               <React.Fragment>
                 <VoiceOverButton
                   voiceEnabled={voiceEnabled}

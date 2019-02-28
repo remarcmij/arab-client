@@ -1,11 +1,11 @@
 import Paper from '@material-ui/core/Paper'
-import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
 import * as React from 'react'
 import Types from 'Types'
 import SpeechSynthesizer from '../services/SpeechSynthesizer'
 import Transcoder from '../services/Transcoder'
-import Tooltip from '@material-ui/core/Tooltip'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -14,7 +14,7 @@ const styles = (theme: Theme) =>
       flexDirection: 'column' as 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: 320,
+      minHeight: 280,
       margin: theme.spacing.unit,
       cursor: 'pointer',
       userSelect: 'none',
@@ -63,7 +63,7 @@ const Flashcard: React.FC<Props> = props => {
   }
 
   return (
-    <Paper className={classes.root} onClick={() => handleClick(props)}>
+    <Paper className={classes.root} elevation={2} onClick={() => handleClick(props)}>
       <Tooltip
         classes={{ tooltip: classes.htmlTooltip }}
         title={<Typography color="inherit">{lemma.trans}</Typography>}

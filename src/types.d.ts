@@ -19,13 +19,13 @@ declare module 'Types' {
   }
 
   export interface LemmaDocument extends DocumentBase {
-    kind: 'csv'
-    data: Lemma[]
+    kind: 'table'
+    body: Lemma[]
   }
 
   export interface MarkdownDocument extends DocumentBase {
     kind: 'md'
-    data: string
+    body: string
   }
 
   export type AppDocument = LemmaDocument | MarkdownDocument | MetaDocument

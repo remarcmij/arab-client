@@ -95,7 +95,7 @@ const LemmaTable: React.FC<Props> = ({
     </TableRow>
   )
 
-  const { title, subtitle, prolog, epilog, data: lemmas } = document
+  const { title, subtitle, prolog, epilog, body: lemmas } = document
 
   return (
     <Paper className={classes.root}>

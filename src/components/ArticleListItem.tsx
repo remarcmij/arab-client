@@ -14,7 +14,7 @@ const ArticleListItem: React.FC<Props> = props => {
   const ItemLink = (p: {}) => <Link to={`/content/${publication}/${article}`} {...p} />
 
   return (
-    <ListItem component={ItemLink}>
+    <ListItem component={ItemLink} button={true}>
       <ListItemText
         primary={title}
         secondary={<span dangerouslySetInnerHTML={{ __html: subtitle || '' }} />}
