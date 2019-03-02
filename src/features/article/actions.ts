@@ -17,7 +17,7 @@ export const fetchArticle = (dispatch: Dispatch<ArticleActions>) => (
   article: string,
 ) => {
   dispatch(fetchStart())
-  fetch(`${process.env.REACT_APP_API_URL}/${publication}/${article}`)
+  fetch(`${process.env.REACT_APP_API_URL}/article/${publication}.${article}`)
     .then(res => {
       if (!res.ok) {
         throw new Error(`HTTP ${res.status} - ${res.statusText}`)

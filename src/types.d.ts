@@ -6,8 +6,7 @@ declare module 'Types' {
   }
 
   interface DocumentBase {
-    publication: string
-    article: string
+    filename: string
     title: string
     prolog: string
     epilog: string
@@ -19,7 +18,7 @@ declare module 'Types' {
   }
 
   export interface LemmaDocument extends DocumentBase {
-    kind: 'table'
+    kind: 'lemmas'
     body: Lemma[]
   }
 

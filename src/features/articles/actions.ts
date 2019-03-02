@@ -14,7 +14,7 @@ export type ArticlesActions = ReturnType<
 
 export const fetchArticleList = (dispatch: Dispatch<ArticlesActions>) => (publication: string) => {
   dispatch(fetchStart())
-  fetch(`${process.env.REACT_APP_API_URL}/${publication}`)
+  fetch(`${process.env.REACT_APP_API_URL}/index/${publication}`)
     .then(res => {
       if (!res.ok) {
         throw new Error(`HTTP ${res.status} - ${res.statusText}`)

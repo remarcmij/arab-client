@@ -65,7 +65,7 @@ class ArticleListPage extends React.Component<Props, State> {
     return (
       <List>
         {documents.map(doc => (
-          <ArticleListItem key={`${doc.publication}.${doc.article}`} publication={doc} />
+          <ArticleListItem key={`${doc.filename}`} publication={doc} />
         ))}
       </List>
     )

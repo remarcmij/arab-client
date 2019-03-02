@@ -28,7 +28,7 @@ class App extends React.Component<Props> {
         <div className={classes.root}>
           <Switch>
             <Redirect exact={true} from="/" to="/content" />
-            <Route path="/content/:publication/index" component={ArticleListPageContainer} />
+            <Route exact={true} path="/content/:publication" component={ArticleListPageContainer} />
             <Route
               path="/content/:publication/:article/flashcards"
               component={FlashcardPagesContainer}

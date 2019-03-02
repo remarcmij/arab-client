@@ -1,6 +1,5 @@
 /* cSpell:disable */
 import LRU from 'lru-cache'
-import { string } from 'prop-types'
 
 type SubstitutionTuple = [RegExp, string]
 
@@ -35,6 +34,29 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
   iso: {
     name: 'ISO',
     substitutions: [[/ḫ/g, 'ẖ']],
+  },
+  ryding: {
+    name: 'Ryding',
+    substitutions: [
+      [/ʾ/g, 'ʼ'],
+      [/ḏ/g, 'dh'],
+      [/ġ/g, 'gh'],
+      [/ṯ/g, 'th'],
+      [/ǧ/g, 'j'],
+      [/ḥ/g, 'H'],
+      [/ḫ/g, 'x'],
+      [/ḏ/g, 'dh'],
+      [/š/g, 'sh'],
+      [/ṣ/g, 'S'],
+      [/ḍ/g, 'D'],
+      [/ṭ/g, 'T'],
+      [/ẓ/g, 'Z'],
+      [/ʿ/g, 'ʻ'],
+      [/ġ/g, 'gh'],
+      [/ā/g, 'aa'],
+      [/ī/g, 'ii'],
+      [/ū/g, 'uu'],
+    ],
   },
   wehr: {
     name: 'Wehr',

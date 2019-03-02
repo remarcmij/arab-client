@@ -23,9 +23,10 @@ interface Props extends WithStyles<typeof styles> {
 
 const PublicationListItem: React.FC<Props> = props => {
   const { classes } = props
-  const { publication, title, subtitle } = props.publication
+  const { filename, title, subtitle } = props.publication
+  const [publication] = filename.split('.')
 
-  const ItemLink = (p: {}) => <Link to={`/content/${publication}/index`} {...p} />
+  const ItemLink = (p: {}) => <Link to={`/content/${publication}`} {...p} />
 
   return (
     <ListItem component={ItemLink} button={true}>

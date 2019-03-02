@@ -83,7 +83,7 @@ class ArticlePage extends React.Component<Props, State> {
       return null
     }
 
-    if (document.kind === 'table') {
+    if (document.kind === 'lemmas') {
       return (
         <React.Fragment>
           <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
@@ -121,7 +121,7 @@ class ArticlePage extends React.Component<Props, State> {
     const { publication, article } = this.props.match.params
 
     if (goBack) {
-      return <Redirect to={`/content/${publication}/index`} />
+      return <Redirect to={`/content/${publication}`} />
     }
 
     if (goFlashcards) {
@@ -135,7 +135,7 @@ class ArticlePage extends React.Component<Props, State> {
           onBack={this.goBack}
           enableSettingsMenu={true}
           rightHandButtons={
-            document === null || document.kind !== 'table' ? null : (
+            document === null || document.kind !== 'lemmas' ? null : (
               <React.Fragment>
                 <VoiceOverButton
                   voiceEnabled={voiceEnabled}

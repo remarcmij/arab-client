@@ -29,13 +29,14 @@ interface Props extends WithStyles<typeof styles> {
 
 const ArticleListItem: React.FC<Props> = props => {
   const { classes } = props
-  const { publication, article, title, subtitle, kind } = props.publication
+  const { filename, title, subtitle, kind } = props.publication
+  const [publication, article] = filename.split('.')
 
   const ItemLink = (p: {}) => <Link to={`/content/${publication}/${article}`} {...p} />
 
   return (
     <ListItem component={ItemLink} button={true}>
-      {kind === 'table' ? (
+      {kind === 'lemmas' ? (
         <ListItemAvatar className={classes.pinkAvatar}>
           <Avatar>
             <Code />
