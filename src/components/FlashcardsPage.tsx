@@ -1,5 +1,5 @@
 import { withTheme, WithTheme } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { match, Redirect } from 'react-router'
 import Types from 'Types'
 import GridContainer from './GridContainer'
@@ -8,6 +8,7 @@ import NavBar from './NavBar'
 import * as S from './strings'
 import VoiceOverButton from './VoiceOverButton'
 import Grid from '@material-ui/core/Grid'
+import useGoBack from './useGoBack'
 
 interface Params {
   publication: string
@@ -28,66 +29,54 @@ interface Props extends WithTheme {
   toggleVoice: () => void
 }
 
-type State = {
-  goBack: boolean
-}
+const FlashcardPage: React.FC<Props> = props => {
+  const { document, showVocalization, voiceEnabled, voiceName, toggleVoice } = props
+  const { publication, article } = props.match.params
 
-class FlashcardPage extends React.Component<Props, State> {
-  state = {
-    goBack: false,
+  const [goBack, handleBack] = useGoBack()
+
+  useEffect(() => {
+    if (!props.document) {
+      props.fetchArticle(publication, article)
+    }
+  }, [])
+
+  if (goBack) {
+    return <Redirect to={`/content/${publication}/${article}`} />
   }
 
-  componentDidMount() {
-    if (!this.props.document) {
-      const { publication, article } = this.props.match.params
-      this.props.fetchArticle(publication, article)
-    }
+  if (!document) {
+    return null
   }
 
-  handleBack = () => void this.setState({ goBack: true })
-
-  render() {
-    const { document, showVocalization, voiceEnabled, voiceName, toggleVoice } = this.props
-    const { goBack } = this.state
-    const { publication, article } = this.props.match.params
-
-    if (goBack) {
-      return <Redirect to={`/content/${publication}/${article}`} />
-    }
-
-    if (!document) {
-      return null
-    }
-
-    return (
-      <React.Fragment>
-        <NavBar
-          title={S.FLASHCARDS_PAGE_TITLE}
-          onBack={this.handleBack}
-          enableSettingsMenu={true}
-          rightHandButtons={
-            <VoiceOverButton
+  return (
+    <React.Fragment>
+      <NavBar
+        title={S.FLASHCARDS_PAGE_TITLE}
+        onBack={handleBack}
+        enableSettingsMenu={true}
+        rightHandButtons={
+          <VoiceOverButton
+            voiceEnabled={voiceEnabled}
+            voiceName={voiceName}
+            toggleVoice={toggleVoice}
+          />
+        }
+      />
+      <GridContainer>
+        <Grid container={true} justify="center">
+          <Grid item={true} xs={12} md={10} lg={8}>
+            <LemmaFlashcards
+              document={document}
+              showVocalization={showVocalization}
               voiceEnabled={voiceEnabled}
               voiceName={voiceName}
-              toggleVoice={toggleVoice}
             />
-          }
-        />
-        <GridContainer>
-          <Grid container={true} justify="center">
-            <Grid item={true} xs={12} md={10} lg={8}>
-              <LemmaFlashcards
-                document={document}
-                showVocalization={showVocalization}
-                voiceEnabled={voiceEnabled}
-                voiceName={voiceName}
-              />
-            </Grid>
           </Grid>
-        </GridContainer>
-      </React.Fragment>
-    )
-  }
+        </Grid>
+      </GridContainer>
+    </React.Fragment>
+  )
 }
 
 export default withTheme()(FlashcardPage)

@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { withTheme, WithTheme } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 import Code from '@material-ui/icons/Code'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MediaQuery from 'react-responsive'
 import { match, Redirect } from 'react-router'
 import Types from 'Types'
@@ -12,6 +12,7 @@ import LemmaList from './LemmaList'
 import LemmaTable from './LemmaTable'
 import NavBar from './NavBar'
 import * as S from './strings'
+import useGoBack from './useGoBack'
 import VoiceOverButton from './VoiceOverButton'
 
 interface Params {
@@ -35,46 +36,57 @@ interface Props extends WithTheme {
   toggleVoice: () => void
 }
 
-type State = {
-  goBack: boolean
-  goFlashcards: boolean
-}
+const ArticlePage: React.FC<Props> = props => {
+  const {
+    error,
+    document,
+    toggleVoice,
+    showVocalization,
+    showTranscription,
+    romanizationStandard,
+    voiceName,
+    voiceEnabled,
+    theme,
+  } = props
 
-class ArticlePage extends React.Component<Props, State> {
-  state = {
-    goBack: false,
-    goFlashcards: false,
-  }
+  const { publication, article } = props.match.params
 
-  componentDidMount() {
-    const { publication, article } = this.props.match.params
-    this.props.fetchArticle(publication, article)
-  }
+  const [goFlashcards, setGoFlashcards] = useState<boolean>(false)
+  const [goBack, handleBack] = useGoBack(props.clear)
 
-  goBack = () => {
-    this.setState({ goBack: true })
-    this.props.clear()
-  }
+  useEffect(() => {
+    if (document === null) {
+      props.fetchArticle(publication, article)
+    }
+  }, [])
 
-  goFlashcards = () => void this.setState({ goFlashcards: true })
+  const onGoFlashcards = () => setGoFlashcards(true)
 
-  renderContent() {
-    const {
-      document,
-      isLoading,
-      error,
-      showVocalization,
-      showTranscription,
-      romanizationStandard,
-      voiceName,
-      voiceEnabled,
-      theme,
-    } = this.props
+  const renderNavBar = () => (
+    <NavBar
+      title={S.ARTICLE_PAGE_TITLE}
+      onBack={handleBack}
+      enableSettingsMenu={true}
+      rightHandButtons={
+        document === null || document.kind !== 'lemmas' ? null : (
+          <React.Fragment>
+            <VoiceOverButton
+              voiceEnabled={voiceEnabled}
+              voiceName={voiceName}
+              toggleVoice={toggleVoice}
+            />
+            <Tooltip title={S.FLASHCARDS_PAGE_TITLE} aria-label={S.FLASHCARDS_PAGE_TITLE}>
+              <IconButton color="inherit" onClick={onGoFlashcards}>
+                <Code />
+              </IconButton>
+            </Tooltip>
+          </React.Fragment>
+        )
+      }
+    />
+  )
 
-    // if (isLoading) {
-    //   return <div>Loading...</div>
-    // }
-
+  const renderContent = () => {
     if (error) {
       return <div>Error: {error.message}</div>
     }
@@ -115,46 +127,20 @@ class ArticlePage extends React.Component<Props, State> {
     }
   }
 
-  render() {
-    const { document, voiceEnabled, voiceName, toggleVoice } = this.props
-    const { goBack, goFlashcards } = this.state
-    const { publication, article } = this.props.match.params
-
-    if (goBack) {
-      return <Redirect to={`/content/${publication}`} />
-    }
-
-    if (goFlashcards) {
-      return <Redirect to={`/content/${publication}/${article}/flashcards`} />
-    }
-
-    return (
-      <React.Fragment>
-        <NavBar
-          title={S.ARTICLE_PAGE_TITLE}
-          onBack={this.goBack}
-          enableSettingsMenu={true}
-          rightHandButtons={
-            document === null || document.kind !== 'lemmas' ? null : (
-              <React.Fragment>
-                <VoiceOverButton
-                  voiceEnabled={voiceEnabled}
-                  voiceName={voiceName}
-                  toggleVoice={toggleVoice}
-                />
-                <Tooltip title={S.FLASHCARDS_PAGE_TITLE} aria-label={S.FLASHCARDS_PAGE_TITLE}>
-                  <IconButton color="inherit" onClick={this.goFlashcards}>
-                    <Code />
-                  </IconButton>
-                </Tooltip>
-              </React.Fragment>
-            )
-          }
-        />
-        <GridContainer>{this.renderContent()}</GridContainer>
-      </React.Fragment>
-    )
+  if (goBack) {
+    return <Redirect to={`/content/${publication}`} />
   }
+
+  if (goFlashcards) {
+    return <Redirect to={`/content/${publication}/${article}/flashcards`} />
+  }
+
+  return (
+    <React.Fragment>
+      {renderNavBar()}
+      <GridContainer>{renderContent()}</GridContainer>
+    </React.Fragment>
+  )
 }
 
 export default withTheme()(ArticlePage)

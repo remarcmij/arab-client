@@ -1,12 +1,12 @@
 import List from '@material-ui/core/List'
-import * as React from 'react'
+import Paper from '@material-ui/core/Paper'
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
+import React, { useEffect } from 'react'
 import Types from 'Types'
 import GridContainer from '../components/GridContainer'
 import NavBar from '../components/NavBar'
 import PublicationListItem from './PublicationListItem'
 import * as S from './strings'
-import Paper from '@material-ui/core/Paper'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -22,14 +22,14 @@ interface Props extends WithStyles<typeof styles> {
   fetchPublicationList: () => void
 }
 
-class PublicationListPage extends React.Component<Props> {
-  componentDidMount() {
-    this.props.fetchPublicationList()
-  }
+const PublicationListPage: React.FC<Props> = props => {
+  const { isLoading, error, documents, classes } = props
 
-  renderContent() {
-    const { isLoading, error, documents } = this.props
+  useEffect(() => {
+    props.fetchPublicationList()
+  }, [])
 
+  const renderContent = () => {
     // if (isLoading) {
     //   return <p>Loading...</p>
     // }
@@ -47,16 +47,14 @@ class PublicationListPage extends React.Component<Props> {
     )
   }
 
-  render() {
-    return (
-      <React.Fragment>
-        <NavBar title={S.APP_TITLE} showDrawerButton={true} enableSettingsMenu={true} />
-        <GridContainer>
-          <Paper classes={{ root: this.props.classes.root }}>{this.renderContent()}</Paper>
-        </GridContainer>
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      <NavBar title={S.APP_TITLE} showDrawerButton={true} enableSettingsMenu={true} />
+      <GridContainer>
+        <Paper classes={{ root: classes.root }}>{renderContent()}</Paper>
+      </GridContainer>
+    </React.Fragment>
+  )
 }
 
 export default withStyles(styles)(PublicationListPage)

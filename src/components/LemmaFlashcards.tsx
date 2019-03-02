@@ -1,5 +1,5 @@
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
+import React, { useState } from 'react'
 import Types from 'Types'
 import Flashcard from './Flashcard'
 import FlashcardButtonBar from './FlashcardButtonBar'
@@ -21,57 +21,45 @@ interface Props extends WithStyles<typeof styles> {
   voiceName: string
 }
 
-type State = {
-  index: number
-  showTranslation: boolean
-}
+const LemmaFlashcards: React.FC<Props> = props => {
+  const { document, showVocalization, voiceEnabled, voiceName, classes } = props
 
-class LemmaFlashcards extends React.Component<Props, State> {
-  readonly state: State = {
-    index: 0,
-    showTranslation: false,
-  }
+  const [index, setIndex] = useState<number>(0)
+  const [showTranslation, setShowTranslation] = useState<boolean>(false)
 
-  handleNext = () => {
-    const { index, showTranslation } = this.state
+  const handleNext = () => {
     if (!showTranslation) {
-      this.setState({ showTranslation: true })
-      return
-    }
-    if (index < this.props.document.body.length - 1) {
-      this.setState({ index: index + 1, showTranslation: false })
+      setShowTranslation(true)
+    } else if (index < props.document.body.length - 1) {
+      setIndex(index + 1)
+      setShowTranslation(false)
     }
   }
 
-  handlePrev = () => {
-    let { index } = this.state
+  const handlePrev = () => {
     if (index > 0) {
-      index--
+      setIndex(index - 1)
     }
-    this.setState({ index, showTranslation: false })
+    setShowTranslation(false)
   }
 
-  render() {
-    const { index, showTranslation } = this.state
-    const { document, showVocalization, voiceEnabled, voiceName, classes } = this.props
-    const { body: lemmas } = document
+  const { body: lemmas } = document
 
-    return (
-      <div className={classes.root}>
-        <FlashcardHeader document={document} index={index} length={document.body.length} />
-        {lemmas.length !== 0 && (
-          <Flashcard
-            lemma={lemmas[index]}
-            showTranslation={showTranslation}
-            showVocalization={showVocalization}
-            voiceEnabled={voiceEnabled}
-            voiceName={voiceName}
-          />
-        )}
-        <FlashcardButtonBar onNext={this.handleNext} onPrev={this.handlePrev} />
-      </div>
-    )
-  }
+  return (
+    <div className={classes.root}>
+      <FlashcardHeader document={document} index={index} length={document.body.length} />
+      {lemmas.length !== 0 && (
+        <Flashcard
+          lemma={lemmas[index]}
+          showTranslation={showTranslation}
+          showVocalization={showVocalization}
+          voiceEnabled={voiceEnabled}
+          voiceName={voiceName}
+        />
+      )}
+      <FlashcardButtonBar onNext={handleNext} onPrev={handlePrev} />
+    </div>
+  )
 }
 
 export default withStyles(styles)(LemmaFlashcards)

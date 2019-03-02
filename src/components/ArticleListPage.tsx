@@ -1,13 +1,14 @@
 import List from '@material-ui/core/List'
 import Paper from '@material-ui/core/Paper'
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { match, Redirect } from 'react-router'
 import Types from 'Types'
 import GridContainer from '../components/GridContainer'
 import NavBar from '../components/NavBar'
 import ArticleListItem from './ArticleListItem'
 import * as C from './strings'
+import useGoBack from './useGoBack'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,67 +31,40 @@ interface Props extends WithStyles<typeof styles> {
   clear: () => void
 }
 
-type State = {
-  goBack: boolean
+const renderContent = ({ documents, error }: Props) => {
+  return error ? (
+    <div>Error: {error.message}</div>
+  ) : (
+    <List>
+      {documents.map(doc => (
+        <ArticleListItem key={`${doc.filename}`} publication={doc} />
+      ))}
+    </List>
+  )
 }
 
-class ArticleListPage extends React.Component<Props, State> {
-  readonly state: State = {
-    goBack: false,
-  }
+const ArticleListPage: React.FC<Props> = props => {
+  const [goBack, handleBack] = useGoBack(props.clear)
 
-  componentDidMount() {
-    if (this.props.documents.length === 0) {
-      const { publication } = this.props.match.params
-      this.props.fetchArticleList(publication)
+  useEffect(() => {
+    if (props.documents.length === 0) {
+      const { publication } = props.match.params
+      props.fetchArticleList(publication)
     }
-  }
+  }, [])
 
-  handleBack = () => {
-    this.setState({ goBack: true })
-    this.props.clear()
-  }
-
-  renderContent() {
-    const { documents, isLoading, error } = this.props
-
-    // if (isLoading) {
-    //   return <p>Loading...</p>
-    // }
-
-    if (error) {
-      return <div>Error: {error.message}</div>
-    }
-
-    return (
-      <List>
-        {documents.map(doc => (
-          <ArticleListItem key={`${doc.filename}`} publication={doc} />
-        ))}
-      </List>
-    )
-  }
-
-  render() {
-    const { goBack } = this.state
-
-    if (goBack) {
-      return <Redirect to="/content" />
-    }
-
-    return (
-      <React.Fragment>
-        <NavBar
-          title={C.ARTICLE_LIST_PAGE_TITLE}
-          onBack={this.handleBack}
-          enableSettingsMenu={true}
-        />
-        <GridContainer>
-          <Paper classes={{ root: this.props.classes.root }}>{this.renderContent()}</Paper>
-        </GridContainer>
-      </React.Fragment>
-    )
-  }
+  return goBack ? (
+    <Redirect to="/content" />
+  ) : (
+    <React.Fragment>
+      <NavBar title={C.ARTICLE_LIST_PAGE_TITLE} onBack={handleBack} enableSettingsMenu={true} />
+      <GridContainer>
+        {!props.isLoading && (
+          <Paper classes={{ root: props.classes.root }}>{renderContent(props)}</Paper>
+        )}
+      </GridContainer>
+    </React.Fragment>
+  )
 }
 
 export default withStyles(styles)(ArticleListPage)

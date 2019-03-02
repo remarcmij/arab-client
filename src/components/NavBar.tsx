@@ -2,16 +2,16 @@ import AppBar from '@material-ui/core/AppBar'
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
+import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import MenuIcon from '@material-ui/icons/Menu'
 import Settings from '@material-ui/icons/Settings'
-import * as React from 'react'
+import React, { useState } from 'react'
 import SettingsDialogContainer from '../containers/SettingsDialogContainer'
 import GridContainer from './GridContainer'
 import MainDrawer from './MainDrawer'
 import * as S from './strings'
-import Tooltip from '@material-ui/core/Tooltip'
 
 const styles = createStyles({
   root: {
@@ -36,87 +36,66 @@ interface Props extends WithStyles<typeof styles> {
   onRightMenu?: () => void
 }
 
-type State = {
-  mainDrawerOpen: boolean
-  settingsDialogOpen: boolean
-}
+const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
+  const { title, onBack, showDrawerButton, enableSettingsMenu, rightHandButtons, classes } = props
 
-class NavBar extends React.Component<Props, State> {
-  static defaultProps = {
-    showDrawerButton: false,
-    enableSettingsMenu: false,
-    rightHandButtons: null,
+  const [mainDrawerOpen, setMainDrawerOpen] = useState(false)
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
+
+  const handleOpenDialog = () => {
+    setSettingsDialogOpen(true)
   }
 
-  state = {
-    mainDrawerOpen: false,
-    settingsDialogOpen: false,
+  const handleCloseDialog = () => {
+    setSettingsDialogOpen(false)
   }
 
-  handleOpenDialog = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ settingsDialogOpen: true })
+  const handleToggleDrawer = () => {
+    setMainDrawerOpen(!mainDrawerOpen)
   }
 
-  handleCloseDialog = () => {
-    this.setState({ settingsDialogOpen: false })
-  }
-
-  handleToggleDrawer = () => {
-    this.setState({ mainDrawerOpen: !this.state.mainDrawerOpen })
-  }
-
-  render() {
-    const {
-      title,
-      onBack,
-      showDrawerButton,
-      enableSettingsMenu,
-      rightHandButtons,
-      classes,
-    } = this.props
-    const { mainDrawerOpen, settingsDialogOpen } = this.state
-
-    return (
-      <AppBar position="fixed">
-        <GridContainer>
-          <Toolbar>
-            {onBack && (
-              <IconButton className={classes.leftButton} onClick={onBack} color="inherit">
-                <ArrowBackIcon />
-              </IconButton>
-            )}
-            {showDrawerButton && (
+  return (
+    <AppBar position="fixed">
+      <GridContainer>
+        <Toolbar>
+          {onBack && (
+            <IconButton className={classes.leftButton} onClick={onBack} color="inherit">
+              <ArrowBackIcon />
+            </IconButton>
+          )}
+          {showDrawerButton && (
+            <IconButton className={classes.leftButton} onClick={handleToggleDrawer} color="inherit">
+              <MenuIcon />
+            </IconButton>
+          )}
+          <Typography variant="h6" color="inherit" className={classes.grow}>
+            {title}
+          </Typography>
+          {rightHandButtons}
+          {enableSettingsMenu && (
+            <Tooltip title={S.EDIT_SETTINGS} aria-label={S.EDIT_SETTINGS}>
               <IconButton
-                className={classes.leftButton}
-                onClick={this.handleToggleDrawer}
+                aria-owns={open ? 'menu-appbar' : undefined}
+                aria-haspopup={true}
+                onClick={handleOpenDialog}
                 color="inherit"
               >
-                <MenuIcon />
+                <Settings />
               </IconButton>
-            )}
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              {title}
-            </Typography>
-            {rightHandButtons}
-            {enableSettingsMenu && (
-              <Tooltip title={S.EDIT_SETTINGS} aria-label={S.EDIT_SETTINGS}>
-                <IconButton
-                  aria-owns={open ? 'menu-appbar' : undefined}
-                  aria-haspopup={true}
-                  onClick={this.handleOpenDialog}
-                  color="inherit"
-                >
-                  <Settings />
-                </IconButton>
-              </Tooltip>
-            )}
-          </Toolbar>
-          <SettingsDialogContainer open={settingsDialogOpen} onClose={this.handleCloseDialog} />
-          <MainDrawer open={mainDrawerOpen} toggleDrawer={this.handleToggleDrawer} />
-        </GridContainer>
-      </AppBar>
-    )
-  }
+            </Tooltip>
+          )}
+        </Toolbar>
+        <SettingsDialogContainer open={settingsDialogOpen} onClose={handleCloseDialog} />
+        <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
+      </GridContainer>
+    </AppBar>
+  )
+}
+
+NavBar.defaultProps = {
+  showDrawerButton: false,
+  enableSettingsMenu: false,
+  rightHandButtons: null,
 }
 
 export default withStyles(styles)(NavBar)

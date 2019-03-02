@@ -27,24 +27,15 @@ interface Props extends WithStyles<typeof styles> {
   onPrev: () => void
 }
 
-interface State {}
-
-class FlashcardButtonBar extends React.Component<Props> {
-  state = {}
-
-  public render() {
-    const { classes, onNext, onPrev } = this.props
-    return (
-      <Paper className={classes.root} square={true} elevation={1}>
-        <Button variant="outlined" className={classes.button} onClick={onPrev}>
-          <ArrowBackIos />
-        </Button>
-        <Button variant="outlined" className={classes.button} onClick={onNext} autoFocus={true}>
-          <ArrowForwardIos />
-        </Button>
-      </Paper>
-    )
-  }
-}
+const FlashcardButtonBar: React.FC<Props> = ({ classes, onNext, onPrev }) => (
+  <Paper className={classes.root} square={true} elevation={1}>
+    <Button variant="outlined" className={classes.button} onClick={onPrev}>
+      <ArrowBackIos />
+    </Button>
+    <Button variant="outlined" className={classes.button} onClick={onNext} autoFocus={true}>
+      <ArrowForwardIos />
+    </Button>
+  </Paper>
+)
 
 export default withStyles(styles)(FlashcardButtonBar)
