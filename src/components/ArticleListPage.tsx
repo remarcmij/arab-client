@@ -9,6 +9,7 @@ import NavBar from '../components/NavBar'
 import ArticleListItem from './ArticleListItem'
 import * as C from './strings'
 import useGoBack from './useGoBack'
+import LanguageContext from '../contexts/LaunguageContext'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,11 +36,15 @@ const renderContent = ({ documents, error }: Props) => {
   return error ? (
     <div>Error: {error.message}</div>
   ) : (
-    <List>
-      {documents.map(doc => (
-        <ArticleListItem key={`${doc.filename}`} publication={doc} />
-      ))}
-    </List>
+    <LanguageContext.Provider value={{ base: 'nl', foreign: 'ar' }}>
+      <List>
+        {documents
+          .filter(doc => !doc.filename.endsWith('.index'))
+          .map(doc => (
+            <ArticleListItem key={`${doc.filename}`} publication={doc} />
+          ))}
+      </List>
+    </LanguageContext.Provider>
   )
 }
 

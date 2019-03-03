@@ -2,10 +2,11 @@ import Paper from '@material-ui/core/Paper'
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
-import * as React from 'react'
+import React, { useContext } from 'react'
 import Types from 'Types'
 import SpeechSynthesizer from '../services/SpeechSynthesizer'
 import Transcoder from '../services/Transcoder'
+import LanguageContext from '../contexts/LaunguageContext'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -57,6 +58,7 @@ const handleClick = (props: Props) => {
 
 const Flashcard: React.FC<Props> = props => {
   const { lemma, showTranslation, showVocalization, voiceEnabled, voiceName, classes } = props
+  const { base, foreign } = useContext(LanguageContext)
 
   if (voiceEnabled && voiceName !== 'none') {
     SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8)
@@ -68,11 +70,23 @@ const Flashcard: React.FC<Props> = props => {
         classes={{ tooltip: classes.htmlTooltip }}
         title={<Typography color="inherit">{lemma.trans}</Typography>}
       >
-        <Typography variant="h4" align="center" lang="ar" dir="rtl" className={classes.foreign}>
+        <Typography
+          variant="h4"
+          align="center"
+          lang={foreign}
+          dir="rtl"
+          className={classes.foreign}
+        >
           {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
         </Typography>
       </Tooltip>
-      <Typography variant="h5" align="center" color="textSecondary" className={classes.native}>
+      <Typography
+        variant="h5"
+        align="center"
+        lang={base}
+        color="textSecondary"
+        className={classes.native}
+      >
         {showTranslation ? lemma.base : '•••'}
       </Typography>
     </Paper>
