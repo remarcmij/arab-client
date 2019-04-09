@@ -1,9 +1,9 @@
-import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
-import Types from 'Types'
-import SettingsDialog from '../components/SettingsDialog'
-import { settingsActions as actions, settingsSelectors as selectors } from '../features/settings'
-import { SettingsAction } from '../features/settings/reducer'
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import Types from 'Types';
+import SettingsDialog from '../components/SettingsDialog';
+import { settingsActions as actions, settingsSelectors as selectors } from '../features/settings';
+import { SettingsAction } from '../features/settings/reducer';
 
 const mapStateToProps = (state: Types.RootState) => ({
   showVocalization: selectors.getShowVocalization(state),
@@ -12,7 +12,7 @@ const mapStateToProps = (state: Types.RootState) => ({
   romanizationStandard: selectors.getRomanization(state),
   voiceEnabled: selectors.getVoiceEnabled(state),
   voiceName: selectors.getVoiceName(state),
-})
+});
 
 const mapDispatchToProps = (dispatch: Dispatch<SettingsAction>) => ({
   toggleVocalization: () => dispatch(actions.toggleVocalization()),
@@ -22,11 +22,11 @@ const mapDispatchToProps = (dispatch: Dispatch<SettingsAction>) => ({
     dispatch(actions.setRomanizationSystem(romanizationStandard)),
   toggleVoice: () => dispatch(actions.toggleVoice()),
   setVoiceName: (voiceName: string) => dispatch(actions.setVoiceName(voiceName)),
-})
+});
 
 const PublicationListPageContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SettingsDialog)
+)(SettingsDialog);
 
-export default PublicationListPageContainer
+export default PublicationListPageContainer;

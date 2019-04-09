@@ -1,17 +1,17 @@
-import AppBar from '@material-ui/core/AppBar'
-import IconButton from '@material-ui/core/IconButton'
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import MenuIcon from '@material-ui/icons/Menu'
-import Settings from '@material-ui/icons/Settings'
-import React, { useState } from 'react'
-import SettingsDialogContainer from '../containers/SettingsDialogContainer'
-import GridContainer from './GridContainer'
-import MainDrawer from './MainDrawer'
-import * as S from './strings'
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import MenuIcon from '@material-ui/icons/Menu';
+import Settings from '@material-ui/icons/Settings';
+import React, { useState } from 'react';
+import SettingsDialogContainer from '../containers/SettingsDialogContainer';
+import GridContainer from './GridContainer';
+import MainDrawer from './MainDrawer';
+import * as S from './strings';
 
 const styles = createStyles({
   root: {
@@ -24,35 +24,35 @@ const styles = createStyles({
     marginLeft: -12,
     marginRight: 20,
   },
-})
+});
 
 interface Props extends WithStyles<typeof styles> {
-  title: string
-  showDrawerButton?: boolean
-  enableSettingsMenu?: boolean
-  rightHandButtons: React.ReactElement<any> | null
-  onBack?: () => void
-  onLeftMenu?: () => void
-  onRightMenu?: () => void
+  title: string;
+  showDrawerButton?: boolean;
+  enableSettingsMenu?: boolean;
+  rightHandButtons: React.ReactElement<any> | null;
+  onBack?: () => void;
+  onLeftMenu?: () => void;
+  onRightMenu?: () => void;
 }
 
 const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
-  const { title, onBack, showDrawerButton, enableSettingsMenu, rightHandButtons, classes } = props
+  const { title, onBack, showDrawerButton, enableSettingsMenu, rightHandButtons, classes } = props;
 
-  const [mainDrawerOpen, setMainDrawerOpen] = useState(false)
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
+  const [mainDrawerOpen, setMainDrawerOpen] = useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
 
   const handleOpenDialog = () => {
-    setSettingsDialogOpen(true)
-  }
+    setSettingsDialogOpen(true);
+  };
 
   const handleCloseDialog = () => {
-    setSettingsDialogOpen(false)
-  }
+    setSettingsDialogOpen(false);
+  };
 
   const handleToggleDrawer = () => {
-    setMainDrawerOpen(!mainDrawerOpen)
-  }
+    setMainDrawerOpen(!mainDrawerOpen);
+  };
 
   return (
     <AppBar position="fixed">
@@ -89,13 +89,13 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
         <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
       </GridContainer>
     </AppBar>
-  )
-}
+  );
+};
 
 NavBar.defaultProps = {
   showDrawerButton: false,
   enableSettingsMenu: false,
   rightHandButtons: null,
-}
+};
 
-export default withStyles(styles)(NavBar)
+export default withStyles(styles)(NavBar);

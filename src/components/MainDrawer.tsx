@@ -1,32 +1,32 @@
-import Divider from '@material-ui/core/Divider'
-import Drawer from '@material-ui/core/Drawer'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
-import InfoIcon from '@material-ui/icons/Info'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import React from 'react'
-import * as S from './strings'
-import { Link } from 'react-router-dom'
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import InfoIcon from '@material-ui/icons/Info';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import React from 'react';
+import * as S from './strings';
+import { Link } from 'react-router-dom';
 
 const styles = () =>
   createStyles({
     list: {
       width: 250,
     },
-  })
+  });
 
 interface Props extends WithStyles<typeof styles> {
-  open: boolean
-  toggleDrawer: () => void
+  open: boolean;
+  toggleDrawer: () => void;
 }
 
 const MainDrawer: React.FC<Props> = props => {
-  const { classes, open, toggleDrawer } = props
+  const { classes, open, toggleDrawer } = props;
 
-  const AboutLink = (p: {}) => <Link to="/about" {...p} />
+  const AboutLink = (p: {}) => <Link to="/about" {...p} />;
 
   const sideList = (
     <div className={classes.list}>
@@ -48,7 +48,7 @@ const MainDrawer: React.FC<Props> = props => {
         </ListItem>
       </List>
     </div>
-  )
+  );
 
   return (
     <Drawer open={open} onClose={toggleDrawer}>
@@ -56,7 +56,7 @@ const MainDrawer: React.FC<Props> = props => {
         {sideList}
       </div>
     </Drawer>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(MainDrawer)
+export default withStyles(styles)(MainDrawer);

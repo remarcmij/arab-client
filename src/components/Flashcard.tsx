@@ -1,12 +1,12 @@
-import Paper from '@material-ui/core/Paper'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
-import React, { useContext } from 'react'
-import Types from 'Types'
-import SpeechSynthesizer from '../services/SpeechSynthesizer'
-import Transcoder from '../services/Transcoder'
-import LanguageContext from '../contexts/LaunguageContext'
+import Paper from '@material-ui/core/Paper';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import React, { useContext } from 'react';
+import Types from 'Types';
+import SpeechSynthesizer from '../services/SpeechSynthesizer';
+import Transcoder from '../services/Transcoder';
+import LanguageContext from '../contexts/LaunguageContext';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -37,31 +37,31 @@ const styles = (theme: Theme) =>
         fontWeight: theme.typography.fontWeightMedium,
       },
     },
-  })
+  });
 
 interface Props extends WithStyles<typeof styles> {
-  lemma: Types.Lemma
-  showTranslation: boolean
-  showVocalization: boolean
-  voiceEnabled: boolean
-  voiceName: string
+  lemma: Types.Lemma;
+  showTranslation: boolean;
+  showVocalization: boolean;
+  voiceEnabled: boolean;
+  voiceName: string;
 }
 
 // tslint:disable:no-floating-promises
 
 const handleClick = (props: Props) => {
-  const { lemma, showTranslation, voiceEnabled, voiceName } = props
+  const { lemma, showTranslation, voiceEnabled, voiceName } = props;
   if (voiceName !== 'none' && voiceEnabled) {
-    SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8)
+    SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8);
   }
-}
+};
 
 const Flashcard: React.FC<Props> = props => {
-  const { lemma, showTranslation, showVocalization, voiceEnabled, voiceName, classes } = props
-  const { base, foreign } = useContext(LanguageContext)
+  const { lemma, showTranslation, showVocalization, voiceEnabled, voiceName, classes } = props;
+  const { base, foreign } = useContext(LanguageContext);
 
   if (voiceEnabled && voiceName !== 'none') {
-    SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8)
+    SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8);
   }
 
   return (
@@ -90,7 +90,7 @@ const Flashcard: React.FC<Props> = props => {
         {showTranslation ? lemma.base : '•••'}
       </Typography>
     </Paper>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(Flashcard)
+export default withStyles(styles)(Flashcard);

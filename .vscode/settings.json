@@ -10,7 +10,8 @@
     "onvoiceschanged",
     "strip",
     "tashkeel",
-    "typesafe"
+    "typesafe",
+    "uuidv"
   ],
   "cSpell.ignorePaths": [
     "**/package-lock.json",

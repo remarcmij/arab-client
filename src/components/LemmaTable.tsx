@@ -1,14 +1,14 @@
-import Paper from '@material-ui/core/Paper'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableRow from '@material-ui/core/TableRow'
-import Typography from '@material-ui/core/Typography'
-import * as React from 'react'
-import Types from 'Types'
-import Transcoder from '../services/Transcoder'
-import SpeechSynthesizer from '../services/SpeechSynthesizer'
+import Paper from '@material-ui/core/Paper';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
+import Types from 'Types';
+import Transcoder from '../services/Transcoder';
+import SpeechSynthesizer from '../services/SpeechSynthesizer';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,23 +40,23 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing.unit,
       marginBottom: theme.spacing.unit / 2,
     },
-  })
+  });
 
 interface Props extends WithStyles<typeof styles> {
-  document: Types.LemmaDocument
-  showVocalization: boolean
-  showTranscription: boolean
-  romanizationStandard: string
-  voiceName: string
-  voiceEnabled: boolean
+  document: Types.LemmaDocument;
+  showVocalization: boolean;
+  showTranscription: boolean;
+  romanizationStandard: string;
+  voiceName: string;
+  voiceEnabled: boolean;
 }
 
 const handleClick = (voiceEnabled: boolean, voiceName: string, foreign: string) => {
   if (voiceEnabled && voiceName !== 'none') {
     // tslint:disable-next-line:no-floating-promises
-    SpeechSynthesizer.speak(voiceName, foreign)
+    SpeechSynthesizer.speak(voiceName, foreign);
   }
-}
+};
 
 const LemmaTable: React.FC<Props> = ({
   document,
@@ -93,9 +93,9 @@ const LemmaTable: React.FC<Props> = ({
         </Typography>
       </TableCell>
     </TableRow>
-  )
+  );
 
-  const { title, subtitle, prolog, epilog, body: lemmas } = document
+  const { title, subtitle, prolog, epilog, body: wordlist } = document;
 
   return (
     <Paper className={classes.root}>
@@ -116,7 +116,7 @@ const LemmaTable: React.FC<Props> = ({
         />
       )}
       <Table padding="dense">
-        <TableBody>{lemmas.map(renderLemma)}</TableBody>
+        <TableBody>{wordlist.map(renderLemma)}</TableBody>
       </Table>
       {epilog && (
         <section
@@ -125,7 +125,7 @@ const LemmaTable: React.FC<Props> = ({
         />
       )}
     </Paper>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(LemmaTable)
+export default withStyles(styles)(LemmaTable);

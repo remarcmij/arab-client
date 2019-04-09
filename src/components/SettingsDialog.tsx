@@ -1,21 +1,21 @@
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormGroup from '@material-ui/core/FormGroup'
-import InputLabel from '@material-ui/core/InputLabel'
-import Select from '@material-ui/core/Select'
-import Switch from '@material-ui/core/Switch'
-import withMobileDialog, { InjectedProps } from '@material-ui/core/withMobileDialog'
-import React from 'react'
-import { romanizationStandards } from '../services/Transcoder'
-import * as S from './strings'
-import SpeechSynthesizer from '../services/SpeechSynthesizer'
-import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
-import Divider from '@material-ui/core/Divider'
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Switch from '@material-ui/core/Switch';
+import withMobileDialog, { InjectedProps } from '@material-ui/core/withMobileDialog';
+import React from 'react';
+import { romanizationStandards } from '../services/Transcoder';
+import * as S from './strings';
+import SpeechSynthesizer from '../services/SpeechSynthesizer';
+import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -26,23 +26,23 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing.unit * 3,
       marginBottom: theme.spacing.unit * 3,
     },
-  })
+  });
 
 interface BaseProps extends InjectedProps {
-  open: boolean
-  onClose: () => void
-  showVocalization: boolean
-  toggleVocalization: () => void
-  showTranscription: boolean
-  toggleTranscription: () => void
-  showFlashcards: boolean
-  toggleFlashcards: () => void
-  romanizationStandard: string
-  setRomanizationSystem: (romanizationStandard: string) => void
-  voiceEnabled: boolean
-  toggleVoice: () => void
-  voiceName: string
-  setVoiceName: (voiceName: string) => void
+  open: boolean;
+  onClose: () => void;
+  showVocalization: boolean;
+  toggleVocalization: () => void;
+  showTranscription: boolean;
+  toggleTranscription: () => void;
+  showFlashcards: boolean;
+  toggleFlashcards: () => void;
+  romanizationStandard: string;
+  setRomanizationSystem: (romanizationStandard: string) => void;
+  voiceEnabled: boolean;
+  toggleVoice: () => void;
+  voiceName: string;
+  setVoiceName: (voiceName: string) => void;
 }
 
 interface SettingsDialogProps extends BaseProps, WithStyles<typeof styles> {}
@@ -61,7 +61,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
     setRomanizationSystem,
     voiceName,
     setVoiceName,
-  } = props
+  } = props;
 
   const renderRomanizationSelect = () => (
     <FormControl>
@@ -82,7 +82,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
         ))}
       </Select>
     </FormControl>
-  )
+  );
 
   const renderVoiceSelect = () => (
     <FormControl>
@@ -106,7 +106,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
           ))}
       </Select>
     </FormControl>
-  )
+  );
 
   return (
     <Dialog
@@ -138,7 +138,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
+  );
+};
 
-export default withMobileDialog<BaseProps>()(withStyles(styles)(SettingsDialog))
+export default withMobileDialog<BaseProps>()(withStyles(styles)(SettingsDialog));

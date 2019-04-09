@@ -1,9 +1,9 @@
-import { combineReducers } from 'redux'
-import { ActionType } from 'typesafe-actions'
-import * as settings from './actions'
-import * as C from './constants'
+import { combineReducers } from 'redux';
+import { ActionType } from 'typesafe-actions';
+import * as settings from './actions';
+import * as C from './constants';
 
-export type SettingsAction = ActionType<typeof settings>
+export type SettingsAction = ActionType<typeof settings>;
 
 export type SettingsState = {
   readonly showVocalization: boolean
@@ -12,55 +12,55 @@ export type SettingsState = {
   readonly romanizationStandard: string
   readonly voiceEnabled: boolean
   readonly voiceName: string
-}
+};
 
 export default combineReducers<SettingsState, SettingsAction>({
   showTranscription: (state = true, action) => {
     switch (action.type) {
       case C.TOGGLE_TRANSCRIPTION:
-        return !state
+        return !state;
       default:
-        return state
+        return state;
     }
   },
   showVocalization: (state = true, action) => {
     switch (action.type) {
       case C.TOGGLE_VOCALIZATION:
-        return !state
+        return !state;
       default:
-        return state
+        return state;
     }
   },
   showFlashcards: (state = false, action) => {
     switch (action.type) {
       case C.TOGGLE_FLASHCARDS:
-        return !state
+        return !state;
       default:
-        return state
+        return state;
     }
   },
   romanizationStandard: (state = 'din', action) => {
     switch (action.type) {
       case C.SET_ROMANIZATION_STANDARD:
-        return action.payload
+        return action.payload;
       default:
-        return state
+        return state;
     }
   },
   voiceEnabled: (state = false, action) => {
     switch (action.type) {
       case C.TOGGLE_VOICE:
-        return !state
+        return !state;
       default:
-        return state
+        return state;
     }
   },
   voiceName: (state = 'none', action) => {
     switch (action.type) {
       case C.SET_VOICE_NAME:
-        return action.payload
+        return action.payload;
       default:
-        return state
+        return state;
     }
   },
-})
+});

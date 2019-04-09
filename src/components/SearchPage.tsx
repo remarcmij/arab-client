@@ -19,13 +19,21 @@ const styles = (theme: Theme) =>
   });
 
 type State = {
-  goBack: boolean
+  goBack: boolean;
 };
 
 interface Props extends WithStyles<typeof styles> {}
 
-const AboutPage: React.FC<Props> = props => {
+const SearchPage: React.FC<Props> = props => {
+  const [term, setTerm] = useState('');
+
   const [goBack, handleBack] = useGoBack();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTerm(e.target.value);
+    // tslint:disable-next-line
+    console.log(term);
+  };
 
   if (goBack) {
     return <Redirect to="/content" />;
@@ -33,11 +41,15 @@ const AboutPage: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      <NavBar title={S.ABOUT_TITLE} onBack={handleBack} />
+      <NavBar
+        title={'Search'}
+        onBack={handleBack}
+        rightHandButtons={<input type="text" value={term} onChange={handleChange} />}
+      />
       <GridContainer>
         <Paper className={props.classes.root}>
           <Typography variant="h4" component="h1" gutterBottom={true}>
-            Overzicht
+            {term}
           </Typography>
           <Typography variant="body1">Bla bla</Typography>
           <Typography variant="caption">Copyright 2019, Jim Cramer, Amstelveen</Typography>
@@ -47,4 +59,4 @@ const AboutPage: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(AboutPage);
+export default withStyles(styles)(SearchPage);

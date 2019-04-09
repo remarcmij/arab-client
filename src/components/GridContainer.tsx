@@ -1,5 +1,5 @@
-import Grid from '@material-ui/core/Grid'
-import * as React from 'react'
+import Grid from '@material-ui/core/Grid';
+import * as React from 'react';
 
 const GridContainer: React.FC = props => {
   return (
@@ -8,7 +8,7 @@ const GridContainer: React.FC = props => {
         {props.children}
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default GridContainer
+export default GridContainer;

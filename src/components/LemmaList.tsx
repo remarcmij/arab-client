@@ -1,11 +1,11 @@
-import Paper from '@material-ui/core/Paper'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import * as React from 'react'
-import Types from 'Types'
-import Transcoder from '../services/Transcoder'
-import Divider from '@material-ui/core/Divider'
-import SpeechSynthesizer from '../services/SpeechSynthesizer'
+import Paper from '@material-ui/core/Paper';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
+import Types from 'Types';
+import Transcoder from '../services/Transcoder';
+import Divider from '@material-ui/core/Divider';
+import SpeechSynthesizer from '../services/SpeechSynthesizer';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2,
     },
-    lemmas: {
+    wordlist: {
       marginBlockStart: 0,
       marginBlockEnd: 0,
     },
@@ -38,23 +38,23 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing.unit,
       marginLeft: theme.spacing.unit * 4,
     },
-  })
+  });
 
 interface Props extends WithStyles<typeof styles> {
-  document: Types.LemmaDocument
-  showVocalization: boolean
-  showTranscription: boolean
-  romanizationStandard: string
-  voiceName: string
-  voiceEnabled: boolean
+  document: Types.LemmaDocument;
+  showVocalization: boolean;
+  showTranscription: boolean;
+  romanizationStandard: string;
+  voiceName: string;
+  voiceEnabled: boolean;
 }
 
 const handleClick = (voiceEnabled: boolean, voiceName: string, foreign: string) => {
   if (voiceEnabled && voiceName !== 'none') {
     // tslint:disable-next-line:no-floating-promises
-    SpeechSynthesizer.speak(voiceName, foreign)
+    SpeechSynthesizer.speak(voiceName, foreign);
   }
-}
+};
 
 const LemmaList: React.FC<Props> = ({
   document,
@@ -86,9 +86,9 @@ const LemmaList: React.FC<Props> = ({
         </Typography>
       )}
     </li>
-  )
+  );
 
-  const { title, subtitle, prolog, epilog, body: lemmas } = document
+  const { title, subtitle, prolog, epilog, body: wordlist } = document;
 
   return (
     <Paper className={classes.root}>
@@ -111,8 +111,8 @@ const LemmaList: React.FC<Props> = ({
           <Divider />
         </React.Fragment>
       )}
-      <ul dir="rtl" className={classes.lemmas}>
-        {lemmas.map(renderLemma)}
+      <ul dir="rtl" className={classes.wordlist}>
+        {wordlist.map(renderLemma)}
       </ul>
       {epilog && (
         <React.Fragment>
@@ -124,7 +124,7 @@ const LemmaList: React.FC<Props> = ({
         </React.Fragment>
       )}
     </Paper>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(LemmaList)
+export default withStyles(styles)(LemmaList);

@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
-import Types from 'Types'
-import Typography from '@material-ui/core/Typography'
+import * as React from 'react';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Types from 'Types';
+import Typography from '@material-ui/core/Typography';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -17,16 +17,16 @@ const styles = (theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-  })
+  });
 
 interface Props extends WithStyles<typeof styles> {
-  document: Types.LemmaDocument
-  index: number
-  length: number
+  document: Types.LemmaDocument;
+  index: number;
+  length: number;
 }
 
 const FlashcardHeader: React.FC<Props> = props => {
-  const { document, index, length, classes } = props
+  const { document, index, length, classes } = props;
   return (
     <Paper className={classes.root} square={true}>
       <div className={classes.flexContainer}>
@@ -39,7 +39,7 @@ const FlashcardHeader: React.FC<Props> = props => {
       </div>
       <div>{document.subtitle && <Typography variant="body1">{document.subtitle}</Typography>}</div>
     </Paper>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(FlashcardHeader)
+export default withStyles(styles)(FlashcardHeader);

@@ -34,7 +34,8 @@
     "tslint-react": "^3.6.0",
     "typesafe-actions": "^3.1.0",
     "typescript": "3.3.3",
-    "typescript-tslint-plugin": "^0.3.1"
+    "typescript-tslint-plugin": "^0.3.1",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,10 +46,14 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "http://localhost:8080",
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@types/uuid": "^3.4.4"
+  }
 }

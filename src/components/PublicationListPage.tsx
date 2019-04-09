@@ -1,33 +1,33 @@
-import List from '@material-ui/core/List'
-import Paper from '@material-ui/core/Paper'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import React, { useEffect } from 'react'
-import Types from 'Types'
-import GridContainer from '../components/GridContainer'
-import NavBar from '../components/NavBar'
-import PublicationListItem from './PublicationListItem'
-import * as S from './strings'
+import List from '@material-ui/core/List';
+import Paper from '@material-ui/core/Paper';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
+import Types from 'Types';
+import GridContainer from '../components/GridContainer';
+import NavBar from '../components/NavBar';
+import PublicationListItem from './PublicationListItem';
+import * as S from './strings';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: theme.spacing.unit,
     },
-  })
+  });
 
 interface Props extends WithStyles<typeof styles> {
-  documents: Types.AppDocument[]
-  isLoading: boolean
-  error: Error | null
-  fetchPublicationList: () => void
+  documents: Types.AppDocument[];
+  isLoading: boolean;
+  error: Error | null;
+  fetchPublicationList: () => void;
 }
 
 const PublicationListPage: React.FC<Props> = props => {
-  const { isLoading, error, documents, classes } = props
+  const { isLoading, error, documents, classes } = props;
 
   useEffect(() => {
-    props.fetchPublicationList()
-  }, [])
+    props.fetchPublicationList();
+  }, []);
 
   const renderContent = () => {
     // if (isLoading) {
@@ -35,7 +35,7 @@ const PublicationListPage: React.FC<Props> = props => {
     // }
 
     if (error) {
-      return <p>Error: {error.message}</p>
+      return <p>Error: {error.message}</p>;
     }
 
     return (
@@ -44,8 +44,8 @@ const PublicationListPage: React.FC<Props> = props => {
           <PublicationListItem key={doc.filename} publication={doc} />
         ))}
       </List>
-    )
-  }
+    );
+  };
 
   return (
     <React.Fragment>
@@ -54,7 +54,7 @@ const PublicationListPage: React.FC<Props> = props => {
         <Paper classes={{ root: classes.root }}>{renderContent()}</Paper>
       </GridContainer>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(PublicationListPage)
+export default withStyles(styles)(PublicationListPage);

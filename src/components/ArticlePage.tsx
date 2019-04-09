@@ -1,39 +1,39 @@
-import IconButton from '@material-ui/core/IconButton'
-import { withTheme, WithTheme } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
-import Code from '@material-ui/icons/Code'
-import React, { useEffect, useState } from 'react'
-import MediaQuery from 'react-responsive'
-import { match, Redirect } from 'react-router'
-import Types from 'Types'
-import ArticleTextContent from './ArticleTextContent'
-import GridContainer from './GridContainer'
-import LemmaList from './LemmaList'
-import LemmaTable from './LemmaTable'
-import NavBar from './NavBar'
-import * as S from './strings'
-import useGoBack from './useGoBack'
-import VoiceOverButton from './VoiceOverButton'
+import IconButton from '@material-ui/core/IconButton';
+import { withTheme, WithTheme } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import Code from '@material-ui/icons/Code';
+import React, { useEffect, useState } from 'react';
+import MediaQuery from 'react-responsive';
+import { match, Redirect } from 'react-router';
+import Types from 'Types';
+import ArticleTextContent from './ArticleTextContent';
+import GridContainer from './GridContainer';
+import LemmaList from './LemmaList';
+import LemmaTable from './LemmaTable';
+import NavBar from './NavBar';
+import * as S from './strings';
+import useGoBack from './useGoBack';
+import VoiceOverButton from './VoiceOverButton';
 
 interface Params {
-  publication: string
-  article: string
+  publication: string;
+  article: string;
 }
 
 interface Props extends WithTheme {
-  match: match<Params>
-  document: Types.AppDocument | null
-  isLoading: boolean
-  error: Error | null
-  showFlashcards: boolean
-  showVocalization: boolean
-  showTranscription: boolean
-  romanizationStandard: string
-  voiceEnabled: boolean
-  voiceName: string
-  fetchArticle: (publication: string, article: string) => void
-  clear: () => void
-  toggleVoice: () => void
+  match: match<Params>;
+  document: Types.AppDocument | null;
+  isLoading: boolean;
+  error: Error | null;
+  showFlashcards: boolean;
+  showVocalization: boolean;
+  showTranscription: boolean;
+  romanizationStandard: string;
+  voiceEnabled: boolean;
+  voiceName: string;
+  fetchArticle: (publication: string, article: string) => void;
+  clear: () => void;
+  toggleVoice: () => void;
 }
 
 const ArticlePage: React.FC<Props> = props => {
@@ -47,20 +47,20 @@ const ArticlePage: React.FC<Props> = props => {
     voiceName,
     voiceEnabled,
     theme,
-  } = props
+  } = props;
 
-  const { publication, article } = props.match.params
+  const { publication, article } = props.match.params;
 
-  const [goFlashcards, setGoFlashcards] = useState<boolean>(false)
-  const [goBack, handleBack] = useGoBack(props.clear)
+  const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
+  const [goBack, handleBack] = useGoBack(props.clear);
 
   useEffect(() => {
     if (document === null) {
-      props.fetchArticle(publication, article)
+      props.fetchArticle(publication, article);
     }
-  }, [])
+  }, []);
 
-  const onGoFlashcards = () => setGoFlashcards(true)
+  const onGoFlashcards = () => setGoFlashcards(true);
 
   const renderNavBar = () => (
     <NavBar
@@ -68,7 +68,7 @@ const ArticlePage: React.FC<Props> = props => {
       onBack={handleBack}
       enableSettingsMenu={true}
       rightHandButtons={
-        document === null || document.kind !== 'lemmas' ? null : (
+        document === null || document.kind !== 'wordlist' ? null : (
           <React.Fragment>
             <VoiceOverButton
               voiceEnabled={voiceEnabled}
@@ -84,18 +84,18 @@ const ArticlePage: React.FC<Props> = props => {
         )
       }
     />
-  )
+  );
 
   const renderContent = () => {
     if (error) {
-      return <div>Error: {error.message}</div>
+      return <div>Error: {error.message}</div>;
     }
 
     if (!document) {
-      return null
+      return null;
     }
 
-    if (document.kind === 'lemmas') {
+    if (document.kind === 'wordlist') {
       return (
         <React.Fragment>
           <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
@@ -119,20 +119,20 @@ const ArticlePage: React.FC<Props> = props => {
             />
           </MediaQuery>
         </React.Fragment>
-      )
+      );
     }
 
-    if (document.kind === 'md') {
-      return <ArticleTextContent document={document} />
+    if (document.kind === 'text') {
+      return <ArticleTextContent document={document} />;
     }
-  }
+  };
 
   if (goBack) {
-    return <Redirect to={`/content/${publication}`} />
+    return <Redirect to={`/content/${publication}`} />;
   }
 
   if (goFlashcards) {
-    return <Redirect to={`/content/${publication}/${article}/flashcards`} />
+    return <Redirect to={`/content/${publication}/${article}/flashcards`} />;
   }
 
   return (
@@ -140,7 +140,7 @@ const ArticlePage: React.FC<Props> = props => {
       {renderNavBar()}
       <GridContainer>{renderContent()}</GridContainer>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default withTheme()(ArticlePage)
+export default withTheme()(ArticlePage);

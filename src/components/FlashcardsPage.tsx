@@ -1,52 +1,52 @@
-import { withTheme, WithTheme } from '@material-ui/core/styles'
-import React, { useEffect } from 'react'
-import { match, Redirect } from 'react-router'
-import Types from 'Types'
-import GridContainer from './GridContainer'
-import LemmaFlashcards from './LemmaFlashcards'
-import NavBar from './NavBar'
-import * as S from './strings'
-import VoiceOverButton from './VoiceOverButton'
-import Grid from '@material-ui/core/Grid'
-import useGoBack from './useGoBack'
+import { withTheme, WithTheme } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
+import { match, Redirect } from 'react-router';
+import Types from 'Types';
+import GridContainer from './GridContainer';
+import LemmaFlashcards from './LemmaFlashcards';
+import NavBar from './NavBar';
+import * as S from './strings';
+import VoiceOverButton from './VoiceOverButton';
+import Grid from '@material-ui/core/Grid';
+import useGoBack from './useGoBack';
 
 interface Params {
-  publication: string
-  article: string
+  publication: string;
+  article: string;
 }
 
 interface Props extends WithTheme {
-  match: match<Params>
-  isLoading: boolean
-  error: Error | null
-  document: Types.LemmaDocument
-  showVocalization: boolean
-  showTranscription: boolean
-  romanizationStandard: string
-  voiceEnabled: boolean
-  voiceName: string
-  fetchArticle: (publication: string, article: string) => void
-  toggleVoice: () => void
+  match: match<Params>;
+  isLoading: boolean;
+  error: Error | null;
+  document: Types.LemmaDocument;
+  showVocalization: boolean;
+  showTranscription: boolean;
+  romanizationStandard: string;
+  voiceEnabled: boolean;
+  voiceName: string;
+  fetchArticle: (publication: string, article: string) => void;
+  toggleVoice: () => void;
 }
 
 const FlashcardPage: React.FC<Props> = props => {
-  const { document, showVocalization, voiceEnabled, voiceName, toggleVoice } = props
-  const { publication, article } = props.match.params
+  const { document, showVocalization, voiceEnabled, voiceName, toggleVoice } = props;
+  const { publication, article } = props.match.params;
 
-  const [goBack, handleBack] = useGoBack()
+  const [goBack, handleBack] = useGoBack();
 
   useEffect(() => {
     if (!props.document) {
-      props.fetchArticle(publication, article)
+      props.fetchArticle(publication, article);
     }
-  }, [])
+  }, []);
 
   if (goBack) {
-    return <Redirect to={`/content/${publication}/${article}`} />
+    return <Redirect to={`/content/${publication}/${article}`} />;
   }
 
   if (!document) {
-    return null
+    return null;
   }
 
   return (
@@ -76,7 +76,7 @@ const FlashcardPage: React.FC<Props> = props => {
         </Grid>
       </GridContainer>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default withTheme()(FlashcardPage)
+export default withTheme()(FlashcardPage);

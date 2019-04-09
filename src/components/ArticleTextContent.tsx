@@ -1,7 +1,7 @@
-import Paper from '@material-ui/core/Paper'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
-import * as React from 'react'
-import Types from 'Types'
+import Paper from '@material-ui/core/Paper';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import Types from 'Types';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -16,14 +16,14 @@ const styles = (theme: Theme) =>
         padding: theme.spacing.unit * 3,
       },
     },
-  })
+  });
 
 interface Props extends WithStyles<typeof styles> {
-  document: Types.MarkdownDocument
+  document: Types.MarkdownDocument;
 }
 
 const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
-  const { prolog, epilog, body } = document
+  const { prolog, epilog, body } = document;
   return (
     <Paper className={classes.root}>
       <article
@@ -31,7 +31,7 @@ const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
         dangerouslySetInnerHTML={{ __html: body }}
       />
     </Paper>
-  )
-}
+  );
+};
 
-export default withStyles(styles)(ArticleTextContent)
+export default withStyles(styles)(ArticleTextContent);
