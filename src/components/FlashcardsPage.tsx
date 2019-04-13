@@ -9,6 +9,9 @@ import * as S from './strings';
 import VoiceOverButton from './VoiceOverButton';
 import Grid from '@material-ui/core/Grid';
 import useGoBack from './useGoBack';
+import useFetch from '../hooks/useFetch';
+import { useSettingsContext } from '../stores/settings/SettingsStore';
+import * as actions from '../stores/settings/actions';
 
 interface Params {
   publication: string;
@@ -17,36 +20,25 @@ interface Params {
 
 interface Props extends WithTheme {
   match: match<Params>;
-  isLoading: boolean;
-  error: Error | null;
-  document: Types.LemmaDocument;
-  showVocalization: boolean;
-  showTranscription: boolean;
-  romanizationStandard: string;
-  voiceEnabled: boolean;
-  voiceName: string;
-  fetchArticle: (publication: string, article: string) => void;
-  toggleVoice: () => void;
 }
 
 const FlashcardPage: React.FC<Props> = props => {
-  const { document, showVocalization, voiceEnabled, voiceName, toggleVoice } = props;
   const { publication, article } = props.match.params;
+
+  const { settings, dispatch } = useSettingsContext();
+
+  const { showVocalization, voiceName, voiceEnabled } = settings;
+
+  const toggleVoice = () => dispatch(actions.toggleVoice());
 
   const [goBack, handleBack] = useGoBack();
 
-  useEffect(() => {
-    if (!props.document) {
-      props.fetchArticle(publication, article);
-    }
-  }, []);
+  const { data: document, error } = useFetch<Types.LemmaDocument>(
+    `/api/article/${publication}.${article}`,
+  );
 
   if (goBack) {
     return <Redirect to={`/content/${publication}/${article}`} />;
-  }
-
-  if (!document) {
-    return null;
   }
 
   return (
@@ -63,18 +55,20 @@ const FlashcardPage: React.FC<Props> = props => {
           />
         }
       />
-      <GridContainer>
-        <Grid container={true} justify="center">
-          <Grid item={true} xs={12} md={10} lg={8}>
-            <LemmaFlashcards
-              document={document}
-              showVocalization={showVocalization}
-              voiceEnabled={voiceEnabled}
-              voiceName={voiceName}
-            />
+      {document && (
+        <GridContainer>
+          <Grid container={true} justify="center">
+            <Grid item={true} xs={12} md={10} lg={8}>
+              <LemmaFlashcards
+                document={document}
+                showVocalization={showVocalization}
+                voiceEnabled={voiceEnabled}
+                voiceName={voiceName}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </GridContainer>
+        </GridContainer>
+      )}
     </React.Fragment>
   );
 };

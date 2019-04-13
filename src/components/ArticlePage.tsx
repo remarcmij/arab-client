@@ -2,10 +2,11 @@ import IconButton from '@material-ui/core/IconButton';
 import { withTheme, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Code from '@material-ui/icons/Code';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import MediaQuery from 'react-responsive';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
+import useFetch from '../hooks/useFetch';
 import ArticleTextContent from './ArticleTextContent';
 import GridContainer from './GridContainer';
 import LemmaList from './LemmaList';
@@ -14,6 +15,8 @@ import NavBar from './NavBar';
 import * as S from './strings';
 import useGoBack from './useGoBack';
 import VoiceOverButton from './VoiceOverButton';
+import { useSettingsContext } from '../stores/settings/SettingsStore';
+import * as actions from '../stores/settings/actions';
 
 interface Params {
   publication: string;
@@ -22,45 +25,31 @@ interface Params {
 
 interface Props extends WithTheme {
   match: match<Params>;
-  document: Types.AppDocument | null;
-  isLoading: boolean;
-  error: Error | null;
-  showFlashcards: boolean;
-  showVocalization: boolean;
-  showTranscription: boolean;
-  romanizationStandard: string;
-  voiceEnabled: boolean;
-  voiceName: string;
-  fetchArticle: (publication: string, article: string) => void;
-  clear: () => void;
-  toggleVoice: () => void;
 }
 
 const ArticlePage: React.FC<Props> = props => {
+  const { settings, dispatch } = useSettingsContext();
+
   const {
-    error,
-    document,
-    toggleVoice,
     showVocalization,
     showTranscription,
     romanizationStandard,
     voiceName,
     voiceEnabled,
-    theme,
-  } = props;
+  } = settings;
+
+  const toggleVoice = () => dispatch(actions.toggleVoice());
 
   const { publication, article } = props.match.params;
 
   const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
-  const [goBack, handleBack] = useGoBack(props.clear);
-
-  useEffect(() => {
-    if (document === null) {
-      props.fetchArticle(publication, article);
-    }
-  }, []);
+  const [goBack, handleBack] = useGoBack();
 
   const onGoFlashcards = () => setGoFlashcards(true);
+
+  const { data: document, error } = useFetch<Types.AppDocument>(
+    `/api/article/${publication}.${article}`,
+  );
 
   const renderNavBar = () => (
     <NavBar
@@ -98,7 +87,7 @@ const ArticlePage: React.FC<Props> = props => {
     if (document.kind === 'wordlist') {
       return (
         <React.Fragment>
-          <MediaQuery query={`(min-device-width: ${theme.breakpoints.values.sm + 1}px)`}>
+          <MediaQuery query={`(min-device-width: ${props.theme.breakpoints.values.sm + 1}px)`}>
             <LemmaTable
               document={document}
               showVocalization={showVocalization}
@@ -108,7 +97,7 @@ const ArticlePage: React.FC<Props> = props => {
               voiceEnabled={voiceEnabled}
             />
           </MediaQuery>
-          <MediaQuery query={`(max-device-width: ${theme.breakpoints.values.sm}px)`}>
+          <MediaQuery query={`(max-device-width: ${props.theme.breakpoints.values.sm}px)`}>
             <LemmaList
               document={document}
               showVocalization={showVocalization}
