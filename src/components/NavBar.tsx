@@ -8,7 +8,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MenuIcon from '@material-ui/icons/Menu';
 import Settings from '@material-ui/icons/Settings';
 import React, { useState } from 'react';
-import SettingsDialogContainer from '../containers/SettingsDialogContainer';
+import SettingsDialog from './SettingsDialog';
 import GridContainer from './GridContainer';
 import MainDrawer from './MainDrawer';
 import * as S from './strings';
@@ -85,7 +85,7 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
             </Tooltip>
           )}
         </Toolbar>
-        <SettingsDialogContainer open={settingsDialogOpen} onClose={handleCloseDialog} />
+        <SettingsDialog open={settingsDialogOpen} onClose={handleCloseDialog} />
         <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
       </GridContainer>
     </AppBar>

@@ -1,6 +1,3 @@
-import { setVoiceName } from '../features/settings/actions';
-import store from '../store';
-
 // tslint:disable:no-console
 
 class SpeechSynthesizer {
@@ -28,9 +25,6 @@ class SpeechSynthesizer {
         );
         if (process.env.NODE_ENV === 'development') {
           console.table(this.voices);
-        }
-        if (this.voices.length === 0) {
-          store.dispatch(setVoiceName('none'));
         }
       })
       .catch(error => console.error(error));

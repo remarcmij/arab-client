@@ -6,7 +6,7 @@ import { Redirect } from 'react-router';
 import GridContainer from './GridContainer';
 import NavBar from './NavBar';
 import * as S from './strings';
-import useGoBack from './useGoBack';
+import useGoBack from '../hooks/useGoBack';
 
 const styles = (theme: Theme) =>
   createStyles({

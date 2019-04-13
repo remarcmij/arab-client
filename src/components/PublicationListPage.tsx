@@ -7,6 +7,7 @@ import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
 import PublicationListItem from './PublicationListItem';
 import * as S from './strings';
+import useFetch from '../hooks/useFetch';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -16,23 +17,18 @@ const styles = (theme: Theme) =>
   });
 
 interface Props extends WithStyles<typeof styles> {
-  documents: Types.AppDocument[];
-  isLoading: boolean;
-  error: Error | null;
   fetchPublicationList: () => void;
 }
 
 const PublicationListPage: React.FC<Props> = props => {
-  const { isLoading, error, documents, classes } = props;
+  const { classes } = props;
 
-  useEffect(() => {
-    props.fetchPublicationList();
-  }, []);
+  const { data: documents, error, loading } = useFetch<Types.AppDocument[]>('/api');
 
   const renderContent = () => {
-    // if (isLoading) {
-    //   return <p>Loading...</p>
-    // }
+    if (loading || documents === null) {
+      return null;
+    }
 
     if (error) {
       return <p>Error: {error.message}</p>;
@@ -40,9 +36,8 @@ const PublicationListPage: React.FC<Props> = props => {
 
     return (
       <List>
-        {documents.map(doc => (
-          <PublicationListItem key={doc.filename} publication={doc} />
-        ))}
+        {documents &&
+          documents.map(doc => <PublicationListItem key={doc.filename} publication={doc} />)}
       </List>
     );
   };

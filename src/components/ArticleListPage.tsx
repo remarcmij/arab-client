@@ -8,8 +8,9 @@ import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
 import ArticleListItem from './ArticleListItem';
 import * as C from './strings';
-import useGoBack from './useGoBack';
+import useGoBack from '../hooks/useGoBack';
 import LanguageContext from '../contexts/LaunguageContext';
+import useFetch from '../hooks/useFetch';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -25,38 +26,15 @@ interface IParams {
 
 interface Props extends WithStyles<typeof styles> {
   match: match<IParams>;
-  documents: Types.AppDocument[];
-  isLoading: boolean;
-  error: Error | null;
-  fetchArticleList: (publication: string) => void;
-  clear: () => void;
 }
 
-const renderContent = ({ documents, error }: Props) => {
-  return error ? (
-    <div>Error: {error.message}</div>
-  ) : (
-    <LanguageContext.Provider value={{ base: 'nl', foreign: 'ar' }}>
-      <List>
-        {documents
-          .filter(doc => !doc.filename.endsWith('.index'))
-          .map(doc => (
-            <ArticleListItem key={`${doc.filename}`} publication={doc} />
-          ))}
-      </List>
-    </LanguageContext.Provider>
-  );
-};
-
 const ArticleListPage: React.FC<Props> = props => {
-  const [goBack, handleBack] = useGoBack(props.clear);
+  const [goBack, handleBack] = useGoBack();
 
-  useEffect(() => {
-    if (props.documents.length === 0) {
-      const { publication } = props.match.params;
-      props.fetchArticleList(publication);
-    }
-  }, []);
+  const { publication } = props.match.params;
+  const { data: documents, error, loading } = useFetch<Types.AppDocument[]>(
+    `/api/index/${publication}`,
+  );
 
   return goBack ? (
     <Redirect to="/content" />
@@ -64,8 +42,22 @@ const ArticleListPage: React.FC<Props> = props => {
     <React.Fragment>
       <NavBar title={C.ARTICLE_LIST_PAGE_TITLE} onBack={handleBack} enableSettingsMenu={true} />
       <GridContainer>
-        {!props.isLoading && (
-          <Paper classes={{ root: props.classes.root }}>{renderContent(props)}</Paper>
+        {!loading && documents !== null && (
+          <Paper classes={{ root: props.classes.root }}>
+            {error ? (
+              <div>Error: {error.message}</div>
+            ) : (
+              <LanguageContext.Provider value={{ base: 'nl', foreign: 'ar' }}>
+                <List>
+                  {documents
+                    .filter(doc => !doc.filename.endsWith('.index'))
+                    .map(doc => (
+                      <ArticleListItem key={`${doc.filename}`} publication={doc} />
+                    ))}
+                </List>
+              </LanguageContext.Provider>
+            )}
+          </Paper>
         )}
       </GridContainer>
     </React.Fragment>

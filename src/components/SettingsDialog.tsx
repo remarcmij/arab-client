@@ -3,19 +3,21 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import withMobileDialog, { InjectedProps } from '@material-ui/core/withMobileDialog';
 import React from 'react';
+import * as actions from '../stores/settings/actions';
+import { useSettingsContext } from '../stores/settings/SettingsStore';
+import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
 import * as S from './strings';
-import SpeechSynthesizer from '../services/SpeechSynthesizer';
-import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -31,37 +33,21 @@ const styles = (theme: Theme) =>
 interface BaseProps extends InjectedProps {
   open: boolean;
   onClose: () => void;
-  showVocalization: boolean;
-  toggleVocalization: () => void;
-  showTranscription: boolean;
-  toggleTranscription: () => void;
-  showFlashcards: boolean;
-  toggleFlashcards: () => void;
-  romanizationStandard: string;
-  setRomanizationSystem: (romanizationStandard: string) => void;
-  voiceEnabled: boolean;
-  toggleVoice: () => void;
-  voiceName: string;
-  setVoiceName: (voiceName: string) => void;
 }
 
 interface SettingsDialogProps extends BaseProps, WithStyles<typeof styles> {}
 
 const SettingsDialog: React.FC<SettingsDialogProps> = props => {
-  const {
-    fullScreen,
-    classes,
-    onClose,
-    open,
-    showVocalization,
-    toggleVocalization,
-    showTranscription,
-    toggleTranscription,
-    romanizationStandard,
-    setRomanizationSystem,
-    voiceName,
-    setVoiceName,
-  } = props;
+  const { fullScreen, classes, onClose, open } = props;
+
+  const { settings, dispatch } = useSettingsContext();
+
+  const { showVocalization, showTranscription, romanizationStandard, voiceName } = settings;
+
+  const toggleVocalization = () => dispatch(actions.toggleVocalization());
+  const toggleTranscription = () => dispatch(actions.toggleTranscription());
+  const setRomanizationSystem = (value: string) => dispatch(actions.setRomanizationSystem(value));
+  const setVoiceName = (value: string) => dispatch(actions.setVoiceName(value));
 
   const renderRomanizationSelect = () => (
     <FormControl>

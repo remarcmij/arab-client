@@ -6,7 +6,7 @@ import { Redirect } from 'react-router';
 import GridContainer from './GridContainer';
 import NavBar from './NavBar';
 import * as S from './strings';
-import useGoBack from './useGoBack';
+import useGoBack from '../hooks/useGoBack';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -19,7 +19,7 @@ const styles = (theme: Theme) =>
   });
 
 type State = {
-  goBack: boolean
+  goBack: boolean;
 };
 
 interface Props extends WithStyles<typeof styles> {}
