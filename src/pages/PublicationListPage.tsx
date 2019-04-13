@@ -5,8 +5,8 @@ import React, { useEffect } from 'react';
 import Types from 'Types';
 import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
-import PublicationListItem from './PublicationListItem';
-import * as S from './strings';
+import PublicationListItem from '../components/PublicationListItem';
+import * as S from '../components/strings';
 import useFetch from '../hooks/useFetch';
 
 const styles = (theme: Theme) =>
@@ -16,9 +16,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
-  fetchPublicationList: () => void;
-}
+interface Props extends WithStyles<typeof styles> {}
 
 const PublicationListPage: React.FC<Props> = props => {
   const { classes } = props;

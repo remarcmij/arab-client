@@ -1,12 +1,12 @@
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import AboutPage from './AboutPage';
+import AboutPage from '../pages/AboutPage';
 import SearchPage from './SearchPage';
-import ArticleListPage from './ArticleListPage';
-import ArticlePage from './ArticlePage';
-import FlashcardPage from './FlashcardsPage';
-import PublicationListPage from './PublicationListPage';
+import ArticleListPage from '../pages/ArticleListPage';
+import ArticlePage from '../pages/ArticlePage';
+import FlashcardPage from '../pages/FlashcardsPage';
+import PublicationListPage from '../pages/PublicationListPage';
 import { SettingsStore } from '../stores/settings/SettingsStore';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
