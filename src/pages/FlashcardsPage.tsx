@@ -1,5 +1,6 @@
+import Grid from '@material-ui/core/Grid';
 import { withTheme, WithTheme } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
 import GridContainer from '../components/GridContainer';
@@ -7,11 +8,9 @@ import LemmaFlashcards from '../components/LemmaFlashcards';
 import NavBar from '../components/NavBar';
 import * as S from '../components/strings';
 import VoiceOverButton from '../components/VoiceOverButton';
-import Grid from '@material-ui/core/Grid';
-import useGoBack from '../hooks/useGoBack';
 import useFetch from '../hooks/useFetch';
-import { useSettingsContext } from '../stores/settings/SettingsStore';
-import * as actions from '../stores/settings/actions';
+import useGoBack from '../hooks/useGoBack';
+import { useSettingsContext } from '../contexts/SettingsProvider';
 
 interface Params {
   publication: string;
@@ -25,11 +24,9 @@ interface Props extends WithTheme {
 const FlashcardPage: React.FC<Props> = props => {
   const { publication, article } = props.match.params;
 
-  const { settings, dispatch } = useSettingsContext();
+  const { settings, toggleVoice } = useSettingsContext();
 
   const { showVocalization, voiceName, voiceEnabled } = settings;
-
-  const toggleVoice = () => dispatch(actions.toggleVoice());
 
   const [goBack, handleBack] = useGoBack();
 

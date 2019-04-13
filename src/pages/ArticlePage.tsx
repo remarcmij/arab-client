@@ -6,17 +6,16 @@ import React, { useState } from 'react';
 import MediaQuery from 'react-responsive';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
-import useFetch from '../hooks/useFetch';
 import ArticleTextContent from '../components/ArticleTextContent';
 import GridContainer from '../components/GridContainer';
 import LemmaList from '../components/LemmaList';
 import LemmaTable from '../components/LemmaTable';
 import NavBar from '../components/NavBar';
 import * as S from '../components/strings';
-import useGoBack from '../hooks/useGoBack';
 import VoiceOverButton from '../components/VoiceOverButton';
-import { useSettingsContext } from '../stores/settings/SettingsStore';
-import * as actions from '../stores/settings/actions';
+import useFetch from '../hooks/useFetch';
+import useGoBack from '../hooks/useGoBack';
+import { useSettingsContext } from '../contexts/SettingsProvider';
 
 interface Params {
   publication: string;
@@ -28,7 +27,7 @@ interface Props extends WithTheme {
 }
 
 const ArticlePage: React.FC<Props> = props => {
-  const { settings, dispatch } = useSettingsContext();
+  const { settings, toggleVoice } = useSettingsContext();
 
   const {
     showVocalization,
@@ -37,8 +36,6 @@ const ArticlePage: React.FC<Props> = props => {
     voiceName,
     voiceEnabled,
   } = settings;
-
-  const toggleVoice = () => dispatch(actions.toggleVoice());
 
   const { publication, article } = props.match.params;
 

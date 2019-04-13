@@ -13,10 +13,9 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/s
 import Switch from '@material-ui/core/Switch';
 import withMobileDialog, { InjectedProps } from '@material-ui/core/withMobileDialog';
 import React from 'react';
-import * as actions from '../stores/settings/actions';
-import { useSettingsContext } from '../stores/settings/SettingsStore';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
+import { useSettingsContext } from '../contexts/SettingsProvider';
 import * as S from './strings';
 
 const styles = (theme: Theme) =>
@@ -40,14 +39,15 @@ interface SettingsDialogProps extends BaseProps, WithStyles<typeof styles> {}
 const SettingsDialog: React.FC<SettingsDialogProps> = props => {
   const { fullScreen, classes, onClose, open } = props;
 
-  const { settings, dispatch } = useSettingsContext();
+  const {
+    settings,
+    toggleVocalization,
+    toggleTranscription,
+    setRomanizationSystem,
+    setVoiceName,
+  } = useSettingsContext();
 
   const { showVocalization, showTranscription, romanizationStandard, voiceName } = settings;
-
-  const toggleVocalization = () => dispatch(actions.toggleVocalization());
-  const toggleTranscription = () => dispatch(actions.toggleTranscription());
-  const setRomanizationSystem = (value: string) => dispatch(actions.setRomanizationSystem(value));
-  const setVoiceName = (value: string) => dispatch(actions.setVoiceName(value));
 
   const renderRomanizationSelect = () => (
     <FormControl>
