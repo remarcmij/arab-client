@@ -11,7 +11,8 @@
     "strip",
     "tashkeel",
     "typesafe",
-    "uuidv"
+    "uuidv",
+    "wordlist"
   ],
   "cSpell.ignorePaths": [
     "**/package-lock.json",
