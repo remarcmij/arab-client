@@ -1,7 +1,7 @@
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import React, { useState } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router';
 import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
@@ -22,7 +22,7 @@ type State = {
   goBack: boolean;
 };
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 const AboutPage: React.FC<Props> = props => {
   const [goBack, handleBack] = useGoBack();

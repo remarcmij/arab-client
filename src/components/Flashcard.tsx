@@ -39,13 +39,15 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   lemma: Types.Lemma;
   showTranslation: boolean;
   showVocalization: boolean;
   voiceEnabled: boolean;
   voiceName: string;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 // tslint:disable:no-floating-promises
 

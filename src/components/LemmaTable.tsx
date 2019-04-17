@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   document: Types.LemmaDocument;
   showVocalization: boolean;
   showTranscription: boolean;
@@ -50,6 +50,8 @@ interface Props extends WithStyles<typeof styles> {
   voiceName: string;
   voiceEnabled: boolean;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const handleClick = (voiceEnabled: boolean, voiceName: string, foreign: string) => {
   if (voiceEnabled && voiceName !== 'none') {

@@ -1,16 +1,16 @@
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
+import ArticleListItem from '../components/ArticleListItem';
 import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
-import ArticleListItem from '../components/ArticleListItem';
 import * as C from '../components/strings';
-import useGoBack from '../hooks/useGoBack';
 import LanguageContext from '../contexts/LaunguageContext';
 import useFetch from '../hooks/useFetch';
+import useGoBack from '../hooks/useGoBack';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -24,9 +24,11 @@ interface IParams {
   article: string;
 }
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   match: match<IParams>;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const ArticleListPage: React.FC<Props> = props => {
   const [goBack, handleBack] = useGoBack();

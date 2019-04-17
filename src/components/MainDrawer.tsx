@@ -18,10 +18,12 @@ const styles = () =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   open: boolean;
   toggleDrawer: () => void;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const MainDrawer: React.FC<Props> = props => {
   const { classes, open, toggleDrawer } = props;

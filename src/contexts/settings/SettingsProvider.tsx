@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionType } from 'typesafe-actions';
-import * as actions from './settings-actions';
-import * as C from './settings-constants';
+import * as actions from './actions';
+import * as C from './constants';
 
 const LOCAL_STORAGE_KEY = '@arab/settings';
 
@@ -73,7 +73,7 @@ export const SettingsProvider: React.FC = props => {
 
 export const useSettingsContext = () => {
   const context = React.useContext(SettingsContext);
-  if (context === null) throw new Error('SettingContext: default null is unexpected');
+  if (context === null) throw new Error('SettingContext: null context is unexpected');
   return context;
 };
 

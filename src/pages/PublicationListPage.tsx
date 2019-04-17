@@ -1,7 +1,7 @@
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Types from 'Types';
 import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 const PublicationListPage: React.FC<Props> = props => {
   const { classes } = props;
@@ -42,7 +42,7 @@ const PublicationListPage: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      <NavBar title={S.APP_TITLE} showDrawerButton={true} enableSettingsMenu={true} />
+      <NavBar title={S.APP_TITLE} enableSettingsMenu={true} />
       <GridContainer>
         <Paper classes={{ root: classes.root }}>{renderContent()}</Paper>
       </GridContainer>

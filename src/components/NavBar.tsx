@@ -26,9 +26,8 @@ const styles = createStyles({
   },
 });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   title: string;
-  showDrawerButton?: boolean;
   enableSettingsMenu?: boolean;
   rightHandButtons: React.ReactElement<any> | null;
   onBack?: () => void;
@@ -36,8 +35,10 @@ interface Props extends WithStyles<typeof styles> {
   onRightMenu?: () => void;
 }
 
+type Props = OwnProps & WithStyles<typeof styles>;
+
 const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
-  const { title, onBack, showDrawerButton, enableSettingsMenu, rightHandButtons, classes } = props;
+  const { title, onBack, enableSettingsMenu, rightHandButtons, classes } = props;
 
   const [mainDrawerOpen, setMainDrawerOpen] = useState(false);
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
@@ -58,12 +59,11 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
     <AppBar position="fixed">
       <GridContainer>
         <Toolbar>
-          {onBack && (
+          {onBack ? (
             <IconButton className={classes.leftButton} onClick={onBack} color="inherit">
               <ArrowBackIcon />
             </IconButton>
-          )}
-          {showDrawerButton && (
+          ) : (
             <IconButton className={classes.leftButton} onClick={handleToggleDrawer} color="inherit">
               <MenuIcon />
             </IconButton>
@@ -88,14 +88,13 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
         {enableSettingsMenu && (
           <SettingsDialog open={settingsDialogOpen} onClose={handleCloseDialog} />
         )}
-        <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
+        {!onBack && <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />}
       </GridContainer>
     </AppBar>
   );
 };
 
 NavBar.defaultProps = {
-  showDrawerButton: false,
   enableSettingsMenu: false,
   rightHandButtons: null,
 };

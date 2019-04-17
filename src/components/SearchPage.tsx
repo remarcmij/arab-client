@@ -3,10 +3,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
+import useGoBack from '../hooks/useGoBack';
 import GridContainer from './GridContainer';
 import NavBar from './NavBar';
-import * as S from './strings';
-import useGoBack from '../hooks/useGoBack';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -22,7 +21,7 @@ type State = {
   goBack: boolean;
 };
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 const SearchPage: React.FC<Props> = props => {
   const [term, setTerm] = useState('');

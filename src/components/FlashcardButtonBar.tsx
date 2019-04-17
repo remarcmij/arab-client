@@ -22,10 +22,12 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   onNext: () => void;
   onPrev: () => void;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const FlashcardButtonBar: React.FC<Props> = ({ classes, onNext, onPrev }) => (
   <Paper className={classes.root} square={true} elevation={1}>

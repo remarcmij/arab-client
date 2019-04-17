@@ -15,13 +15,13 @@ import withMobileDialog, { InjectedProps } from '@material-ui/core/withMobileDia
 import React from 'react';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
-import { useSettingsContext } from '../contexts/SettingsProvider';
+import { useSettingsContext } from '../contexts/settings';
 import {
   setRomanizationSystem,
   setVoiceName,
   toggleVocalization,
   toggleTranscription,
-} from '../contexts/settings-actions';
+} from '../contexts/settings/actions';
 import * as S from './strings';
 
 const styles = (theme: Theme) =>
@@ -35,14 +35,14 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface BaseProps extends InjectedProps {
+interface OwnProps {
   open: boolean;
   onClose: () => void;
 }
 
-interface SettingsDialogProps extends BaseProps, WithStyles<typeof styles> {}
+type Props = OwnProps & InjectedProps & WithStyles<typeof styles>;
 
-const SettingsDialog: React.FC<SettingsDialogProps> = props => {
+const SettingsDialog: React.FC<Props> = props => {
   const { fullScreen, classes, onClose, open } = props;
 
   const { settings, dispatch } = useSettingsContext();
@@ -134,4 +134,4 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
   );
 };
 
-export default withMobileDialog<BaseProps>()(withStyles(styles)(SettingsDialog));
+export default withMobileDialog<OwnProps>()(withStyles(styles)(SettingsDialog));
