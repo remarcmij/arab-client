@@ -22,7 +22,7 @@ type State = {
   goBack: boolean;
 };
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 const SearchPage: React.FC<Props> = props => {
   const [term, setTerm] = useState('');

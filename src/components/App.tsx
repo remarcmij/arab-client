@@ -6,7 +6,7 @@ import ArticleListPage from '../pages/ArticleListPage';
 import ArticlePage from '../pages/ArticlePage';
 import FlashcardPage from '../pages/FlashcardsPage';
 import PublicationListPage from '../pages/PublicationListPage';
-import { SettingsProvider } from '../contexts/SettingsProvider';
+import { SettingsProvider } from '../contexts/settings';
 import SearchPage from './SearchPage';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
@@ -20,7 +20,7 @@ const styles = createStyles({
   },
 });
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 const App: React.FC<Props> = ({ classes }) => {
   return (

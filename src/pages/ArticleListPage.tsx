@@ -24,9 +24,11 @@ interface IParams {
   article: string;
 }
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   match: match<IParams>;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const ArticleListPage: React.FC<Props> = props => {
   const [goBack, handleBack] = useGoBack();

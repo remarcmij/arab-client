@@ -18,9 +18,11 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   document: Types.MarkdownDocument;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
   const { prolog, epilog, body } = document;

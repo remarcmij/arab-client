@@ -23,9 +23,11 @@ const styles = () =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   publication: Types.AppDocument;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const ArticleListItem: React.FC<Props> = props => {
   const { classes } = props;

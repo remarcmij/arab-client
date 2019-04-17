@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 const PublicationListPage: React.FC<Props> = props => {
   const { classes } = props;

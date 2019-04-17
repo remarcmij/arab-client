@@ -10,8 +10,8 @@ import * as S from '../components/strings';
 import VoiceOverButton from '../components/VoiceOverButton';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
-import { useSettingsContext } from '../contexts/SettingsProvider';
-import { toggleVoice } from '../contexts/settings-actions';
+import { useSettingsContext } from '../contexts/settings';
+import { toggleVoice } from '../contexts/settings/actions';
 
 interface Params {
   publication: string;

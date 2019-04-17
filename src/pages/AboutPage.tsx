@@ -22,7 +22,7 @@ type State = {
   goBack: boolean;
 };
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 const AboutPage: React.FC<Props> = props => {
   const [goBack, handleBack] = useGoBack();

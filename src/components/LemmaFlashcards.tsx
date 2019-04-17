@@ -14,12 +14,14 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   document: Types.LemmaDocument;
   showVocalization: boolean;
   voiceEnabled: boolean;
   voiceName: string;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const LemmaFlashcards: React.FC<Props> = props => {
   const { document, showVocalization, voiceEnabled, voiceName, classes } = props;

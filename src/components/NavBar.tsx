@@ -26,7 +26,7 @@ const styles = createStyles({
   },
 });
 
-interface Props extends WithStyles<typeof styles> {
+interface OwnProps {
   title: string;
   showDrawerButton?: boolean;
   enableSettingsMenu?: boolean;
@@ -35,6 +35,8 @@ interface Props extends WithStyles<typeof styles> {
   onLeftMenu?: () => void;
   onRightMenu?: () => void;
 }
+
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
   const { title, onBack, showDrawerButton, enableSettingsMenu, rightHandButtons, classes } = props;
