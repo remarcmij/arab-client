@@ -1,75 +1,78 @@
-import React, { useState, createContext, useContext } from 'react';
+import React from 'react';
+import { ActionType } from 'typesafe-actions';
+import * as actions from './settings-actions';
+import * as C from './settings-constants';
 
-const LOCAL_STORAGE_KEY = '@arab/setting';
+const LOCAL_STORAGE_KEY = '@arab/settings';
+
+export type SettingsAction = ActionType<typeof actions>;
 
 export type SettingsState = {
   readonly showVocalization: boolean;
   readonly showTranscription: boolean;
   readonly showFlashcards: boolean;
-  readonly romanizationStandard: string;
   readonly voiceEnabled: boolean;
+  readonly romanizationStandard: string;
   readonly voiceName: string;
 };
 
 type SettingsContextProps = {
   settings: SettingsState;
-  toggleVocalization: () => void;
-  toggleTranscription: () => void;
-  toggleFlashcards: () => void;
-  toggleVoice: () => void;
-  setRomanizationSystem: (romanizationStandard: string) => void;
-  setVoiceName: (voiceName: string) => void;
+  dispatch: React.Dispatch<SettingsAction>;
 };
 
 let initialState = {
   showVocalization: true,
   showTranscription: true,
   showFlashcards: false,
-  romanizationStandard: 'din',
   voiceEnabled: false,
+  romanizationStandard: 'din',
   voiceName: 'none',
 };
 
-const SettingsContext = createContext<SettingsContextProps | null>(null);
+const SettingsContext = React.createContext<SettingsContextProps | null>(null);
+
+const reducer = (state: SettingsState, action: SettingsAction): SettingsState => {
+  switch (action.type) {
+    case C.TOGGLE_VOCALIZATION:
+      return { ...state, showVocalization: !state.showVocalization };
+    case C.TOGGLE_TRANSCRIPTION:
+      return { ...state, showTranscription: !state.showTranscription };
+    case C.TOGGLE_FLASHCARDS:
+      return { ...state, showFlashcards: !state.showFlashcards };
+    case C.TOGGLE_VOICE:
+      return { ...state, voiceEnabled: !state.voiceEnabled };
+    case C.SET_ROMANIZATION_STANDARD:
+      return { ...state, romanizationStandard: action.payload };
+    case C.SET_VOICE_NAME:
+      return { ...state, voiceName: action.payload };
+    default:
+      return state;
+  }
+};
+
+const persistentReducer = (state: SettingsState, action: SettingsAction): SettingsState => {
+  const newState = reducer(state, action);
+  const { showVocalization, showTranscription, romanizationStandard, voiceName } = newState;
+  window.localStorage.setItem(
+    LOCAL_STORAGE_KEY,
+    JSON.stringify({ showVocalization, showTranscription, romanizationStandard, voiceName }),
+  );
+  return newState;
+};
 
 export const SettingsProvider: React.FC = props => {
-  const [settings, setSettings] = useState(initialState);
-
-  const saveSettings = (newSettings: SettingsState) => {
-    setSettings(newSettings);
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSettings));
-  };
-
-  const toggleVocalization = () =>
-    saveSettings({ ...settings, showVocalization: !settings.showVocalization });
-  const toggleTranscription = () =>
-    saveSettings({ ...settings, showTranscription: !settings.showTranscription });
-  const toggleFlashcards = () =>
-    saveSettings({ ...settings, showFlashcards: !settings.showFlashcards });
-  const toggleVoice = () => saveSettings({ ...settings, voiceEnabled: !settings.voiceEnabled });
-  const setRomanizationSystem = (romanizationStandard: string) =>
-    saveSettings({ ...settings, romanizationStandard });
-  const setVoiceName = (voiceName: string) => saveSettings({ ...settings, voiceName });
+  const [state, dispatch] = React.useReducer(persistentReducer, initialState);
 
   return (
-    <SettingsContext.Provider
-      value={{
-        settings,
-        toggleVocalization,
-        toggleTranscription,
-        toggleFlashcards,
-        toggleVoice,
-        setRomanizationSystem,
-        setVoiceName,
-      }}
-    >
+    <SettingsContext.Provider value={{ settings: state, dispatch }}>
       {props.children}
     </SettingsContext.Provider>
   );
 };
 
 export const useSettingsContext = () => {
-  const context = useContext(SettingsContext);
+  const context = React.useContext(SettingsContext);
   if (context === null) throw new Error('SettingContext: default null is unexpected');
   return context;
 };

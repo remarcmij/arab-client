@@ -85,7 +85,9 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
             </Tooltip>
           )}
         </Toolbar>
-        <SettingsDialog open={settingsDialogOpen} onClose={handleCloseDialog} />
+        {enableSettingsMenu && (
+          <SettingsDialog open={settingsDialogOpen} onClose={handleCloseDialog} />
+        )}
         <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
       </GridContainer>
     </AppBar>

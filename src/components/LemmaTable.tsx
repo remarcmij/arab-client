@@ -14,7 +14,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.up('md')]: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing.unit,
       },
       userSelect: 'none',
     },

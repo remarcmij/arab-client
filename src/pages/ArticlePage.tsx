@@ -16,6 +16,7 @@ import VoiceOverButton from '../components/VoiceOverButton';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
 import { useSettingsContext } from '../contexts/SettingsProvider';
+import { toggleVoice } from '../contexts/settings-actions';
 
 interface Params {
   publication: string;
@@ -27,7 +28,7 @@ interface Props extends WithTheme {
 }
 
 const ArticlePage: React.FC<Props> = props => {
-  const { settings, toggleVoice } = useSettingsContext();
+  const { settings, dispatch } = useSettingsContext();
 
   const {
     showVocalization,
@@ -59,7 +60,7 @@ const ArticlePage: React.FC<Props> = props => {
             <VoiceOverButton
               voiceEnabled={voiceEnabled}
               voiceName={voiceName}
-              toggleVoice={toggleVoice}
+              toggleVoice={() => dispatch(toggleVoice())}
             />
             <Tooltip title={S.FLASHCARDS_PAGE_TITLE} aria-label={S.FLASHCARDS_PAGE_TITLE}>
               <IconButton color="inherit" onClick={onGoFlashcards}>

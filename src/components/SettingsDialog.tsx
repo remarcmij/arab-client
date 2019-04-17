@@ -16,6 +16,12 @@ import React from 'react';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
 import { useSettingsContext } from '../contexts/SettingsProvider';
+import {
+  setRomanizationSystem,
+  setVoiceName,
+  toggleVocalization,
+  toggleTranscription,
+} from '../contexts/settings-actions';
 import * as S from './strings';
 
 const styles = (theme: Theme) =>
@@ -39,13 +45,7 @@ interface SettingsDialogProps extends BaseProps, WithStyles<typeof styles> {}
 const SettingsDialog: React.FC<SettingsDialogProps> = props => {
   const { fullScreen, classes, onClose, open } = props;
 
-  const {
-    settings,
-    toggleVocalization,
-    toggleTranscription,
-    setRomanizationSystem,
-    setVoiceName,
-  } = useSettingsContext();
+  const { settings, dispatch } = useSettingsContext();
 
   const { showVocalization, showTranscription, romanizationStandard, voiceName } = settings;
 
@@ -55,7 +55,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
       <Select
         native={true}
         value={romanizationStandard}
-        onChange={event => setRomanizationSystem(event.target.value)}
+        onChange={event => dispatch(setRomanizationSystem(event.target.value))}
         inputProps={{
           name: 'Romanization',
           id: 'romanizationStandard-select',
@@ -76,7 +76,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
       <Select
         native={true}
         value={voiceName}
-        onChange={event => setVoiceName(event.target.value)}
+        onChange={event => dispatch(setVoiceName(event.target.value))}
         inputProps={{
           name: 'Romanization',
           id: 'romanizationStandard-select',
@@ -106,11 +106,18 @@ const SettingsDialog: React.FC<SettingsDialogProps> = props => {
       <DialogContent>
         <FormGroup>
           <FormControlLabel
-            control={<Switch checked={showVocalization} onChange={toggleVocalization} />}
+            control={
+              <Switch checked={showVocalization} onChange={() => dispatch(toggleVocalization())} />
+            }
             label={S.SHOW_VOCALIZATION}
           />
           <FormControlLabel
-            control={<Switch checked={showTranscription} onChange={toggleTranscription} />}
+            control={
+              <Switch
+                checked={showTranscription}
+                onChange={() => dispatch(toggleTranscription())}
+              />
+            }
             label={S.SHOW_TRANSCRIPTION}
           />
           {renderRomanizationSelect()}

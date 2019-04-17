@@ -11,6 +11,7 @@ import VoiceOverButton from '../components/VoiceOverButton';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
 import { useSettingsContext } from '../contexts/SettingsProvider';
+import { toggleVoice } from '../contexts/settings-actions';
 
 interface Params {
   publication: string;
@@ -24,7 +25,7 @@ interface Props extends WithTheme {
 const FlashcardPage: React.FC<Props> = props => {
   const { publication, article } = props.match.params;
 
-  const { settings, toggleVoice } = useSettingsContext();
+  const { settings, dispatch } = useSettingsContext();
 
   const { showVocalization, voiceName, voiceEnabled } = settings;
 
@@ -48,7 +49,7 @@ const FlashcardPage: React.FC<Props> = props => {
           <VoiceOverButton
             voiceEnabled={voiceEnabled}
             voiceName={voiceName}
-            toggleVoice={toggleVoice}
+            toggleVoice={() => dispatch(toggleVoice())}
           />
         }
       />
