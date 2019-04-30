@@ -1,5 +1,10 @@
 import Paper from '@material-ui/core/Paper';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import React, { useContext } from 'react';
@@ -54,20 +59,39 @@ type Props = OwnProps & WithStyles<typeof styles>;
 const handleClick = (props: Props) => {
   const { lemma, showTranslation, voiceEnabled, voiceName } = props;
   if (voiceName !== 'none' && voiceEnabled) {
-    SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8);
+    SpeechSynthesizer.speak(
+      voiceName,
+      lemma.foreign,
+      showTranslation ? 0.6 : 0.8,
+    );
   }
 };
 
 const Flashcard: React.FC<Props> = props => {
-  const { lemma, showTranslation, showVocalization, voiceEnabled, voiceName, classes } = props;
+  const {
+    lemma,
+    showTranslation,
+    showVocalization,
+    voiceEnabled,
+    voiceName,
+    classes,
+  } = props;
   const { base, foreign } = useContext(LanguageContext);
 
   if (voiceEnabled && voiceName !== 'none') {
-    SpeechSynthesizer.speak(voiceName, lemma.foreign, showTranslation ? 0.6 : 0.8);
+    SpeechSynthesizer.speak(
+      voiceName,
+      lemma.foreign,
+      showTranslation ? 0.6 : 0.8,
+    );
   }
 
   return (
-    <Paper className={classes.root} elevation={2} onClick={() => handleClick(props)}>
+    <Paper
+      className={classes.root}
+      elevation={2}
+      onClick={() => handleClick(props)}
+    >
       <Tooltip
         classes={{ tooltip: classes.htmlTooltip }}
         title={<Typography color="inherit">{lemma.trans}</Typography>}
@@ -79,7 +103,9 @@ const Flashcard: React.FC<Props> = props => {
           dir="rtl"
           className={classes.foreign}
         >
-          {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
+          {showVocalization
+            ? lemma.foreign
+            : Transcoder.stripTashkeel(lemma.foreign)}
         </Typography>
       </Tooltip>
       <Typography

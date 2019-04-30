@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Types from 'Types';
 import Typography from '@material-ui/core/Typography';
@@ -39,7 +44,11 @@ const FlashcardHeader: React.FC<Props> = props => {
           {index + 1}/{length}
         </Typography>
       </div>
-      <div>{document.subtitle && <Typography variant="body1">{document.subtitle}</Typography>}</div>
+      <div>
+        {document.subtitle && (
+          <Typography variant="body1">{document.subtitle}</Typography>
+        )}
+      </div>
     </Paper>
   );
 };

@@ -4,8 +4,8 @@ import LRU from 'lru-cache';
 type SubstitutionTuple = [RegExp, string];
 
 type RomanizationStandard = {
-  name: string
-  substitutions?: SubstitutionTuple[]
+  name: string;
+  substitutions?: SubstitutionTuple[];
 };
 
 // See: https://en.wikipedia.org/wiki/Romanization_of_Arabic
@@ -60,7 +60,13 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
   },
   wehr: {
     name: 'Wehr',
-    substitutions: [[/ġ/g, 'ḡ'], [/ǧ/g, 'j'], [/ḫ/g, 'ḵ'], [/ʾ/g, 'ʼ'], [/ʿ/g, 'ʽ']],
+    substitutions: [
+      [/ġ/g, 'ḡ'],
+      [/ǧ/g, 'j'],
+      [/ḫ/g, 'ḵ'],
+      [/ʾ/g, 'ʼ'],
+      [/ʿ/g, 'ʽ'],
+    ],
   },
 };
 

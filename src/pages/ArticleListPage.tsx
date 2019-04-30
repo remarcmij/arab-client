@@ -1,6 +1,11 @@
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import React from 'react';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
@@ -42,7 +47,11 @@ const ArticleListPage: React.FC<Props> = props => {
     <Redirect to="/content" />
   ) : (
     <React.Fragment>
-      <NavBar title={C.ARTICLE_LIST_PAGE_TITLE} onBack={handleBack} enableSettingsMenu={true} />
+      <NavBar
+        title={C.ARTICLE_LIST_PAGE_TITLE}
+        onBack={handleBack}
+        enableSettingsMenu={true}
+      />
       <GridContainer>
         {!loading && documents !== null && (
           <Paper classes={{ root: props.classes.root }}>
@@ -54,7 +63,10 @@ const ArticleListPage: React.FC<Props> = props => {
                   {documents
                     .filter(doc => !doc.filename.endsWith('.index'))
                     .map(doc => (
-                      <ArticleListItem key={`${doc.filename}`} publication={doc} />
+                      <ArticleListItem
+                        key={`${doc.filename}`}
+                        publication={doc}
+                      />
                     ))}
                 </List>
               </LanguageContext.Provider>

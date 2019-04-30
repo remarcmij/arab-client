@@ -1,5 +1,10 @@
 import Paper from '@material-ui/core/Paper';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -53,7 +58,11 @@ interface OwnProps {
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
-const handleClick = (voiceEnabled: boolean, voiceName: string, foreign: string) => {
+const handleClick = (
+  voiceEnabled: boolean,
+  voiceName: string,
+  foreign: string,
+) => {
   if (voiceEnabled && voiceName !== 'none') {
     // tslint:disable-next-line:no-floating-promises
     SpeechSynthesizer.speak(voiceName, foreign);
@@ -72,14 +81,22 @@ const LemmaTable: React.FC<Props> = ({
   const renderLemma = (lemma: Types.Lemma, index: number) => (
     <TableRow key={index}>
       <TableCell align="left">
-        <Typography variant="h6" classes={{ h6: classes.base }} color="textPrimary">
+        <Typography
+          variant="h6"
+          classes={{ h6: classes.base }}
+          color="textPrimary"
+        >
           {lemma.base}
         </Typography>
       </TableCell>
 
       {lemma.trans && showTranscription && (
         <TableCell align="left">
-          <Typography variant="h6" classes={{ h6: classes.trans }} color="textSecondary">
+          <Typography
+            variant="h6"
+            classes={{ h6: classes.trans }}
+            color="textSecondary"
+          >
             {Transcoder.applyRomanization(lemma.trans, romanizationStandard)}
           </Typography>
         </TableCell>
@@ -90,8 +107,14 @@ const LemmaTable: React.FC<Props> = ({
         classes={{ root: classes.foreignCell }}
         onClick={() => handleClick(voiceEnabled, voiceName, lemma.foreign)}
       >
-        <Typography variant="h4" classes={{ h4: classes.foreign }} color="inherit">
-          {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
+        <Typography
+          variant="h4"
+          classes={{ h4: classes.foreign }}
+          color="inherit"
+        >
+          {showVocalization
+            ? lemma.foreign
+            : Transcoder.stripTashkeel(lemma.foreign)}
         </Typography>
       </TableCell>
     </TableRow>

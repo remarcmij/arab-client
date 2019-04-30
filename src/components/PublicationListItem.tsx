@@ -41,7 +41,9 @@ const PublicationListItem: React.FC<Props> = props => {
       </ListItemAvatar>
       <ListItemText
         primary={title}
-        secondary={<span dangerouslySetInnerHTML={{ __html: subtitle || '' }} />}
+        secondary={
+          <span dangerouslySetInnerHTML={{ __html: subtitle || '' }} />
+        }
       />
     </ListItem>
   );

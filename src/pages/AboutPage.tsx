@@ -40,7 +40,9 @@ const AboutPage: React.FC<Props> = props => {
             Overzicht
           </Typography>
           <Typography variant="body1">Bla bla</Typography>
-          <Typography variant="caption">Copyright 2019, Jim Cramer, Amstelveen</Typography>
+          <Typography variant="caption">
+            Copyright 2019, Jim Cramer, Amstelveen
+          </Typography>
         </Paper>
       </GridContainer>
     </React.Fragment>

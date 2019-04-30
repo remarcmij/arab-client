@@ -1,4 +1,9 @@
-import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  WithStyles,
+  withStyles,
+} from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import Types from 'Types';
 import Flashcard from './Flashcard';
@@ -24,7 +29,13 @@ interface OwnProps {
 type Props = OwnProps & WithStyles<typeof styles>;
 
 const LemmaFlashcards: React.FC<Props> = props => {
-  const { document, showVocalization, voiceEnabled, voiceName, classes } = props;
+  const {
+    document,
+    showVocalization,
+    voiceEnabled,
+    voiceName,
+    classes,
+  } = props;
 
   const [index, setIndex] = useState<number>(0);
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
@@ -49,7 +60,11 @@ const LemmaFlashcards: React.FC<Props> = props => {
 
   return (
     <div className={classes.root}>
-      <FlashcardHeader document={document} index={index} length={document.body.length} />
+      <FlashcardHeader
+        document={document}
+        index={index}
+        length={document.body.length}
+      />
       {wordlist.length !== 0 && (
         <Flashcard
           lemma={wordlist[index]}

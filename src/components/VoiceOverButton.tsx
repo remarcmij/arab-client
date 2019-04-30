@@ -6,9 +6,9 @@ import * as React from 'react';
 import * as S from './strings';
 
 type Props = {
-  voiceName: string
-  voiceEnabled: boolean
-  toggleVoice: () => void
+  voiceName: string;
+  voiceEnabled: boolean;
+  toggleVoice: () => void;
 };
 
 const VoiceOverButton: React.FC<Props> = props => {

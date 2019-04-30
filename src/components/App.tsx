@@ -1,6 +1,11 @@
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import AboutPage from '../pages/AboutPage';
 import ArticleListPage from '../pages/ArticleListPage';
 import ArticlePage from '../pages/ArticlePage';
@@ -29,9 +34,19 @@ const App: React.FC<Props> = ({ classes }) => {
         <SettingsProvider>
           <Switch>
             <Redirect exact={true} from="/" to="/content" />
-            <Route exact={true} path="/content/:publication" component={ArticleListPage} />
-            <Route path="/content/:publication/:article/flashcards" component={FlashcardPage} />
-            <Route path="/content/:publication/:article" component={ArticlePage} />
+            <Route
+              exact={true}
+              path="/content/:publication"
+              component={ArticleListPage}
+            />
+            <Route
+              path="/content/:publication/:article/flashcards"
+              component={FlashcardPage}
+            />
+            <Route
+              path="/content/:publication/:article"
+              component={ArticlePage}
+            />
             <Route path="/content" component={PublicationListPage} />
             <Route path="/dict" component={SearchPage} />
             <Route path="/about" component={AboutPage} />

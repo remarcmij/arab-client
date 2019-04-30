@@ -62,7 +62,10 @@ const ArticlePage: React.FC<Props> = props => {
               voiceName={voiceName}
               toggleVoice={() => dispatch(toggleVoice())}
             />
-            <Tooltip title={S.FLASHCARDS_PAGE_TITLE} aria-label={S.FLASHCARDS_PAGE_TITLE}>
+            <Tooltip
+              title={S.FLASHCARDS_PAGE_TITLE}
+              aria-label={S.FLASHCARDS_PAGE_TITLE}
+            >
               <IconButton color="inherit" onClick={onGoFlashcards}>
                 <Code />
               </IconButton>
@@ -85,7 +88,10 @@ const ArticlePage: React.FC<Props> = props => {
     if (document.kind === 'wordlist') {
       return (
         <React.Fragment>
-          <MediaQuery query={`(min-device-width: ${props.theme.breakpoints.values.sm + 1}px)`}>
+          <MediaQuery
+            query={`(min-device-width: ${props.theme.breakpoints.values.sm +
+              1}px)`}
+          >
             <LemmaTable
               document={document}
               showVocalization={showVocalization}
@@ -95,7 +101,9 @@ const ArticlePage: React.FC<Props> = props => {
               voiceEnabled={voiceEnabled}
             />
           </MediaQuery>
-          <MediaQuery query={`(max-device-width: ${props.theme.breakpoints.values.sm}px)`}>
+          <MediaQuery
+            query={`(max-device-width: ${props.theme.breakpoints.values.sm}px)`}
+          >
             <LemmaList
               document={document}
               showVocalization={showVocalization}

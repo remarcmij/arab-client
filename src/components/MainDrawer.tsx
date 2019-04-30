@@ -35,7 +35,9 @@ const MainDrawer: React.FC<Props> = props => {
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
           <ListItem button={true} key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <InfoIcon />}</ListItemIcon>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <InfoIcon />}
+            </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
@@ -54,7 +56,12 @@ const MainDrawer: React.FC<Props> = props => {
 
   return (
     <Drawer open={open} onClose={toggleDrawer}>
-      <div tabIndex={0} role="button" onClick={toggleDrawer} onKeyDown={toggleDrawer}>
+      <div
+        tabIndex={0}
+        role="button"
+        onClick={toggleDrawer}
+        onKeyDown={toggleDrawer}
+      >
         {sideList}
       </div>
     </Drawer>

@@ -9,9 +9,16 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
-import withMobileDialog, { InjectedProps } from '@material-ui/core/withMobileDialog';
+import withMobileDialog, {
+  InjectedProps,
+} from '@material-ui/core/withMobileDialog';
 import React from 'react';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
@@ -47,11 +54,18 @@ const SettingsDialog: React.FC<Props> = props => {
 
   const { settings, dispatch } = useSettingsContext();
 
-  const { showVocalization, showTranscription, romanizationStandard, voiceName } = settings;
+  const {
+    showVocalization,
+    showTranscription,
+    romanizationStandard,
+    voiceName,
+  } = settings;
 
   const renderRomanizationSelect = () => (
     <FormControl>
-      <InputLabel htmlFor="romanizationStandard-select">{S.ROMANIZATION_SYSTEM}</InputLabel>
+      <InputLabel htmlFor="romanizationStandard-select">
+        {S.ROMANIZATION_SYSTEM}
+      </InputLabel>
       <Select
         native={true}
         value={romanizationStandard}
@@ -72,7 +86,9 @@ const SettingsDialog: React.FC<Props> = props => {
 
   const renderVoiceSelect = () => (
     <FormControl>
-      <InputLabel htmlFor="romanizationStandard-select">{S.VOICE_NAME}</InputLabel>
+      <InputLabel htmlFor="romanizationStandard-select">
+        {S.VOICE_NAME}
+      </InputLabel>
       <Select
         native={true}
         value={voiceName}
@@ -107,7 +123,10 @@ const SettingsDialog: React.FC<Props> = props => {
         <FormGroup>
           <FormControlLabel
             control={
-              <Switch checked={showVocalization} onChange={() => dispatch(toggleVocalization())} />
+              <Switch
+                checked={showVocalization}
+                onChange={() => dispatch(toggleVocalization())}
+              />
             }
             label={S.SHOW_VOCALIZATION}
           />

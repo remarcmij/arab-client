@@ -1,5 +1,10 @@
 import Paper from '@material-ui/core/Paper';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Types from 'Types';
@@ -51,7 +56,11 @@ interface OwnProps {
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
-const handleClick = (voiceEnabled: boolean, voiceName: string, foreign: string) => {
+const handleClick = (
+  voiceEnabled: boolean,
+  voiceName: string,
+  foreign: string,
+) => {
   if (voiceEnabled && voiceName !== 'none') {
     // tslint:disable-next-line:no-floating-promises
     SpeechSynthesizer.speak(voiceName, foreign);
@@ -69,7 +78,11 @@ const LemmaList: React.FC<Props> = ({
 }) => {
   const renderLemma = (lemma: Types.Lemma, index: number) => (
     <li key={index} className={classes.listItem}>
-      <Typography variant="h6" classes={{ h6: classes.base }} color="textPrimary">
+      <Typography
+        variant="h6"
+        classes={{ h6: classes.base }}
+        color="textPrimary"
+      >
         <span dir="ltr">{lemma.base}</span>
       </Typography>
       <Typography
@@ -79,12 +92,20 @@ const LemmaList: React.FC<Props> = ({
         onClick={() => handleClick(voiceEnabled, voiceName, lemma.foreign)}
       >
         <span dir="rtl">
-          {showVocalization ? lemma.foreign : Transcoder.stripTashkeel(lemma.foreign)}
+          {showVocalization
+            ? lemma.foreign
+            : Transcoder.stripTashkeel(lemma.foreign)}
         </span>
       </Typography>
       {lemma.trans && showTranscription && (
-        <Typography variant="body1" classes={{ body1: classes.trans }} color="textSecondary">
-          <span dir="ltr">{Transcoder.applyRomanization(lemma.trans, romanizationStandard)}</span>
+        <Typography
+          variant="body1"
+          classes={{ body1: classes.trans }}
+          color="textSecondary"
+        >
+          <span dir="ltr">
+            {Transcoder.applyRomanization(lemma.trans, romanizationStandard)}
+          </span>
         </Typography>
       )}
     </li>

@@ -43,7 +43,9 @@ const SearchPage: React.FC<Props> = props => {
       <NavBar
         title={'Search'}
         onBack={handleBack}
-        rightHandButtons={<input type="text" value={term} onChange={handleChange} />}
+        rightHandButtons={
+          <input type="text" value={term} onChange={handleChange} />
+        }
       />
       <GridContainer>
         <Paper className={props.classes.root}>
@@ -51,7 +53,9 @@ const SearchPage: React.FC<Props> = props => {
             {term}
           </Typography>
           <Typography variant="body1">Bla bla</Typography>
-          <Typography variant="caption">Copyright 2019, Jim Cramer, Amstelveen</Typography>
+          <Typography variant="caption">
+            Copyright 2019, Jim Cramer, Amstelveen
+          </Typography>
         </Paper>
       </GridContainer>
     </React.Fragment>

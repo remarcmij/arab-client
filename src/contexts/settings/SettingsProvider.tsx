@@ -32,7 +32,10 @@ let initialState = {
 
 const SettingsContext = React.createContext<SettingsContextProps | null>(null);
 
-const reducer = (state: SettingsState, action: SettingsAction): SettingsState => {
+const reducer = (
+  state: SettingsState,
+  action: SettingsAction,
+): SettingsState => {
   switch (action.type) {
     case C.TOGGLE_VOCALIZATION:
       return { ...state, showVocalization: !state.showVocalization };
@@ -51,12 +54,25 @@ const reducer = (state: SettingsState, action: SettingsAction): SettingsState =>
   }
 };
 
-const persistentReducer = (state: SettingsState, action: SettingsAction): SettingsState => {
+const persistentReducer = (
+  state: SettingsState,
+  action: SettingsAction,
+): SettingsState => {
   const newState = reducer(state, action);
-  const { showVocalization, showTranscription, romanizationStandard, voiceName } = newState;
+  const {
+    showVocalization,
+    showTranscription,
+    romanizationStandard,
+    voiceName,
+  } = newState;
   window.localStorage.setItem(
     LOCAL_STORAGE_KEY,
-    JSON.stringify({ showVocalization, showTranscription, romanizationStandard, voiceName }),
+    JSON.stringify({
+      showVocalization,
+      showTranscription,
+      romanizationStandard,
+      voiceName,
+    }),
   );
   return newState;
 };
@@ -73,7 +89,8 @@ export const SettingsProvider: React.FC = props => {
 
 export const useSettingsContext = () => {
   const context = React.useContext(SettingsContext);
-  if (context === null) throw new Error('SettingContext: null context is unexpected');
+  if (context === null)
+    throw new Error('SettingContext: null context is unexpected');
   return context;
 };
 

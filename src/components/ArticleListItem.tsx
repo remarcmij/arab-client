@@ -34,7 +34,9 @@ const ArticleListItem: React.FC<Props> = props => {
   const { filename, title, subtitle, kind } = props.publication;
   const [publication, article] = filename.split('.');
 
-  const ItemLink = (p: {}) => <Link to={`/content/${publication}/${article}`} {...p} />;
+  const ItemLink = (p: {}) => (
+    <Link to={`/content/${publication}/${article}`} {...p} />
+  );
 
   return (
     <ListItem component={ItemLink} button={true}>
@@ -53,7 +55,9 @@ const ArticleListItem: React.FC<Props> = props => {
       )}
       <ListItemText
         primary={title}
-        secondary={<span dangerouslySetInnerHTML={{ __html: subtitle || '' }} />}
+        secondary={
+          <span dangerouslySetInnerHTML={{ __html: subtitle || '' }} />
+        }
       />
     </ListItem>
   );
