@@ -24,7 +24,7 @@ const styles = () =>
   });
 
 interface OwnProps {
-  publication: Types.AppDocument;
+  readonly publication: Types.AppDocument;
 }
 
 type Props = OwnProps & WithStyles<typeof styles>;
