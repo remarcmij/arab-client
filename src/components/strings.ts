@@ -15,3 +15,4 @@ export const ARTICLE_PAGE_TITLE = 'Artikel';
 export const FLASHCARDS_PAGE_TITLE = 'Flashcards';
 export const ENABLE_VOICE = 'Spraak aan';
 export const DISABLE_VOICE = 'Spraak uit';
+export const SEARCH = 'Zoeken';

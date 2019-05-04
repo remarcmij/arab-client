@@ -40,7 +40,7 @@ const ArticleListItem: React.FC<Props> = props => {
 
   return (
     <ListItem component={ItemLink} button={true}>
-      {kind === 'wordlist' ? (
+      {kind === 'lemmas' ? (
         <ListItemAvatar className={classes.pinkAvatar}>
           <Avatar>
             <Code />

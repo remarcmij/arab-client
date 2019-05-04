@@ -24,6 +24,7 @@
     "react-responsive": "^6.1.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "react-select": "^2.4.3",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^8.0.1",
@@ -50,6 +51,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@types/react-select": "^2.0.17",
     "@types/uuid": "^3.4.4"
   }
 }

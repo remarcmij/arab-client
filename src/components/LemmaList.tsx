@@ -28,18 +28,18 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2,
     },
-    wordlist: {
+    lemmas: {
       marginBlockStart: 0,
       marginBlockEnd: 0,
     },
-    base: {
+    source: {
       color: theme.palette.primary.main,
     },
-    trans: {
+    roman: {
       fontFamily: 'Georgia',
       fontStyle: 'italic',
     },
-    foreign: {
+    target: {
       marginBottom: theme.spacing.unit,
       marginLeft: theme.spacing.unit * 4,
     },
@@ -59,11 +59,11 @@ type Props = OwnProps & WithStyles<typeof styles>;
 const handleClick = (
   voiceEnabled: boolean,
   voiceName: string,
-  foreign: string,
+  target: string,
 ) => {
   if (voiceEnabled && voiceName !== 'none') {
     // tslint:disable-next-line:no-floating-promises
-    SpeechSynthesizer.speak(voiceName, foreign);
+    SpeechSynthesizer.speak(voiceName, target);
   }
 };
 
@@ -80,38 +80,38 @@ const LemmaList: React.FC<Props> = ({
     <li key={index} className={classes.listItem}>
       <Typography
         variant="h6"
-        classes={{ h6: classes.base }}
+        classes={{ h6: classes.source }}
         color="textPrimary"
       >
-        <span dir="ltr">{lemma.base}</span>
+        <span dir="ltr">{lemma.source}</span>
       </Typography>
       <Typography
         variant="h4"
-        classes={{ h4: classes.foreign }}
+        classes={{ h4: classes.target }}
         color="textPrimary"
-        onClick={() => handleClick(voiceEnabled, voiceName, lemma.foreign)}
+        onClick={() => handleClick(voiceEnabled, voiceName, lemma.target)}
       >
         <span dir="rtl">
           {showVocalization
-            ? lemma.foreign
-            : Transcoder.stripTashkeel(lemma.foreign)}
+            ? lemma.target
+            : Transcoder.stripTashkeel(lemma.target)}
         </span>
       </Typography>
-      {lemma.trans && showTranscription && (
+      {lemma.roman && showTranscription && (
         <Typography
           variant="body1"
-          classes={{ body1: classes.trans }}
+          classes={{ body1: classes.roman }}
           color="textSecondary"
         >
           <span dir="ltr">
-            {Transcoder.applyRomanization(lemma.trans, romanizationStandard)}
+            {Transcoder.applyRomanization(lemma.roman, romanizationStandard)}
           </span>
         </Typography>
       )}
     </li>
   );
 
-  const { title, subtitle, prolog, epilog, body: wordlist } = document;
+  const { title, subtitle, prolog, epilog, body: lemmas } = document;
 
   return (
     <Paper className={classes.root}>
@@ -134,8 +134,8 @@ const LemmaList: React.FC<Props> = ({
           <Divider />
         </React.Fragment>
       )}
-      <ul dir="rtl" className={classes.wordlist}>
-        {wordlist.map(renderLemma)}
+      <ul dir="rtl" className={classes.lemmas}>
+        {lemmas.map(renderLemma)}
       </ul>
       {epilog && (
         <React.Fragment>

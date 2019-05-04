@@ -13,7 +13,7 @@
     "tashkeel",
     "typesafe",
     "uuidv",
-    "wordlist"
+    "lemmas"
   ],
   "cSpell.ignorePaths": [
     "**/package-lock.json",

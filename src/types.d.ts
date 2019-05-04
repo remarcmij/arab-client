@@ -8,9 +8,12 @@ declare module 'Types' {
   }
 
   export interface Lemma {
-    base: string;
-    foreign: string;
-    trans?: string;
+    id: number;
+    source: string;
+    target: string;
+    roman?: string;
+    filename: string;
+    doc_id: number;
   }
 
   interface DocumentBase {
@@ -21,12 +24,12 @@ declare module 'Types' {
     subtitle: string | null;
   }
 
-  export interface MetaDocument extends DocumentBase {
-    kind: 'meta';
+  export interface IndexDocument extends DocumentBase {
+    kind: 'index';
   }
 
   export interface LemmaDocument extends DocumentBase {
-    kind: 'wordlist';
+    kind: 'lemmas';
     body: Lemma[];
   }
 
@@ -35,5 +38,5 @@ declare module 'Types' {
     body: string;
   }
 
-  export type AppDocument = LemmaDocument | MarkdownDocument | MetaDocument;
+  export type AppDocument = LemmaDocument | MarkdownDocument | IndexDocument;
 }

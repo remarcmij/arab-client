@@ -6,11 +6,13 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MenuIcon from '@material-ui/icons/Menu';
+import Search from '@material-ui/icons/Search';
 import Settings from '@material-ui/icons/Settings';
 import React, { useState } from 'react';
-import SettingsDialog from './SettingsDialog';
+import { Redirect, RouteComponentProps, withRouter } from 'react-router';
 import GridContainer from './GridContainer';
 import MainDrawer from './MainDrawer';
+import SettingsDialog from './SettingsDialog';
 import * as S from './strings';
 
 const styles = createStyles({
@@ -29,25 +31,29 @@ const styles = createStyles({
 interface OwnProps {
   title: string;
   enableSettingsMenu?: boolean;
-  rightHandButtons: React.ReactElement<any> | null;
+  rightHandButtons?: React.ReactElement<any> | null;
+  hideSearchButton?: boolean;
   onBack?: () => void;
   onLeftMenu?: () => void;
   onRightMenu?: () => void;
 }
 
-type Props = OwnProps & WithStyles<typeof styles>;
+type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
-const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
+const NavBar: React.FC<Props> = props => {
   const {
     title,
     onBack,
-    enableSettingsMenu,
-    rightHandButtons,
+    enableSettingsMenu = false,
+    rightHandButtons = null,
+    hideSearchButton = false,
     classes,
+    history,
   } = props;
 
   const [mainDrawerOpen, setMainDrawerOpen] = useState(false);
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+  const [goSearch, setGoSearch] = useState(false);
 
   const handleOpenDialog = () => {
     setSettingsDialogOpen(true);
@@ -60,6 +66,19 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
   const handleToggleDrawer = () => {
     setMainDrawerOpen(!mainDrawerOpen);
   };
+
+  const handleSearch = () => {
+    setGoSearch(true);
+  };
+
+  if (goSearch) {
+    let url = '/search';
+    const { search } = history.location;
+    if (search) {
+      url += search;
+    }
+    return <Redirect to={url} />;
+  }
 
   return (
     <AppBar position="fixed">
@@ -86,6 +105,18 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
             {title}
           </Typography>
           {rightHandButtons}
+          {!hideSearchButton && (
+            <Tooltip title={S.SEARCH} aria-label={S.SEARCH}>
+              <IconButton
+                aria-owns={open ? 'menu-appbar' : undefined}
+                aria-haspopup={true}
+                onClick={handleSearch}
+                color="inherit"
+              >
+                <Search />
+              </IconButton>
+            </Tooltip>
+          )}
           {enableSettingsMenu && (
             <Tooltip title={S.EDIT_SETTINGS} aria-label={S.EDIT_SETTINGS}>
               <IconButton
@@ -113,9 +144,4 @@ const NavBar: React.FC<Props> & { defaultProps: Partial<Props> } = props => {
   );
 };
 
-NavBar.defaultProps = {
-  enableSettingsMenu: false,
-  rightHandButtons: null,
-};
-
-export default withStyles(styles)(NavBar);
+export default withRouter(withStyles(styles)(NavBar));

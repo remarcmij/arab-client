@@ -12,7 +12,7 @@ import ArticlePage from '../pages/ArticlePage';
 import FlashcardPage from '../pages/FlashcardsPage';
 import PublicationListPage from '../pages/PublicationListPage';
 import { SettingsProvider } from '../contexts/settings';
-import SearchPage from './SearchPage';
+import SearchPage from '../pages/SearchPage';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
 const styles = createStyles({
@@ -48,7 +48,7 @@ const App: React.FC<Props> = ({ classes }) => {
               component={ArticlePage}
             />
             <Route path="/content" component={PublicationListPage} />
-            <Route path="/dict" component={SearchPage} />
+            <Route path="/search" component={SearchPage} />
             <Route path="/about" component={AboutPage} />
             <Route render={() => <div>404</div>} />
           </Switch>

@@ -11,7 +11,7 @@ import React, { useContext } from 'react';
 import Types from 'Types';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import Transcoder from '../services/Transcoder';
-import LanguageContext from '../contexts/LaunguageContext';
+import LanguageContext from '../contexts/LanguageContext';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
       cursor: 'pointer',
       userSelect: 'none',
     },
-    foreign: {
+    target: {
       fontFamily: 'Arial',
       margin: theme.spacing.unit,
     },
@@ -61,7 +61,7 @@ const handleClick = (props: Props) => {
   if (voiceName !== 'none' && voiceEnabled) {
     SpeechSynthesizer.speak(
       voiceName,
-      lemma.foreign,
+      lemma.target,
       showTranslation ? 0.6 : 0.8,
     );
   }
@@ -76,12 +76,12 @@ const Flashcard: React.FC<Props> = props => {
     voiceName,
     classes,
   } = props;
-  const { base, foreign } = useContext(LanguageContext);
+  const { sourceLang, targetLang } = useContext(LanguageContext);
 
   if (voiceEnabled && voiceName !== 'none') {
     SpeechSynthesizer.speak(
       voiceName,
-      lemma.foreign,
+      lemma.target,
       showTranslation ? 0.6 : 0.8,
     );
   }
@@ -94,28 +94,28 @@ const Flashcard: React.FC<Props> = props => {
     >
       <Tooltip
         classes={{ tooltip: classes.htmlTooltip }}
-        title={<Typography color="inherit">{lemma.trans}</Typography>}
+        title={<Typography color="inherit">{lemma.roman}</Typography>}
       >
         <Typography
           variant="h4"
           align="center"
-          lang={foreign}
+          lang={targetLang}
           dir="rtl"
-          className={classes.foreign}
+          className={classes.target}
         >
           {showVocalization
-            ? lemma.foreign
-            : Transcoder.stripTashkeel(lemma.foreign)}
+            ? lemma.target
+            : Transcoder.stripTashkeel(lemma.target)}
         </Typography>
       </Tooltip>
       <Typography
         variant="h5"
         align="center"
-        lang={base}
+        lang={sourceLang}
         color="textSecondary"
         className={classes.native}
       >
-        {showTranslation ? lemma.base : '•••'}
+        {showTranslation ? lemma.source : '•••'}
       </Typography>
     </Paper>
   );

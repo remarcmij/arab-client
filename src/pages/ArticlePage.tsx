@@ -9,7 +9,7 @@ import Types from 'Types';
 import ArticleTextContent from '../components/ArticleTextContent';
 import GridContainer from '../components/GridContainer';
 import LemmaList from '../components/LemmaList';
-import LemmaTable from '../components/LemmaTable';
+import LemmaArticle from '../components/LemmaArticle';
 import NavBar from '../components/NavBar';
 import * as S from '../components/strings';
 import VoiceOverButton from '../components/VoiceOverButton';
@@ -23,9 +23,11 @@ interface Params {
   article: string;
 }
 
-interface Props extends WithTheme {
+interface OwnProps {
   match: match<Params>;
 }
+
+type Props = OwnProps & WithTheme;
 
 const ArticlePage: React.FC<Props> = props => {
   const { settings, dispatch } = useSettingsContext();
@@ -51,11 +53,11 @@ const ArticlePage: React.FC<Props> = props => {
 
   const renderNavBar = () => (
     <NavBar
-      title={S.ARTICLE_PAGE_TITLE}
+      title={document ? document.title : ''}
       onBack={handleBack}
       enableSettingsMenu={true}
       rightHandButtons={
-        document === null || document.kind !== 'wordlist' ? null : (
+        document === null || document.kind !== 'lemmas' ? null : (
           <React.Fragment>
             <VoiceOverButton
               voiceEnabled={voiceEnabled}
@@ -85,21 +87,14 @@ const ArticlePage: React.FC<Props> = props => {
       return null;
     }
 
-    if (document.kind === 'wordlist') {
+    if (document.kind === 'lemmas') {
       return (
         <React.Fragment>
           <MediaQuery
             query={`(min-device-width: ${props.theme.breakpoints.values.sm +
               1}px)`}
           >
-            <LemmaTable
-              document={document}
-              showVocalization={showVocalization}
-              showTranscription={showTranscription}
-              romanizationStandard={romanizationStandard}
-              voiceName={voiceName}
-              voiceEnabled={voiceEnabled}
-            />
+            <LemmaArticle document={document} />
           </MediaQuery>
           <MediaQuery
             query={`(max-device-width: ${props.theme.breakpoints.values.sm}px)`}

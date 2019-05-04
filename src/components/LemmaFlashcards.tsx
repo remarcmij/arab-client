@@ -56,7 +56,7 @@ const LemmaFlashcards: React.FC<Props> = props => {
     setShowTranslation(false);
   };
 
-  const { body: wordlist } = document;
+  const { body: lemmas } = document;
 
   return (
     <div className={classes.root}>
@@ -65,9 +65,9 @@ const LemmaFlashcards: React.FC<Props> = props => {
         index={index}
         length={document.body.length}
       />
-      {wordlist.length !== 0 && (
+      {lemmas.length !== 0 && (
         <Flashcard
-          lemma={wordlist[index]}
+          lemma={lemmas[index]}
           showTranslation={showTranslation}
           showVocalization={showVocalization}
           voiceEnabled={voiceEnabled}

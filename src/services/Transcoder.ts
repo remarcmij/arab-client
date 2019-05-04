@@ -1,6 +1,4 @@
 /* cSpell:disable */
-import LRU from 'lru-cache';
-
 type SubstitutionTuple = [RegExp, string];
 
 type RomanizationStandard = {
@@ -70,10 +68,7 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
   },
 };
 
-const CHARCODE_SUPERSCRIPT_ALIF = 1648;
-const CHARCODE_TATWEEL = 1600;
-
-const tashkeelCache = new LRU<string, string>(500);
+const tashkeelRegExp = /[\u064c-\u065f\u0640\u0670]/g;
 
 class Transcoder {
   static applyRomanization(text: string, name: string) {
@@ -87,29 +82,8 @@ class Transcoder {
     );
   }
 
-  static isCharTashkeel(letter: string) {
-    const code = letter.charCodeAt(0);
-    // 1648 - superscript alif
-    // 1619 - madd: ~
-    return (
-      code === CHARCODE_TATWEEL ||
-      code === CHARCODE_SUPERSCRIPT_ALIF ||
-      (code >= 0x64c && code <= 0x65f)
-    );
-  }
-
-  static stripTashkeel(input: string) {
-    let output = tashkeelCache.get(input);
-    if (!output) {
-      output = '';
-      for (const letter of input) {
-        if (!this.isCharTashkeel(letter)) {
-          output += letter;
-        }
-      }
-      tashkeelCache.set(input, output);
-    }
-    return output;
+  static stripTashkeel(line: string) {
+    return line.replace(tashkeelRegExp, '');
   }
 }
 

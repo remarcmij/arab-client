@@ -13,7 +13,7 @@ import ArticleListItem from '../components/ArticleListItem';
 import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
 import * as C from '../components/strings';
-import LanguageContext from '../contexts/LaunguageContext';
+import LanguageContext from '../contexts/LanguageContext';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
 
@@ -58,7 +58,9 @@ const ArticleListPage: React.FC<Props> = props => {
             {error ? (
               <div>Error: {error.message}</div>
             ) : (
-              <LanguageContext.Provider value={{ base: 'nl', foreign: 'ar' }}>
+              <LanguageContext.Provider
+                value={{ sourceLang: 'nl', targetLang: 'ar' }}
+              >
                 <List>
                   {documents
                     .filter(doc => !doc.filename.endsWith('.index'))
