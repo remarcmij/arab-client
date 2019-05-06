@@ -1,8 +1,10 @@
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
 import axios from 'axios';
-import React from 'react';
+import latinize from 'latinize';
+import React, { useState } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import { ValueType } from 'react-select/lib/types';
+import color from '@material-ui/core/colors/red';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,7 +25,7 @@ export interface WordOption {
 }
 
 interface OwnProps {
-  onChange: (option: ValueType<WordOption>, _: any) => void;
+  onChange: (option: ValueType<WordOption>) => void;
 }
 
 type Props = WithStyles<typeof styles> & OwnProps;
@@ -53,6 +55,21 @@ const promiseOptions = (input: string) => {
 };
 
 const SearchBox: React.FC<Props> = props => {
+  const [inputValue, setInputValue] = useState('');
+  const [isRtl, setIsRtl] = useState(false);
+
+  const handleInputChange = (value: string) => {
+    value = value.trim();
+    if (/[\u0600-\u06ff]+/.test(value)) {
+      setIsRtl(true);
+      value = value.replace(/[^\u0621-\u064a]/g, '');
+    } else {
+      setIsRtl(false);
+      value = latinize(value.toLowerCase());
+    }
+    setInputValue(value);
+  };
+
   return (
     <AsyncSelect
       placeholder="Zoek..."
@@ -60,6 +77,9 @@ const SearchBox: React.FC<Props> = props => {
       loadOptions={promiseOptions}
       className={props.classes.select}
       onChange={props.onChange}
+      onInputChange={handleInputChange}
+      inputValue={inputValue}
+      isRtl={isRtl}
       autoFocus={true}
     />
   );
