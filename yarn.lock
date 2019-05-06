@@ -1142,6 +1142,11 @@
     csstype "^2.0.0"
     indefinite-observable "^1.0.1"
 
+"@types/latinize@^0.2.15":
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/@types/latinize/-/latinize-0.2.15.tgz#a1718e53c5d6a37a554cbe4209e4ab15adc975f9"
+  integrity sha1-oXGOU8XWo3pVTL5CCeSrFa3Jdfk=
+
 "@types/lru-cache@^5.1.0":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@types/lru-cache/-/lru-cache-5.1.0.tgz#57f228f2b80c046b4a1bd5cac031f81f207f4f03"
@@ -6311,6 +6316,11 @@ last-call-webpack-plugin@^3.0.0:
   dependencies:
     lodash "^4.17.5"
     webpack-sources "^1.1.0"
+
+latinize@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/latinize/-/latinize-0.4.0.tgz#27439b21e4eb7506c37717b638f1df2c49075a48"
+  integrity sha1-J0ObIeTrdQbDdxe2OPHfLEkHWkg=
 
 lazy-cache@^0.2.3:
   version "0.2.7"

@@ -47,11 +47,7 @@ const ArticleListPage: React.FC<Props> = props => {
     <Redirect to="/content" />
   ) : (
     <React.Fragment>
-      <NavBar
-        title={C.ARTICLE_LIST_PAGE_TITLE}
-        onBack={handleBack}
-        enableSettingsMenu={true}
-      />
+      <NavBar title={C.ARTICLE_LIST_PAGE_TITLE} onBack={handleBack} />
       <GridContainer>
         {!loading && documents !== null && (
           <Paper classes={{ root: props.classes.root }}>

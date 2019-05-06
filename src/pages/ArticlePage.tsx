@@ -55,7 +55,6 @@ const ArticlePage: React.FC<Props> = props => {
     <NavBar
       title={document ? document.title : ''}
       onBack={handleBack}
-      enableSettingsMenu={true}
       rightHandButtons={
         document === null || document.kind !== 'lemmas' ? null : (
           <React.Fragment>

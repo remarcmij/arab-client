@@ -12,7 +12,6 @@ import React, { useState } from 'react';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router';
 import GridContainer from './GridContainer';
 import MainDrawer from './MainDrawer';
-import SettingsDialog from './SettingsDialog';
 import * as S from './strings';
 
 const styles = createStyles({
@@ -30,7 +29,6 @@ const styles = createStyles({
 
 interface OwnProps {
   title: string;
-  enableSettingsMenu?: boolean;
   rightHandButtons?: React.ReactElement<any> | null;
   hideSearchButton?: boolean;
   onBack?: () => void;
@@ -44,7 +42,6 @@ const NavBar: React.FC<Props> = props => {
   const {
     title,
     onBack,
-    enableSettingsMenu = false,
     rightHandButtons = null,
     hideSearchButton = false,
     classes,
@@ -117,25 +114,7 @@ const NavBar: React.FC<Props> = props => {
               </IconButton>
             </Tooltip>
           )}
-          {enableSettingsMenu && (
-            <Tooltip title={S.EDIT_SETTINGS} aria-label={S.EDIT_SETTINGS}>
-              <IconButton
-                aria-owns={open ? 'menu-appbar' : undefined}
-                aria-haspopup={true}
-                onClick={handleOpenDialog}
-                color="inherit"
-              >
-                <Settings />
-              </IconButton>
-            </Tooltip>
-          )}
         </Toolbar>
-        {enableSettingsMenu && (
-          <SettingsDialog
-            open={settingsDialogOpen}
-            onClose={handleCloseDialog}
-          />
-        )}
         {!onBack && (
           <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
         )}

@@ -44,7 +44,6 @@ const FlashcardPage: React.FC<Props> = props => {
       <NavBar
         title={S.FLASHCARDS_PAGE_TITLE}
         onBack={handleBack}
-        enableSettingsMenu={true}
         rightHandButtons={
           <VoiceOverButton
             voiceEnabled={voiceEnabled}

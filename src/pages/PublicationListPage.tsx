@@ -51,7 +51,7 @@ const PublicationListPage: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      <NavBar title={S.APP_TITLE} enableSettingsMenu={true} />
+      <NavBar title={S.APP_TITLE} />
       <GridContainer>
         <Paper classes={{ root: classes.root }}>{renderContent()}</Paper>
       </GridContainer>

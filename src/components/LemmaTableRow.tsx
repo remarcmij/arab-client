@@ -15,7 +15,7 @@ import Types from 'Types';
 import { useSettingsContext } from '../contexts/settings';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import Transcoder from '../services/Transcoder';
-import yellow from '@material-ui/core/colors/yellow';
+import indigo from '@material-ui/core/colors/indigo';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,7 +43,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing.unit / 2,
     },
     selected: {
-      backgroundColor: `${yellow[100]}!important`,
+      backgroundColor: `${indigo[50]}!important`,
     },
   });
 
