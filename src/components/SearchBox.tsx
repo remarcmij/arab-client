@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import { ValueType } from 'react-select/lib/types';
 import color from '@material-ui/core/colors/red';
+import { getToken } from '../services/token-service';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,11 +37,15 @@ interface LookupResponse {
 }
 
 const promiseOptions = (input: string) => {
-  if (!input) {
+  const token = getToken();
+  if (!input || !token) {
     return Promise.resolve([]);
   }
+
+  const headers = { Authorization: `Bearer ${token}` };
+
   return axios
-    .get<LookupResponse>(`/api/lookup?term=${input}`)
+    .get<LookupResponse>(`/api/lookup?term=${input}`, { headers })
     .then(({ data }) => {
       const options = data.words.map(word => ({
         value: word.text,

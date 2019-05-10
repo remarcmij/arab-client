@@ -4,18 +4,28 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  withStyles,
+  WithStyles,
+  Theme,
+} from '@material-ui/core/styles';
 import InfoIcon from '@material-ui/icons/Info';
 import Settings from '@material-ui/icons/Settings';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import SettingsDialog from './SettingsDialog';
 import * as S from './strings';
+import { UserProfileContext } from '../contexts/UserProfileProvider';
+import Avatar from '@material-ui/core/Avatar';
 
-const styles = () =>
+const styles = (theme: Theme) =>
   createStyles({
     list: {
       width: 250,
+    },
+    avatar: {
+      margin: theme.spacing.unit * 2,
     },
   });
 
@@ -28,21 +38,48 @@ type Props = OwnProps & WithStyles<typeof styles>;
 
 const MainDrawer: React.FC<Props> = props => {
   const { classes, open, toggleDrawer } = props;
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const { profile, clearProfile } = useContext(UserProfileContext);
 
   const AboutLink = (p: {}) => <Link to="/about" {...p} />;
 
+  const logout = () => {
+    clearProfile();
+    setLoggingOut(true);
+  };
+
   const sideList = (
     <div className={classes.list}>
-      <List>
-        <ListItem button={true} onClick={() => setSettingsOpen(true)}>
-          <ListItemIcon>
-            <Settings />
-          </ListItemIcon>
-          <ListItemText primary={S.EDIT_SETTINGS} />
-        </ListItem>
-      </List>
-      <Divider />
+      {profile && (
+        <>
+          {profile.photo && (
+            <Avatar
+              alt="User avatar"
+              src={profile.photo}
+              className={classes.avatar}
+            />
+          )}
+
+          <List>
+            <ListItem button={true} onClick={() => setSettingsDialogOpen(true)}>
+              <ListItemIcon>
+                <Settings />
+              </ListItemIcon>
+              <ListItemText primary={S.EDIT_SETTINGS} />
+            </ListItem>
+          </List>
+          <List>
+            <ListItem button={true} onClick={logout}>
+              <ListItemIcon>
+                <Settings />
+              </ListItemIcon>
+              <ListItemText primary={'Logout'} />
+            </ListItem>
+          </List>
+          <Divider />
+        </>
+      )}
       <List>
         <ListItem component={AboutLink}>
           <ListItemIcon>
@@ -53,6 +90,10 @@ const MainDrawer: React.FC<Props> = props => {
       </List>
     </div>
   );
+
+  if (loggingOut) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <React.Fragment>
@@ -67,8 +108,8 @@ const MainDrawer: React.FC<Props> = props => {
         </div>
       </Drawer>
       <SettingsDialog
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
+        open={settingsDialogOpen}
+        onClose={() => setSettingsDialogOpen(false)}
       />
     </React.Fragment>
   );

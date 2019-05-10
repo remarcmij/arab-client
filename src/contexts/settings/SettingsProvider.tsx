@@ -21,15 +21,6 @@ type SettingsContextProps = {
   dispatch: React.Dispatch<SettingsAction>;
 };
 
-let initialState = {
-  showVocalization: true,
-  showTranscription: true,
-  showFlashcards: false,
-  voiceEnabled: false,
-  romanizationStandard: 'din',
-  voiceName: 'none',
-};
-
 const SettingsContext = React.createContext<SettingsContextProps | null>(null);
 
 const reducer = (
@@ -89,9 +80,19 @@ export const SettingsProvider: React.FC = props => {
 
 export const useSettingsContext = () => {
   const context = React.useContext(SettingsContext);
-  if (context === null)
+  if (context === null) {
     throw new Error('SettingContext: null context is unexpected');
+  }
   return context;
+};
+
+let initialState = {
+  showVocalization: true,
+  showTranscription: true,
+  showFlashcards: false,
+  voiceEnabled: false,
+  romanizationStandard: 'din',
+  voiceName: 'none',
 };
 
 const stateString = window.localStorage.getItem(LOCAL_STORAGE_KEY);
