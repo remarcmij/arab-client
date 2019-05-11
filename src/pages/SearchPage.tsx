@@ -66,7 +66,7 @@ const SearchPage: React.FC<Props> = props => {
   if (lemma) {
     const [publication, article] = lemma.filename.split('.');
     const url = encodeURI(
-      `/content/${publication}/${article}?id=${lemma.id}&q=${selectedWord}`,
+      `/content/${publication}/${article}?id=${lemma._id}&q=${selectedWord}`,
     );
     return <Redirect to={url} />;
   }

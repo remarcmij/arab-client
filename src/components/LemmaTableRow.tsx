@@ -51,7 +51,7 @@ interface OwnProps {
   lemma: Types.Lemma;
   onButtonClick?: (lemma: Types.Lemma) => void;
   showButtons?: boolean;
-  lemmaId?: number | null;
+  lemmaId?: string | null;
 }
 
 type Props = WithStyles<typeof styles> & OwnProps;
@@ -87,7 +87,7 @@ const LemmaTableRow: React.FC<Props> = props => {
 
   const rootRef = useRef<HTMLElement>(null);
 
-  const isTargeted = !!lemmaId && lemmaId === lemma.id;
+  const isTargeted = !!lemmaId && lemmaId === lemma._id;
 
   useEffect(() => {
     if (isTargeted && rootRef.current) {
@@ -98,8 +98,8 @@ const LemmaTableRow: React.FC<Props> = props => {
   return (
     <RootRef rootRef={rootRef}>
       <TableRow
-        key={lemma.id}
-        id={`lemma-${lemma.id}`}
+        key={lemma._id}
+        id={`lemma-${lemma._id}`}
         selected={isTargeted}
         classes={{ selected: classes.selected }}
       >

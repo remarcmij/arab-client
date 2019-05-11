@@ -4,7 +4,6 @@ import latinize from 'latinize';
 import React, { useState } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import { ValueType } from 'react-select/lib/types';
-import color from '@material-ui/core/colors/red';
 import { getToken } from '../services/token-service';
 
 const styles = (theme: Theme) =>
@@ -16,7 +15,7 @@ const styles = (theme: Theme) =>
   });
 
 interface WordDef {
-  text: string;
+  word: string;
   lang: string;
 }
 
@@ -48,8 +47,8 @@ const promiseOptions = (input: string) => {
     .get<LookupResponse>(`/api/lookup?term=${input}`, { headers })
     .then(({ data }) => {
       const options = data.words.map(word => ({
-        value: word.text,
-        label: word.text,
+        value: word.word,
+        label: word.word,
       }));
       return options;
     })

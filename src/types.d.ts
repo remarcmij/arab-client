@@ -8,7 +8,7 @@ declare module 'Types' {
   }
 
   export interface Lemma {
-    id: number;
+    _id: string;
     source: string;
     target: string;
     roman?: string;

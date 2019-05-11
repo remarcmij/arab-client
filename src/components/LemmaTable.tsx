@@ -25,8 +25,8 @@ const LemmaTable: React.FC<Props> = props => {
   const { history, lemmas, showButtons, onButtonClick } = props;
   const { search } = history.location;
 
-  const matches = decodeURI(search).match(/\bid=(\d+)/);
-  const lemmaId = matches ? parseInt(matches[1], 10) : null;
+  const matches = decodeURI(search).match(/\bid=(\w+)/);
+  const lemmaId = matches ? matches[1] : null;
 
   return (
     <Table padding="dense">
@@ -34,7 +34,7 @@ const LemmaTable: React.FC<Props> = props => {
         {lemmas &&
           lemmas.map(lemma => (
             <LemmaTableRow
-              key={lemma.id}
+              key={lemma._id}
               lemma={lemma}
               lemmaId={lemmaId}
               showButtons={showButtons}

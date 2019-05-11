@@ -16,3 +16,6 @@ export const FLASHCARDS_PAGE_TITLE = 'Flashcards';
 export const ENABLE_VOICE = 'Spraak aan';
 export const DISABLE_VOICE = 'Spraak uit';
 export const SEARCH = 'Zoeken';
+export const SIGN_IN_WITH_GOOGLE = 'Aanmelden met Google';
+export const SIGN_IN_WITH_USERNAME = 'Aanmelden met gebruikersnaam';
+export const SIGN_UP = 'Gebruikersnaam aanmaken';
