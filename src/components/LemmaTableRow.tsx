@@ -93,7 +93,7 @@ const LemmaTableRow: React.FC<Props> = props => {
     if (isTargeted && rootRef.current) {
       window.scrollTo(0, rootRef.current.offsetTop);
     }
-  }, []);
+  }, [isTargeted]);
 
   return (
     <RootRef rootRef={rootRef}>
@@ -148,12 +148,7 @@ const LemmaTableRow: React.FC<Props> = props => {
         </TableCell>
         {showButtons && (
           <TableCell align="right">
-            <IconButton
-              aria-owns={open ? 'menu-appbar' : undefined}
-              aria-haspopup={true}
-              onClick={() => onButtonClick(lemma)}
-              color="default"
-            >
+            <IconButton onClick={() => onButtonClick(lemma)} color="default">
               <ArrowForwardIcon />
             </IconButton>
           </TableCell>

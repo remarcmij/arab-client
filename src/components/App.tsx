@@ -1,5 +1,5 @@
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Redirect,
@@ -7,17 +7,14 @@ import {
   Switch,
 } from 'react-router-dom';
 import { SettingsProvider } from '../contexts/settings';
-import {
-  UserProfileProvider,
-  UserProfileContext,
-} from '../contexts/UserProfileProvider';
+import { UserProfileProvider } from '../contexts/UserProfileProvider';
 import AboutPage from '../pages/AboutPage';
 import ArticleListPage from '../pages/ArticleListPage';
 import ArticlePage from '../pages/ArticlePage';
 import FlashcardPage from '../pages/FlashcardsPage';
+import LoginPage from '../pages/LoginPage';
 import PublicationListPage from '../pages/PublicationListPage';
 import SearchPage from '../pages/SearchPage';
-import LoginPage from '../pages/LoginPage';
 import { getToken } from '../services/token-service';
 
 // paddingTop emulates the toolbar's minHeight from the default theme

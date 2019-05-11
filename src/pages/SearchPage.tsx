@@ -45,11 +45,11 @@ const SearchPage: React.FC<Props> = props => {
         setSelectedWord(matches[1]);
       }
     }
-  }, []);
+  }, [history.location]);
 
-  const { data: lemmas, error, loading } = useFetch<Types.Lemma[]>(
+  const { data: lemmas } = useFetch<Types.Lemma[]>(
     selectedWord ? `/api/search?term=${selectedWord}` : null,
-    [selectedWord],
+    selectedWord,
   );
 
   const handleChange = (option: ValueType<WordOption>) => {

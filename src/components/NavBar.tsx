@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MenuIcon from '@material-ui/icons/Menu';
 import Search from '@material-ui/icons/Search';
-import Settings from '@material-ui/icons/Settings';
 import React, { useState } from 'react';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router';
 import GridContainer from './GridContainer';
@@ -49,16 +48,7 @@ const NavBar: React.FC<Props> = props => {
   } = props;
 
   const [mainDrawerOpen, setMainDrawerOpen] = useState(false);
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [goSearch, setGoSearch] = useState(false);
-
-  const handleOpenDialog = () => {
-    setSettingsDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setSettingsDialogOpen(false);
-  };
 
   const handleToggleDrawer = () => {
     setMainDrawerOpen(!mainDrawerOpen);
@@ -104,12 +94,7 @@ const NavBar: React.FC<Props> = props => {
           {rightHandButtons}
           {!hideSearchButton && (
             <Tooltip title={S.SEARCH} aria-label={S.SEARCH}>
-              <IconButton
-                aria-owns={open ? 'menu-appbar' : undefined}
-                aria-haspopup={true}
-                onClick={handleSearch}
-                color="inherit"
-              >
+              <IconButton onClick={handleSearch} color="inherit">
                 <Search />
               </IconButton>
             </Tooltip>

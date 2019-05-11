@@ -30,7 +30,7 @@ interface OwnProps {
 type Props = OwnProps & WithStyles<typeof styles>;
 
 const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
-  const { prolog, epilog, body } = document;
+  const { body } = document;
   return (
     <Paper className={classes.root}>
       <article

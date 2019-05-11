@@ -6,11 +6,9 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
+import * as React from 'react';
 
 const styles = (theme: Theme) =>
   createStyles({

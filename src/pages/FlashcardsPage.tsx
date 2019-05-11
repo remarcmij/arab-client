@@ -31,7 +31,7 @@ const FlashcardPage: React.FC<Props> = props => {
 
   const [goBack, handleBack] = useGoBack();
 
-  const { data: document, error } = useFetch<Types.LemmaDocument>(
+  const { data: document } = useFetch<Types.LemmaDocument>(
     `/api/article/${publication}.${article}`,
   );
 

@@ -6,7 +6,7 @@ import { getToken } from '../services/token-service';
 
 const cache = new LRU<string, any>();
 
-const useFetch = <T>(url: string | null, deps: any[] = []) => {
+const useFetch = <T>(url: string | null, externalDep?: string) => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -52,7 +52,7 @@ const useFetch = <T>(url: string | null, deps: any[] = []) => {
         setLoading(false);
         setError(err);
       });
-  }, deps);
+  }, [url, clearProfile, externalDep]);
 
   return { data, loading, error };
 };
