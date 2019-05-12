@@ -5,8 +5,11 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
+import markdownIt from 'markdown-it';
 import * as React from 'react';
 import Types from 'Types';
+
+const md = markdownIt();
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -15,7 +18,7 @@ const styles = (theme: Theme) =>
         margin: theme.spacing.unit,
       },
     },
-    extra: {
+    content: {
       padding: theme.spacing.unit,
       [theme.breakpoints.up('md')]: {
         padding: theme.spacing.unit * 3,
@@ -34,9 +37,9 @@ const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
   return (
     <Paper className={classes.root}>
       <article
-        className={`markdown-body ${classes.extra}`}
-        dangerouslySetInnerHTML={{ __html: body }}
-      />
+        className={`markdown-body ${classes.content}`}
+        dangerouslySetInnerHTML={{ __html: md.render(body) }}
+      />{' '}
     </Paper>
   );
 };
