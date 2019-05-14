@@ -22,20 +22,13 @@ const styles = (theme: Theme) =>
 interface OwnProps {
   document: Types.LemmaDocument;
   showVocalization: boolean;
-  voiceEnabled: boolean;
   voiceName: string;
 }
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
 const LemmaFlashcards: React.FC<Props> = props => {
-  const {
-    document,
-    showVocalization,
-    voiceEnabled,
-    voiceName,
-    classes,
-  } = props;
+  const { document, showVocalization, voiceName, classes } = props;
 
   const [index, setIndex] = useState<number>(0);
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
@@ -70,7 +63,6 @@ const LemmaFlashcards: React.FC<Props> = props => {
           lemma={lemmas[index]}
           showTranslation={showTranslation}
           showVocalization={showVocalization}
-          voiceEnabled={voiceEnabled}
           voiceName={voiceName}
         />
       )}

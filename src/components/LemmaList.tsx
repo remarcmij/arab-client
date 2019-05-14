@@ -1,3 +1,4 @@
+import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import {
   createStyles,
@@ -8,9 +9,8 @@ import {
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Types from 'Types';
-import Transcoder from '../services/Transcoder';
-import Divider from '@material-ui/core/Divider';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
+import Transcoder from '../services/Transcoder';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -51,17 +51,12 @@ interface OwnProps {
   showTranscription: boolean;
   romanizationStandard: string;
   voiceName: string;
-  voiceEnabled: boolean;
 }
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
-const handleClick = (
-  voiceEnabled: boolean,
-  voiceName: string,
-  target: string,
-) => {
-  if (voiceEnabled && voiceName !== 'none') {
+const handleClick = (voiceName: string, target: string) => {
+  if (voiceName) {
     // tslint:disable-next-line:no-floating-promises
     SpeechSynthesizer.speak(voiceName, target);
   }
@@ -72,7 +67,6 @@ const LemmaList: React.FC<Props> = ({
   showVocalization,
   showTranscription,
   romanizationStandard,
-  voiceEnabled,
   voiceName,
   classes,
 }) => {
@@ -89,7 +83,7 @@ const LemmaList: React.FC<Props> = ({
         variant="h4"
         classes={{ h4: classes.target }}
         color="textPrimary"
-        onClick={() => handleClick(voiceEnabled, voiceName, lemma.target)}
+        onClick={() => handleClick(voiceName, lemma.target)}
       >
         <span dir="rtl">
           {showVocalization

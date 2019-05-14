@@ -1,3 +1,4 @@
+import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -6,18 +7,17 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {
   createStyles,
+  Theme,
   withStyles,
   WithStyles,
-  Theme,
 } from '@material-ui/core/styles';
 import InfoIcon from '@material-ui/icons/Info';
 import Settings from '@material-ui/icons/Settings';
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import SettingsDialog from './SettingsDialog';
-import * as S from './strings';
 import { UserProfileContext } from '../contexts/UserProfileProvider';
-import Avatar from '@material-ui/core/Avatar';
+import * as C from './constants';
+import SettingsDialog from './SettingsDialog';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -66,7 +66,7 @@ const MainDrawer: React.FC<Props> = props => {
               <ListItemIcon>
                 <Settings />
               </ListItemIcon>
-              <ListItemText primary={S.EDIT_SETTINGS} />
+              <ListItemText primary={C.EDIT_SETTINGS} />
             </ListItem>
           </List>
           <List>
@@ -85,7 +85,7 @@ const MainDrawer: React.FC<Props> = props => {
           <ListItemIcon>
             <InfoIcon />
           </ListItemIcon>
-          <ListItemText primary={S.ABOUT_MENU_ITEM} />
+          <ListItemText primary={C.ABOUT_MENU_ITEM} />
         </ListItem>
       </List>
     </div>

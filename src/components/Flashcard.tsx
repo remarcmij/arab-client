@@ -9,9 +9,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import React, { useContext } from 'react';
 import Types from 'Types';
+import LanguageContext from '../contexts/LanguageContext';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import Transcoder from '../services/Transcoder';
-import LanguageContext from '../contexts/LanguageContext';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,7 +48,6 @@ interface OwnProps {
   lemma: Types.Lemma;
   showTranslation: boolean;
   showVocalization: boolean;
-  voiceEnabled: boolean;
   voiceName: string;
 }
 
@@ -57,8 +56,8 @@ type Props = OwnProps & WithStyles<typeof styles>;
 // tslint:disable:no-floating-promises
 
 const handleClick = (props: Props) => {
-  const { lemma, showTranslation, voiceEnabled, voiceName } = props;
-  if (voiceName !== 'none' && voiceEnabled) {
+  const { lemma, showTranslation, voiceName } = props;
+  if (voiceName) {
     SpeechSynthesizer.speak(
       voiceName,
       lemma.target,
@@ -72,13 +71,12 @@ const Flashcard: React.FC<Props> = props => {
     lemma,
     showTranslation,
     showVocalization,
-    voiceEnabled,
     voiceName,
     classes,
   } = props;
   const { sourceLang, targetLang } = useContext(LanguageContext);
 
-  if (voiceEnabled && voiceName !== 'none') {
+  if (voiceName) {
     SpeechSynthesizer.speak(
       voiceName,
       lemma.target,

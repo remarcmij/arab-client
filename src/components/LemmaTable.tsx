@@ -4,14 +4,31 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import Types from 'Types';
 import LemmaTableRow from './LemmaTableRow';
-import { withRouter, RouteComponentProps } from 'react-router';
 
-const styles = (theme: Theme) => createStyles({});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing.unit * 3,
+    },
+    mdTable: {
+      '& td': {
+        minWidth: 120,
+      },
+    },
+    source: {
+      color: 'red',
+    },
+    target: {
+      color: 'green',
+    },
+    roman: {
+      color: 'blue',
+    },
+  });
 
 interface OwnProps {
   lemmas: Types.Lemma[];
@@ -22,27 +39,29 @@ interface OwnProps {
 type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const LemmaTable: React.FC<Props> = props => {
-  const { history, lemmas, showButtons, onButtonClick } = props;
+  const { classes, history, lemmas, showButtons, onButtonClick } = props;
   const { search } = history.location;
 
   const matches = decodeURI(search).match(/\bid=(\w+)/);
   const lemmaId = matches ? matches[1] : null;
 
   return (
-    <Table padding="dense">
-      <TableBody>
-        {lemmas &&
-          lemmas.map(lemma => (
-            <LemmaTableRow
-              key={lemma._id}
-              lemma={lemma}
-              lemmaId={lemmaId}
-              showButtons={showButtons}
-              onButtonClick={onButtonClick}
-            />
-          ))}
-      </TableBody>
-    </Table>
+    <div className={`markdown-body ${classes.root}`}>
+      <table className={classes.mdTable}>
+        <tbody>
+          {lemmas &&
+            lemmas.map(lemma => (
+              <LemmaTableRow
+                key={lemma._id}
+                lemma={lemma}
+                lemmaId={lemmaId}
+                showButtons={showButtons}
+                onButtonClick={onButtonClick}
+              />
+            ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

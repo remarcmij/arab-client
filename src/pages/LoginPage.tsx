@@ -1,4 +1,5 @@
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import {
   createStyles,
@@ -8,10 +9,9 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
+import * as C from '../components/constants';
 import GridContainer from '../components/GridContainer';
-import Grid from '@material-ui/core/Grid';
 import NavBar from '../components/NavBar';
-import * as S from '../components/strings';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -28,7 +28,7 @@ type Props = WithStyles<typeof styles>;
 const LoginPage: React.FC<Props> = props => {
   return (
     <React.Fragment>
-      <NavBar title={S.APP_TITLE} hideSearchButton={true} />
+      <NavBar title={C.APP_TITLE} hideSearchButton={true} />
       <GridContainer>
         <Paper className={props.classes.root}>
           <Typography variant="h4" component="h1" gutterBottom={true}>
@@ -47,17 +47,17 @@ const LoginPage: React.FC<Props> = props => {
                 variant="contained"
                 fullWidth={true}
               >
-                {S.SIGN_IN_WITH_GOOGLE}
+                {C.SIGN_IN_WITH_GOOGLE}
               </Button>
             </Grid>
             <Grid item={true}>
               <Button color="secondary" variant="contained" fullWidth={true}>
-                {S.SIGN_IN_WITH_USERNAME}
+                {C.SIGN_IN_WITH_USERNAME}
               </Button>
             </Grid>
             <Grid item={true}>
               <Button color="secondary" variant="contained" fullWidth={true}>
-                {S.SIGN_UP}
+                {C.SIGN_UP}
               </Button>
             </Grid>
           </Grid>

@@ -10,6 +10,7 @@ import * as React from 'react';
 import Types from 'Types';
 
 const md = markdownIt();
+const arabicRegExp = /[\u0600-\u06ff]+/g;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,6 +24,11 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         padding: theme.spacing.unit * 3,
       },
+      '& span[lang="ar"]': {
+        fontSize: 28,
+        cursor: 'pointer',
+        color: theme.palette.primary.dark,
+      },
     },
   });
 
@@ -34,11 +40,14 @@ type Props = OwnProps & WithStyles<typeof styles>;
 
 const ArticleTextContent: React.FC<Props> = ({ document, classes }) => {
   const { body } = document;
+  const html = md
+    .render(body)
+    .replace(arabicRegExp, '<span lang="ar">$&</span>');
   return (
     <Paper className={classes.root}>
       <article
         className={`markdown-body ${classes.content}`}
-        dangerouslySetInnerHTML={{ __html: md.render(body) }}
+        dangerouslySetInnerHTML={{ __html: html }}
       />{' '}
     </Paper>
   );

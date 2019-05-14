@@ -11,7 +11,6 @@ export type SettingsState = {
   readonly showVocalization: boolean;
   readonly showTranscription: boolean;
   readonly showFlashcards: boolean;
-  readonly voiceEnabled: boolean;
   readonly romanizationStandard: string;
   readonly voiceName: string;
 };
@@ -34,8 +33,6 @@ const reducer = (
       return { ...state, showTranscription: !state.showTranscription };
     case C.TOGGLE_FLASHCARDS:
       return { ...state, showFlashcards: !state.showFlashcards };
-    case C.TOGGLE_VOICE:
-      return { ...state, voiceEnabled: !state.voiceEnabled };
     case C.SET_ROMANIZATION_STANDARD:
       return { ...state, romanizationStandard: action.payload };
     case C.SET_VOICE_NAME:
@@ -90,9 +87,8 @@ let initialState = {
   showVocalization: true,
   showTranscription: true,
   showFlashcards: false,
-  voiceEnabled: false,
   romanizationStandard: 'din',
-  voiceName: 'none',
+  voiceName: '',
 };
 
 const stateString = window.localStorage.getItem(LOCAL_STORAGE_KEY);

@@ -1,3 +1,4 @@
+import indigo from '@material-ui/core/colors/indigo';
 import IconButton from '@material-ui/core/IconButton';
 import RootRef from '@material-ui/core/RootRef';
 import {
@@ -6,16 +7,13 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForwardIos';
 import React, { useEffect, useRef } from 'react';
 import Types from 'Types';
 import { useSettingsContext } from '../contexts/settings';
-import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import Transcoder from '../services/Transcoder';
-import indigo from '@material-ui/core/colors/indigo';
+
+const arabicWordRegExp = /[\u0600-\u06FF]+/g;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -31,17 +29,18 @@ const styles = (theme: Theme) =>
         color: theme.palette.secondary.main,
       },
     },
-    source: {
-      color: theme.palette.primary.main,
-    },
     roman: {
       fontFamily: 'Georgia',
       fontStyle: 'italic',
     },
     target: {
-      marginTop: theme.spacing.unit,
-      marginBottom: theme.spacing.unit / 2,
+      fontSize: 28,
+      color: theme.palette.primary.dark,
+      '&>span[lang="ar"]': {
+        cursor: 'pointer',
+      },
     },
+    source: {},
     selected: {
       backgroundColor: `${indigo[50]}!important`,
     },
@@ -55,17 +54,6 @@ interface OwnProps {
 }
 
 type Props = WithStyles<typeof styles> & OwnProps;
-
-const handleTargetClick = (
-  voiceEnabled: boolean,
-  voiceName: string,
-  target: string,
-) => {
-  if (voiceEnabled && voiceName !== 'none') {
-    // tslint:disable-next-line:no-floating-promises
-    SpeechSynthesizer.speak(voiceName, target);
-  }
-};
 
 const LemmaTableRow: React.FC<Props> = props => {
   const {
@@ -81,8 +69,6 @@ const LemmaTableRow: React.FC<Props> = props => {
     showVocalization,
     showTranscription,
     romanizationStandard,
-    voiceName,
-    voiceEnabled,
   } = settings;
 
   const rootRef = useRef<HTMLElement>(null);
@@ -95,65 +81,46 @@ const LemmaTableRow: React.FC<Props> = props => {
     }
   }, [isTargeted]);
 
+  const arabicText = showVocalization
+    ? lemma.target
+    : Transcoder.stripTashkeel(lemma.target);
+  const arabicHtml = arabicText.replace(
+    arabicWordRegExp,
+    '<span lang="ar">$&</span>',
+  );
+
   return (
     <RootRef rootRef={rootRef}>
-      <TableRow
+      <tr
         key={lemma._id}
         id={`lemma-${lemma._id}`}
-        selected={isTargeted}
-        classes={{ selected: classes.selected }}
+        // selected={isTargeted}
+        // classes={{ selected: classes.selected }}
       >
-        <TableCell align="left">
-          <Typography
-            variant="h6"
-            classes={{ h6: classes.source }}
-            color="textPrimary"
-          >
-            {lemma.source}
-          </Typography>
-        </TableCell>
-        {showTranscription && (
-          <TableCell align="center">
-            <Typography
-              variant="h6"
-              classes={{ h6: classes.roman }}
-              color="textSecondary"
-            >
-              {lemma.roman
-                ? Transcoder.applyRomanization(
-                    lemma.roman,
-                    romanizationStandard,
-                  )
-                : ' '}
-            </Typography>
-          </TableCell>
+        <td align="left" className={classes.source}>
+          {lemma.source}
+        </td>
+        {((showTranscription && lemma.roman) || showButtons) && (
+          <td align="center" className={classes.roman}>
+            {lemma.roman
+              ? Transcoder.applyRomanization(lemma.roman, romanizationStandard)
+              : ' '}
+          </td>
         )}
-        <TableCell
+        <td
           align="right"
           dir={'rtl'}
-          classes={{ root: classes.foreignCell }}
-          onClick={() =>
-            handleTargetClick(voiceEnabled, voiceName, lemma.target)
-          }
-        >
-          <Typography
-            variant="h4"
-            classes={{ h4: classes.target }}
-            color="inherit"
-          >
-            {showVocalization
-              ? lemma.target
-              : Transcoder.stripTashkeel(lemma.target)}
-          </Typography>
-        </TableCell>
+          className={classes.target}
+          dangerouslySetInnerHTML={{ __html: arabicHtml }}
+        />
         {showButtons && (
-          <TableCell align="right">
+          <td align="right" style={{ minWidth: 'inherit' }}>
             <IconButton onClick={() => onButtonClick(lemma)} color="default">
               <ArrowForwardIcon />
             </IconButton>
-          </TableCell>
+          </td>
         )}
-      </TableRow>
+      </tr>
     </RootRef>
   );
 };

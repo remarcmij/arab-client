@@ -7,16 +7,15 @@ import MediaQuery from 'react-responsive';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
 import ArticleTextContent from '../components/ArticleTextContent';
+import * as C from '../components/constants';
 import GridContainer from '../components/GridContainer';
-import LemmaList from '../components/LemmaList';
 import LemmaArticle from '../components/LemmaArticle';
+import LemmaList from '../components/LemmaList';
 import NavBar from '../components/NavBar';
-import * as S from '../components/strings';
-import VoiceOverButton from '../components/VoiceOverButton';
+import WordClickHandler from '../components/WordClickHandler';
+import { useSettingsContext } from '../contexts/settings';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
-import { useSettingsContext } from '../contexts/settings';
-import { toggleVoice } from '../contexts/settings/actions';
 
 interface Params {
   publication: string;
@@ -30,14 +29,13 @@ interface OwnProps {
 type Props = OwnProps & WithTheme;
 
 const ArticlePage: React.FC<Props> = props => {
-  const { settings, dispatch } = useSettingsContext();
+  const { settings } = useSettingsContext();
 
   const {
     showVocalization,
     showTranscription,
     romanizationStandard,
     voiceName,
-    voiceEnabled,
   } = settings;
 
   const { publication, article } = props.match.params;
@@ -58,14 +56,9 @@ const ArticlePage: React.FC<Props> = props => {
       rightHandButtons={
         document === null || document.kind !== 'lemmas' ? null : (
           <React.Fragment>
-            <VoiceOverButton
-              voiceEnabled={voiceEnabled}
-              voiceName={voiceName}
-              toggleVoice={() => dispatch(toggleVoice())}
-            />
             <Tooltip
-              title={S.FLASHCARDS_PAGE_TITLE}
-              aria-label={S.FLASHCARDS_PAGE_TITLE}
+              title={C.FLASHCARDS_PAGE_TITLE}
+              aria-label={C.FLASHCARDS_PAGE_TITLE}
             >
               <IconButton color="inherit" onClick={onGoFlashcards}>
                 <Code />
@@ -104,7 +97,6 @@ const ArticlePage: React.FC<Props> = props => {
               showTranscription={showTranscription}
               romanizationStandard={romanizationStandard}
               voiceName={voiceName}
-              voiceEnabled={voiceEnabled}
             />
           </MediaQuery>
         </React.Fragment>
@@ -125,10 +117,10 @@ const ArticlePage: React.FC<Props> = props => {
   }
 
   return (
-    <React.Fragment>
+    <WordClickHandler>
       {renderNavBar()}
       <GridContainer>{renderContent()}</GridContainer>
-    </React.Fragment>
+    </WordClickHandler>
   );
 };
 

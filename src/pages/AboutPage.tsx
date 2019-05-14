@@ -3,9 +3,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { Redirect } from 'react-router';
+import * as C from '../components/constants';
 import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
-import * as S from '../components/strings';
 import useGoBack from '../hooks/useGoBack';
 
 const styles = (theme: Theme) =>
@@ -33,7 +33,7 @@ const AboutPage: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      <NavBar title={S.ABOUT_TITLE} onBack={handleBack} />
+      <NavBar title={C.ABOUT_TITLE} onBack={handleBack} />
       <GridContainer>
         <Paper className={props.classes.root}>
           <Typography variant="h4" component="h1" gutterBottom={true}>

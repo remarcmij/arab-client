@@ -3,15 +3,13 @@ import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React from 'react';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
+import * as C from '../components/constants';
 import GridContainer from '../components/GridContainer';
 import LemmaFlashcards from '../components/LemmaFlashcards';
 import NavBar from '../components/NavBar';
-import * as S from '../components/strings';
-import VoiceOverButton from '../components/VoiceOverButton';
+import { useSettingsContext } from '../contexts/settings';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
-import { useSettingsContext } from '../contexts/settings';
-import { toggleVoice } from '../contexts/settings/actions';
 
 interface Params {
   publication: string;
@@ -25,9 +23,9 @@ interface Props extends WithTheme {
 const FlashcardPage: React.FC<Props> = props => {
   const { publication, article } = props.match.params;
 
-  const { settings, dispatch } = useSettingsContext();
+  const { settings } = useSettingsContext();
 
-  const { showVocalization, voiceName, voiceEnabled } = settings;
+  const { showVocalization, voiceName } = settings;
 
   const [goBack, handleBack] = useGoBack();
 
@@ -41,17 +39,7 @@ const FlashcardPage: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      <NavBar
-        title={S.FLASHCARDS_PAGE_TITLE}
-        onBack={handleBack}
-        rightHandButtons={
-          <VoiceOverButton
-            voiceEnabled={voiceEnabled}
-            voiceName={voiceName}
-            toggleVoice={() => dispatch(toggleVoice())}
-          />
-        }
-      />
+      <NavBar title={C.FLASHCARDS_PAGE_TITLE} onBack={handleBack} />
       {document && (
         <GridContainer>
           <Grid container={true} justify="center">
@@ -59,7 +47,6 @@ const FlashcardPage: React.FC<Props> = props => {
               <LemmaFlashcards
                 document={document}
                 showVocalization={showVocalization}
-                voiceEnabled={voiceEnabled}
                 voiceName={voiceName}
               />
             </Grid>

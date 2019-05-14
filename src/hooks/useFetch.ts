@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import LRU from 'lru-cache';
+import { useContext, useEffect, useState } from 'react';
 import { UserProfileContext } from '../contexts/UserProfileProvider';
 import { getToken } from '../services/token-service';
 

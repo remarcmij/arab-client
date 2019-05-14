@@ -1,13 +1,13 @@
-import * as React from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Types from 'Types';
 import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
+import Types from 'Types';
 
 const styles = (theme: Theme) =>
   createStyles({

@@ -1,18 +1,16 @@
 // tslint:disable no-import-side-effect
 
 /* Start of IE11 polyfills */
-import 'react-app-polyfill/ie11';
 import 'core-js/es7/object';
-/* End of IE11 polyfills */
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App';
-
-import 'normalize.css';
-import './index.css';
 import 'github-markdown-css';
 import 'isomorphic-fetch';
+import 'normalize.css';
+/* End of IE11 polyfills */
+import React from 'react';
+import 'react-app-polyfill/ie11';
+import ReactDOM from 'react-dom';
+import App from './components/App';
+import './index.css';
 import './services/SpeechSynthesizer';
 import * as serviceWorker from './serviceWorker';
 

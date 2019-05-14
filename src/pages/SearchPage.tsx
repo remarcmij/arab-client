@@ -9,13 +9,14 @@ import React, { useEffect, useState } from 'react';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router';
 import { ValueType } from 'react-select/lib/types';
 import Types from 'Types';
+import * as C from '../components/constants';
 import GridContainer from '../components/GridContainer';
 import LemmaTable from '../components/LemmaTable';
 import NavBar from '../components/NavBar';
 import SearchBox, { WordOption } from '../components/SearchBox';
+import WordClickHandler from '../components/WordClickHandler';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
-import * as S from '../components/strings';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -72,9 +73,9 @@ const SearchPage: React.FC<Props> = props => {
   }
 
   return (
-    <React.Fragment>
+    <WordClickHandler>
       <NavBar
-        title={S.SEARCH}
+        title={C.SEARCH}
         onBack={handleBack}
         rightHandButtons={<SearchBox onChange={handleChange} />}
         hideSearchButton={true}
@@ -90,7 +91,7 @@ const SearchPage: React.FC<Props> = props => {
           </Paper>
         )}
       </GridContainer>
-    </React.Fragment>
+    </WordClickHandler>
   );
 };
 

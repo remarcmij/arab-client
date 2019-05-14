@@ -3,11 +3,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import {
   createStyles,
@@ -20,25 +20,21 @@ import withMobileDialog, {
   InjectedProps,
 } from '@material-ui/core/withMobileDialog';
 import React from 'react';
-import SpeechSynthesizer from '../services/SpeechSynthesizer';
-import { romanizationStandards } from '../services/Transcoder';
 import { useSettingsContext } from '../contexts/settings';
 import {
   setRomanizationSystem,
   setVoiceName,
-  toggleVocalization,
   toggleTranscription,
+  toggleVocalization,
 } from '../contexts/settings/actions';
-import * as S from './strings';
+import SpeechSynthesizer from '../services/SpeechSynthesizer';
+import { romanizationStandards } from '../services/Transcoder';
+import * as C from './constants';
 
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 400,
-    },
-    divider: {
-      marginTop: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
     },
   });
 
@@ -64,21 +60,20 @@ const SettingsDialog: React.FC<Props> = props => {
   const renderRomanizationSelect = () => (
     <FormControl>
       <InputLabel htmlFor="romanizationStandard-select">
-        {S.ROMANIZATION_SYSTEM}
+        {C.ROMANIZATION_SYSTEM}
       </InputLabel>
       <Select
-        native={true}
         value={romanizationStandard}
         onChange={event => dispatch(setRomanizationSystem(event.target.value))}
         inputProps={{
-          name: 'Romanization',
+          name: 'romanization',
           id: 'romanizationStandard-select',
         }}
       >
         {Object.entries(romanizationStandards).map(([key, value]) => (
-          <option key={key} value={key}>
+          <MenuItem key={key} value={key}>
             {value.name}
-          </option>
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
@@ -86,25 +81,24 @@ const SettingsDialog: React.FC<Props> = props => {
 
   const renderVoiceSelect = () => (
     <FormControl>
-      <InputLabel htmlFor="romanizationStandard-select">
-        {S.VOICE_NAME}
-      </InputLabel>
+      <InputLabel htmlFor="voice-select">{C.VOICE_NAME}</InputLabel>
       <Select
-        native={true}
         value={voiceName}
         onChange={event => dispatch(setVoiceName(event.target.value))}
         inputProps={{
-          name: 'Romanization',
-          id: 'romanizationStandard-select',
+          name: 'voice',
+          id: 'voice-select',
         }}
       >
-        <option value="none">{S.NULL_VOICE}</option>
+        <MenuItem value="">
+          <em>{C.NULL_VOICE}</em>
+        </MenuItem>
         {SpeechSynthesizer.getVoices()
           .filter(voice => voice.lang.startsWith('ar-'))
           .map(voice => (
-            <option key={voice.voiceURI} value={voice.name}>
+            <MenuItem key={voice.voiceURI} value={voice.name}>
               {`${voice.name} (${voice.lang})`}
-            </option>
+            </MenuItem>
           ))}
       </Select>
     </FormControl>
@@ -118,7 +112,7 @@ const SettingsDialog: React.FC<Props> = props => {
       aria-labelledby="responsive-dialog-title"
       classes={{ paper: classes.paper }}
     >
-      <DialogTitle id="responsive-dialog-title">{S.EDIT_SETTINGS}</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">{C.EDIT_SETTINGS}</DialogTitle>
       <DialogContent>
         <FormGroup>
           <FormControlLabel
@@ -128,7 +122,7 @@ const SettingsDialog: React.FC<Props> = props => {
                 onChange={() => dispatch(toggleVocalization())}
               />
             }
-            label={S.SHOW_VOCALIZATION}
+            label={C.SHOW_VOCALIZATION}
           />
           <FormControlLabel
             control={
@@ -137,10 +131,9 @@ const SettingsDialog: React.FC<Props> = props => {
                 onChange={() => dispatch(toggleTranscription())}
               />
             }
-            label={S.SHOW_TRANSCRIPTION}
+            label={C.SHOW_TRANSCRIPTION}
           />
           {renderRomanizationSelect()}
-          <Divider className={classes.divider} />
           {renderVoiceSelect()}
         </FormGroup>
       </DialogContent>

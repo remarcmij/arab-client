@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
-import { setToken, getToken, removeToken } from '../services/token-service';
+import { getToken, removeToken, setToken } from '../services/token-service';
 
 export interface UserProfile {
   email: string;

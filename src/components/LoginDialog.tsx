@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import withMobileDialog, {
-  InjectedProps,
-} from '@material-ui/core/withMobileDialog';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
+import withMobileDialog, {
+  InjectedProps,
+} from '@material-ui/core/withMobileDialog';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 const styles = (theme: Theme) =>
   createStyles({

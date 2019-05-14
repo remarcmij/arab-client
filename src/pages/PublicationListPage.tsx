@@ -8,10 +8,10 @@ import {
 } from '@material-ui/core/styles';
 import React from 'react';
 import Types from 'Types';
+import * as C from '../components/constants';
 import GridContainer from '../components/GridContainer';
 import NavBar from '../components/NavBar';
 import PublicationListItem from '../components/PublicationListItem';
-import * as S from '../components/strings';
 import useFetch from '../hooks/useFetch';
 
 const styles = (theme: Theme) =>
@@ -51,7 +51,7 @@ const PublicationListPage: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      <NavBar title={S.APP_TITLE} />
+      <NavBar title={C.APP_TITLE} />
       <GridContainer>
         <Paper classes={{ root: classes.root }}>{renderContent()}</Paper>
       </GridContainer>

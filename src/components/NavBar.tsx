@@ -9,9 +9,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Search from '@material-ui/icons/Search';
 import React, { useState } from 'react';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router';
+import * as C from './constants';
 import GridContainer from './GridContainer';
 import MainDrawer from './MainDrawer';
-import * as S from './strings';
 
 const styles = createStyles({
   root: {
@@ -93,7 +93,7 @@ const NavBar: React.FC<Props> = props => {
           </Typography>
           {rightHandButtons}
           {!hideSearchButton && (
-            <Tooltip title={S.SEARCH} aria-label={S.SEARCH}>
+            <Tooltip title={C.SEARCH} aria-label={C.SEARCH}>
               <IconButton onClick={handleSearch} color="inherit">
                 <Search />
               </IconButton>
