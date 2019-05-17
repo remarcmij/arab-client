@@ -4,7 +4,7 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import Types from 'Types';
 import LemmaTableRow from './LemmaTableRow';
@@ -32,18 +32,19 @@ const styles = (theme: Theme) =>
 
 interface OwnProps {
   lemmas: Types.Lemma[];
-  showButtons?: boolean;
-  onButtonClick?: (lemma: Types.Lemma) => void;
 }
 
 type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const LemmaTable: React.FC<Props> = props => {
-  const { classes, history, lemmas, showButtons, onButtonClick } = props;
-  const { search } = history.location;
+  const { classes, history, lemmas } = props;
+  const [hashId, setHashId] = useState('');
 
-  const matches = decodeURI(search).match(/\bid=(\w+)/);
-  const lemmaId = matches ? matches[1] : null;
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    const { hash } = history.location;
+    setHashId(hash ? hash.slice(1) : '');
+  }, []);
 
   return (
     <div className={`markdown-body ${classes.root}`}>
@@ -51,13 +52,7 @@ const LemmaTable: React.FC<Props> = props => {
         <tbody>
           {lemmas &&
             lemmas.map(lemma => (
-              <LemmaTableRow
-                key={lemma._id}
-                lemma={lemma}
-                lemmaId={lemmaId}
-                showButtons={showButtons}
-                onButtonClick={onButtonClick}
-              />
+              <LemmaTableRow key={lemma._id} lemma={lemma} hashId={hashId} />
             ))}
         </tbody>
       </table>

@@ -1491,6 +1491,13 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-scrollable-anchor@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@types/react-scrollable-anchor/-/react-scrollable-anchor-0.6.0.tgz#dfc2f144f02ae05083ef20d3a83085e74267e295"
+  integrity sha512-oVHslt+VBrlgdR3cv2aOnhQk75afLA2lqzCRSC21FzEd6s6q33WUnO+dJUxDsWpgb9e8S63F0vyfgA19huIkYQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-select@^2.0.17":
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-2.0.17.tgz#e59ad7f292abff1311ce2ca7e130fff85df18aa2"
@@ -6222,6 +6229,11 @@ jsx-ast-utils@^2.0.1:
   dependencies:
     array-includes "^3.0.3"
 
+jump.js@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jump.js/-/jump.js-1.0.1.tgz#0de2b1631ba9a1c2c6b8572ad277d877e8503600"
+  integrity sha1-DeKxYxupocLGuFcq0nfYd+hQNgA=
+
 killable@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -8280,7 +8292,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -8639,6 +8651,14 @@ react-scripts@3.0.1:
     workbox-webpack-plugin "4.2.0"
   optionalDependencies:
     fsevents "2.0.6"
+
+react-scrollable-anchor@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-scrollable-anchor/-/react-scrollable-anchor-0.6.1.tgz#fd6e78026c744f76414053d06903b82adccb54d9"
+  integrity sha1-/W54Amx0T3ZBQFPQaQO4KtzLVNk=
+  dependencies:
+    jump.js "1.0.1"
+    prop-types "^15.5.10"
 
 react-select@^2.4.3:
   version "2.4.3"
@@ -10083,10 +10103,10 @@ typescript-tslint-plugin@^0.3.1:
     mock-require "^3.0.2"
     vscode-languageserver "^5.1.0"
 
-typescript@3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.3.tgz#f1657fc7daa27e1a8930758ace9ae8da31403221"
-  integrity sha512-Y21Xqe54TBVp+VDSNbuDYdGw0BpoR/Q6wo/+35M8PAU0vipahnyduJWirxxdxjsAkS7hue53x2zp8gz7F05u0A==
+typescript@^3.5.0-rc:
+  version "3.5.0-rc"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.0-rc.tgz#6f1ada90c15427713f8c0f4550ef7d357ac2a5f1"
+  integrity sha512-8Os3bqTeHc6bf+bkPFL3O/pb09j8SbDa2LUBxTXWpZlcHUW9ziGuiEFiqMcArkbAjGLqEzshkl4zvxhb0gVPuQ==
 
 ua-parser-js@^0.7.18:
   version "0.7.19"

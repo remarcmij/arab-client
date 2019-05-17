@@ -5,11 +5,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -19,9 +15,8 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es5",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "incremental": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

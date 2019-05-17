@@ -1,19 +1,11 @@
 declare module 'Types' {
-  export interface DictEntry {
-    base: string;
-    foreign: string;
-    word_class: string | null;
-    notes: string | null;
-    doc_id: number;
-  }
-
   export interface Lemma {
     _id: string;
     source: string;
     target: string;
     roman?: string;
     filename: string;
-    doc_id: number;
+    title?: string;
   }
 
   interface DocumentBase {

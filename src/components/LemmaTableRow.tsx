@@ -1,17 +1,20 @@
-import indigo from '@material-ui/core/colors/indigo';
-import IconButton from '@material-ui/core/IconButton';
-import RootRef from '@material-ui/core/RootRef';
+import pink from '@material-ui/core/colors/pink';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForwardIos';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import Types from 'Types';
 import { useSettingsContext } from '../contexts/settings';
 import Transcoder from '../services/Transcoder';
+
+configureAnchors({
+  offset: -65,
+  keepLastAnchorHash: true,
+});
 
 const arabicWordRegExp = /[\u0600-\u06FF]+/g;
 
@@ -41,28 +44,20 @@ const styles = (theme: Theme) =>
       },
     },
     source: {},
-    selected: {
-      backgroundColor: `${indigo[50]}!important`,
+    targeted: {
+      backgroundColor: `${pink[50]}!important`,
     },
   });
 
 interface OwnProps {
   lemma: Types.Lemma;
-  onButtonClick?: (lemma: Types.Lemma) => void;
-  showButtons?: boolean;
-  lemmaId?: string | null;
+  hashId: string;
 }
 
-type Props = WithStyles<typeof styles> & OwnProps;
+type Props = OwnProps & WithStyles<typeof styles>;
 
 const LemmaTableRow: React.FC<Props> = props => {
-  const {
-    lemma,
-    lemmaId,
-    classes,
-    showButtons = false,
-    onButtonClick = () => undefined,
-  } = props;
+  const { lemma, hashId, classes } = props;
 
   const { settings } = useSettingsContext();
   const {
@@ -70,16 +65,6 @@ const LemmaTableRow: React.FC<Props> = props => {
     showTranscription,
     romanizationStandard,
   } = settings;
-
-  const rootRef = useRef<HTMLElement>(null);
-
-  const isTargeted = !!lemmaId && lemmaId === lemma._id;
-
-  useEffect(() => {
-    if (isTargeted && rootRef.current) {
-      window.scrollTo(0, rootRef.current.offsetTop);
-    }
-  }, [isTargeted]);
 
   const arabicText = showVocalization
     ? lemma.target
@@ -90,17 +75,12 @@ const LemmaTableRow: React.FC<Props> = props => {
   );
 
   return (
-    <RootRef rootRef={rootRef}>
-      <tr
-        key={lemma._id}
-        id={`lemma-${lemma._id}`}
-        // selected={isTargeted}
-        // classes={{ selected: classes.selected }}
-      >
+    <ScrollableAnchor id={lemma._id}>
+      <tr className={lemma._id === hashId ? classes.targeted : ''}>
         <td align="left" className={classes.source}>
           {lemma.source}
         </td>
-        {((showTranscription && lemma.roman) || showButtons) && (
+        {showTranscription && lemma.roman && (
           <td align="center" className={classes.roman}>
             {lemma.roman
               ? Transcoder.applyRomanization(lemma.roman, romanizationStandard)
@@ -113,15 +93,8 @@ const LemmaTableRow: React.FC<Props> = props => {
           className={classes.target}
           dangerouslySetInnerHTML={{ __html: arabicHtml }}
         />
-        {showButtons && (
-          <td align="right" style={{ minWidth: 'inherit' }}>
-            <IconButton onClick={() => onButtonClick(lemma)} color="default">
-              <ArrowForwardIcon />
-            </IconButton>
-          </td>
-        )}
       </tr>
-    </RootRef>
+    </ScrollableAnchor>
   );
 };
 
