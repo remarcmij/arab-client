@@ -55,9 +55,16 @@ type Props = OwnProps & WithStyles<typeof styles>;
 const SearchResultList: React.FC<Props> = props => {
   const { classes } = props;
 
+  const lemmaMap = props.lemmas.reduce((map, lemma) => {
+    if (!map.has(lemma._topicId)) {
+      map.set(lemma._topicId, lemma);
+    }
+    return map;
+  }, new Map<string, Types.Lemma>());
+
   return (
     <>
-      {props.lemmas.map(lemma => (
+      {Array.from(lemmaMap.values()).map(lemma => (
         <Paper classes={{ root: classes.root }} key={lemma._id}>
           <Typography variant="subtitle1" classes={{ root: classes.nl }}>
             {lemma.nl}

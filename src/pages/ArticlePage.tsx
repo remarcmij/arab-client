@@ -10,7 +10,6 @@ import GridContainer from '../components/GridContainer';
 import LemmaArticle from '../components/LemmaArticle';
 import NavBar from '../components/NavBar';
 import WordClickHandler from '../components/WordClickHandler';
-import { useSettingsContext } from '../contexts/settings';
 import useFetch from '../hooks/useFetch';
 import useGoBack from '../hooks/useGoBack';
 
@@ -26,15 +25,6 @@ interface OwnProps {
 type Props = OwnProps & WithTheme;
 
 const ArticlePage: React.FC<Props> = props => {
-  const { settings } = useSettingsContext();
-
-  const {
-    showVocalization,
-    showTranscription,
-    romanizationStandard,
-    voiceName,
-  } = settings;
-
   const { publication, article } = props.match.params;
 
   const [goFlashcards, setGoFlashcards] = useState<boolean>(false);

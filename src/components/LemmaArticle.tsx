@@ -8,7 +8,7 @@ import {
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Types from 'Types';
-import LemmaTable from './LemmaTable';
+import LemmaList from './LemmaList';
 import markdownIt from 'markdown-it';
 
 const md = markdownIt();
@@ -20,12 +20,12 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         margin: theme.spacing.unit,
       },
+      padding: theme.spacing.unit * 4,
       userSelect: 'none',
     },
     mdPadding: {
-      paddingTop: theme.spacing.unit * 3,
-      paddingRight: theme.spacing.unit * 3,
-      paddingLeft: theme.spacing.unit * 3,
+      // paddingRight: theme.spacing.unit * 3,
+      // paddingLeft: theme.spacing.unit * 3,
     },
     content: {
       '& span[lang="ar"]': {
@@ -47,9 +47,7 @@ const LemmaArticle: React.FC<Props> = ({ document, classes }) => {
 
   return (
     <Paper className={classes.root}>
-      <Typography variant="h5" className={classes.mdPadding}>
-        {title}
-      </Typography>
+      <Typography variant="h5">{title}</Typography>
       {subtitle && (
         <Typography
           variant="h6"
@@ -65,16 +63,15 @@ const LemmaArticle: React.FC<Props> = ({ document, classes }) => {
           lemma => lemma.sectionNum === index,
         );
         return (
-          <>
+          <React.Fragment key={index}>
             <section
-              key={index}
               dangerouslySetInnerHTML={{ __html: html }}
               className={`markdown-body ${classes.mdPadding} ${
                 classes.content
               }`}
             />
-            <LemmaTable lemmas={sectionLemmas} />
-          </>
+            <LemmaList lemmas={sectionLemmas} />
+          </React.Fragment>
         );
       })}
     </Paper>

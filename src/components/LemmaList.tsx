@@ -1,5 +1,6 @@
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import grey from '@material-ui/core/colors/grey';
+import pink from '@material-ui/core/colors/pink';
 import {
   createStyles,
   Theme,
@@ -7,135 +8,151 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import { RouteComponentProps, withRouter, Redirect, match } from 'react-router';
+import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import Types from 'Types';
-import SpeechSynthesizer from '../services/SpeechSynthesizer';
+import { useSettingsContext } from '../contexts/settings';
 import Transcoder from '../services/Transcoder';
+import * as C from './constants';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      [theme.breakpoints.up('md')]: {
-        margin: theme.spacing.unit,
-      },
-      padding: theme.spacing.unit,
+configureAnchors({
+  offset: -73,
+  keepLastAnchorHash: true,
+});
+
+const arabicWordRegExp = /[\u0600-\u06FF]+/g;
+
+const styles = (theme: Theme) => {
+  const { unit } = theme.spacing;
+  return createStyles({
+    buttonContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      margin: unit,
+    },
+    list: {
+      listStyleType: 'none',
       userSelect: 'none',
+      backgroundColor: grey[100],
+      padding: unit * 2,
+      margin: 0,
+      marginBottom: unit * 4,
     },
     listItem: {
-      marginBottom: theme.spacing.unit * 2,
-    },
-    extra: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2,
-    },
-    lemmas: {
-      marginBlockStart: 0,
-      marginBlockEnd: 0,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginRight: unit * 2,
     },
     nl: {
-      color: theme.palette.primary.main,
-    },
-    rom: {
-      fontFamily: 'Georgia',
-      fontStyle: 'italic',
+      flex: 1,
+      textAlign: 'right',
     },
     ar: {
-      marginBottom: theme.spacing.unit,
-      marginLeft: theme.spacing.unit * 4,
+      flex: 1,
+      fontSize: 28,
+      textAlign: 'right',
+      color: theme.palette.primary.dark,
+      '&>span[lang="ar"]': {
+        cursor: 'pointer',
+      },
+      marginRight: unit * 2,
+    },
+    rom: {
+      flex: 1,
+      fontFamily: 'Georgia',
+      fontStyle: 'italic',
+      textAlign: 'center',
+    },
+    hashMatch: {
+      backgroundColor: `${pink[50]}!important`,
     },
   });
+};
 
+interface Params {
+  publication: string;
+  article: string;
+}
 interface OwnProps {
-  document: Types.LemmaDocument;
-  showVocalization: boolean;
-  showTranscription: boolean;
-  romanizationStandard: string;
-  voiceName: string;
+  match: match<Params>;
+  lemmas: Types.Lemma[];
 }
 
-type Props = OwnProps & WithStyles<typeof styles>;
+type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
-const handleClick = (voiceName: string, ar: string) => {
-  if (voiceName) {
-    // tslint:disable-next-line:no-floating-promises
-    SpeechSynthesizer.speak(voiceName, ar);
+const LemmaList: React.FC<Props> = props => {
+  const { lemmas, classes, history } = props;
+  const { publication, article } = props.match.params;
+
+  const { settings } = useSettingsContext();
+  const {
+    showVocalization,
+    showTranscription,
+    romanizationStandard,
+  } = settings;
+
+  const [hashId, setHashId] = useState('');
+  const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    const { hash } = history.location;
+    setHashId(hash ? hash.slice(1) : '');
+  }, []);
+
+  const onGoFlashcards = () => setGoFlashcards(true);
+
+  const renderLemma = (lemma: Types.Lemma, index: number) => {
+    const arabicText = showVocalization
+      ? lemma.ar
+      : Transcoder.stripTashkeel(lemma.ar);
+    const arabicHtml = arabicText.replace(
+      arabicWordRegExp,
+      '<span lang="ar">$&</span>',
+    );
+    const listClasses =
+      lemma._id === hashId
+        ? `${classes.listItem} ${classes.hashMatch}`
+        : classes.listItem;
+    return (
+      <ScrollableAnchor key={index} id={lemma._id}>
+        <li className={listClasses}>
+          <Typography variant="body1" className={classes.nl}>
+            {lemma.nl}
+          </Typography>
+          <Typography
+            dir="rtl"
+            className={classes.ar}
+            dangerouslySetInnerHTML={{ __html: arabicHtml }}
+          />
+          {lemma.rom && showTranscription && (
+            <Typography variant="body1" className={classes.rom}>
+              {Transcoder.applyRomanization(lemma.rom, romanizationStandard)}
+            </Typography>
+          )}
+        </li>
+      </ScrollableAnchor>
+    );
+  };
+
+  if (goFlashcards) {
+    return <Redirect to={`/content/${publication}/${article}/flashcards`} />;
   }
-};
-
-const LemmaList: React.FC<Props> = ({
-  document,
-  showVocalization,
-  showTranscription,
-  romanizationStandard,
-  voiceName,
-  classes,
-}) => {
-  const renderLemma = (lemma: Types.Lemma, index: number) => (
-    <li key={index} className={classes.listItem}>
-      <Typography variant="h6" classes={{ h6: classes.nl }} color="textPrimary">
-        <span dir="ltr">{lemma.nl}</span>
-      </Typography>
-      <Typography
-        variant="h4"
-        classes={{ h4: classes.ar }}
-        color="textPrimary"
-        onClick={() => handleClick(voiceName, lemma.ar)}
-      >
-        <span dir="rtl">
-          {showVocalization ? lemma.ar : Transcoder.stripTashkeel(lemma.ar)}
-        </span>
-      </Typography>
-      {lemma.rom && showTranscription && (
-        <Typography
-          variant="body1"
-          classes={{ body1: classes.rom }}
-          color="textSecondary"
-        >
-          <span dir="ltr">
-            {Transcoder.applyRomanization(lemma.rom, romanizationStandard)}
-          </span>
-        </Typography>
-      )}
-    </li>
-  );
-
-  const { title, subtitle, prolog, epilog, body: lemmas } = document;
 
   return (
-    <Paper className={classes.root}>
-      <Typography variant="h5" gutterBottom={true}>
-        {title}
-      </Typography>
-      {subtitle && (
-        <Typography
-          variant="h6"
-          gutterBottom={true}
-          dangerouslySetInnerHTML={{ __html: subtitle }}
-        />
-      )}
-      {prolog && (
-        <React.Fragment>
-          <section
-            dangerouslySetInnerHTML={{ __html: prolog }}
-            className={`markdown-body ${classes.extra}`}
-          />
-          <Divider />
-        </React.Fragment>
-      )}
-      <ul dir="rtl" className={classes.lemmas}>
-        {lemmas.map(renderLemma)}
-      </ul>
-      {epilog && (
-        <React.Fragment>
-          <Divider />
-          <section
-            dangerouslySetInnerHTML={{ __html: epilog }}
-            className={`markdown-body ${classes.extra}`}
-          />
-        </React.Fragment>
-      )}
-    </Paper>
+    <>
+      <div className={classes.buttonContainer}>
+        <Button variant="outlined" color="primary" onClick={onGoFlashcards}>
+          {C.FLASHCARDS}
+        </Button>
+      </div>
+      <ul className={classes.list}>{lemmas.map(renderLemma)}</ul>
+    </>
   );
 };
 
-export default withStyles(styles)(LemmaList);
+export default withRouter(withStyles(styles)(LemmaList));

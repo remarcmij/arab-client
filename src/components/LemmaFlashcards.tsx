@@ -20,7 +20,7 @@ const styles = (theme: Theme) =>
   });
 
 interface OwnProps {
-  document: Types.LemmaDocument;
+  document: Types.AppDocument;
   showVocalization: boolean;
   voiceName: string;
 }
@@ -29,6 +29,7 @@ type Props = OwnProps & WithStyles<typeof styles>;
 
 const LemmaFlashcards: React.FC<Props> = props => {
   const { document, showVocalization, voiceName, classes } = props;
+  const { lemmas } = document;
 
   const [index, setIndex] = useState<number>(0);
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
@@ -36,7 +37,7 @@ const LemmaFlashcards: React.FC<Props> = props => {
   const handleNext = () => {
     if (!showTranslation) {
       setShowTranslation(true);
-    } else if (index < props.document.body.length - 1) {
+    } else if (index < lemmas.length - 1) {
       setIndex(index + 1);
       setShowTranslation(false);
     }
@@ -49,14 +50,12 @@ const LemmaFlashcards: React.FC<Props> = props => {
     setShowTranslation(false);
   };
 
-  const { body: lemmas } = document;
-
   return (
     <div className={classes.root}>
       <FlashcardHeader
         document={document}
         index={index}
-        length={document.body.length}
+        length={lemmas.length}
       />
       {lemmas.length !== 0 && (
         <Flashcard

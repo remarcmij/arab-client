@@ -77,12 +77,11 @@ const LemmaTableRow: React.FC<Props> = props => {
   return (
     <ScrollableAnchor id={lemma._id}>
       <tr className={lemma._id === hashId ? classes.targeted : ''}>
-        <td align="left" className={classes.nl}>
+        <td align="right" className={classes.nl}>
           {lemma.nl}
         </td>
         <td
-          align="right"
-          dir={'rtl'}
+          dir="rtl"
           className={classes.ar}
           dangerouslySetInnerHTML={{ __html: arabicHtml }}
         />

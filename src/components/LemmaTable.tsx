@@ -19,15 +19,6 @@ const styles = (theme: Theme) =>
         width: 240,
       },
     },
-    nl: {
-      color: 'red',
-    },
-    ar: {
-      color: 'green',
-    },
-    rom: {
-      color: 'blue',
-    },
   });
 
 interface OwnProps {

@@ -21,3 +21,4 @@ export const SIGN_IN_WITH_USERNAME = 'Aanmelden met gebruikersnaam';
 export const SIGN_UP = 'Gebruikersnaam aanmaken';
 export const READ_ALOUD = 'Spreek uit';
 export const LOOK_UP = 'Zoek op';
+export const FLASHCARDS = 'Oefenen';

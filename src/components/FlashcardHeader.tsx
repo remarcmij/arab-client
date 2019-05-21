@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
   });
 
 interface OwnPropProps {
-  document: Types.LemmaDocument;
+  document: Types.AppDocument;
   index: number;
   length: number;
 }
