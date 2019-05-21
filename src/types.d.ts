@@ -1,10 +1,11 @@
 declare module 'Types' {
   export interface Lemma {
     _id: string;
-    source: string;
-    target: string;
-    roman?: string;
+    nl: string;
+    ar: string;
+    rom?: string;
     filename: string;
+    sectionNum: number;
     title?: string;
   }
 
@@ -30,5 +31,12 @@ declare module 'Types' {
     body: string;
   }
 
-  export type AppDocument = LemmaDocument | MarkdownDocument | IndexDocument;
+  export interface AppDocument {
+    filename: string;
+    title: string;
+    subtitle: string | null;
+    kind: string;
+    sections: string[];
+    lemmas: Lemma[];
+  }
 }

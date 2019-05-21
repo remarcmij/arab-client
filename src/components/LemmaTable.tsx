@@ -16,16 +16,16 @@ const styles = (theme: Theme) =>
     },
     mdTable: {
       '& td': {
-        minWidth: 120,
+        width: 240,
       },
     },
-    source: {
+    nl: {
       color: 'red',
     },
-    target: {
+    ar: {
       color: 'green',
     },
-    roman: {
+    rom: {
       color: 'blue',
     },
   });

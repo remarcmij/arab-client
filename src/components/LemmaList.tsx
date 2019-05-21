@@ -32,14 +32,14 @@ const styles = (theme: Theme) =>
       marginBlockStart: 0,
       marginBlockEnd: 0,
     },
-    source: {
+    nl: {
       color: theme.palette.primary.main,
     },
-    roman: {
+    rom: {
       fontFamily: 'Georgia',
       fontStyle: 'italic',
     },
-    target: {
+    ar: {
       marginBottom: theme.spacing.unit,
       marginLeft: theme.spacing.unit * 4,
     },
@@ -55,10 +55,10 @@ interface OwnProps {
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
-const handleClick = (voiceName: string, target: string) => {
+const handleClick = (voiceName: string, ar: string) => {
   if (voiceName) {
     // tslint:disable-next-line:no-floating-promises
-    SpeechSynthesizer.speak(voiceName, target);
+    SpeechSynthesizer.speak(voiceName, ar);
   }
 };
 
@@ -72,33 +72,27 @@ const LemmaList: React.FC<Props> = ({
 }) => {
   const renderLemma = (lemma: Types.Lemma, index: number) => (
     <li key={index} className={classes.listItem}>
-      <Typography
-        variant="h6"
-        classes={{ h6: classes.source }}
-        color="textPrimary"
-      >
-        <span dir="ltr">{lemma.source}</span>
+      <Typography variant="h6" classes={{ h6: classes.nl }} color="textPrimary">
+        <span dir="ltr">{lemma.nl}</span>
       </Typography>
       <Typography
         variant="h4"
-        classes={{ h4: classes.target }}
+        classes={{ h4: classes.ar }}
         color="textPrimary"
-        onClick={() => handleClick(voiceName, lemma.target)}
+        onClick={() => handleClick(voiceName, lemma.ar)}
       >
         <span dir="rtl">
-          {showVocalization
-            ? lemma.target
-            : Transcoder.stripTashkeel(lemma.target)}
+          {showVocalization ? lemma.ar : Transcoder.stripTashkeel(lemma.ar)}
         </span>
       </Typography>
-      {lemma.roman && showTranscription && (
+      {lemma.rom && showTranscription && (
         <Typography
           variant="body1"
-          classes={{ body1: classes.roman }}
+          classes={{ body1: classes.rom }}
           color="textSecondary"
         >
           <span dir="ltr">
-            {Transcoder.applyRomanization(lemma.roman, romanizationStandard)}
+            {Transcoder.applyRomanization(lemma.rom, romanizationStandard)}
           </span>
         </Typography>
       )}

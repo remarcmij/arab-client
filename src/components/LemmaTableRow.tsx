@@ -32,18 +32,18 @@ const styles = (theme: Theme) =>
         color: theme.palette.secondary.main,
       },
     },
-    roman: {
+    rom: {
       fontFamily: 'Georgia',
       fontStyle: 'italic',
     },
-    target: {
+    ar: {
       fontSize: 28,
       color: theme.palette.primary.dark,
       '&>span[lang="ar"]': {
         cursor: 'pointer',
       },
     },
-    source: {},
+    nl: {},
     targeted: {
       backgroundColor: `${pink[50]}!important`,
     },
@@ -67,8 +67,8 @@ const LemmaTableRow: React.FC<Props> = props => {
   } = settings;
 
   const arabicText = showVocalization
-    ? lemma.target
-    : Transcoder.stripTashkeel(lemma.target);
+    ? lemma.ar
+    : Transcoder.stripTashkeel(lemma.ar);
   const arabicHtml = arabicText.replace(
     arabicWordRegExp,
     '<span lang="ar">$&</span>',
@@ -77,22 +77,22 @@ const LemmaTableRow: React.FC<Props> = props => {
   return (
     <ScrollableAnchor id={lemma._id}>
       <tr className={lemma._id === hashId ? classes.targeted : ''}>
-        <td align="left" className={classes.source}>
-          {lemma.source}
+        <td align="left" className={classes.nl}>
+          {lemma.nl}
         </td>
-        {showTranscription && lemma.roman && (
-          <td align="center" className={classes.roman}>
-            {lemma.roman
-              ? Transcoder.applyRomanization(lemma.roman, romanizationStandard)
-              : ' '}
-          </td>
-        )}
         <td
           align="right"
           dir={'rtl'}
-          className={classes.target}
+          className={classes.ar}
           dangerouslySetInnerHTML={{ __html: arabicHtml }}
         />
+        {showTranscription && lemma.rom && (
+          <td align="center" className={classes.rom}>
+            {lemma.rom
+              ? Transcoder.applyRomanization(lemma.rom, romanizationStandard)
+              : ' '}
+          </td>
+        )}
       </tr>
     </ScrollableAnchor>
   );

@@ -3,14 +3,11 @@ import { withTheme, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Code from '@material-ui/icons/Code';
 import React, { useState } from 'react';
-import MediaQuery from 'react-responsive';
 import { match, Redirect } from 'react-router';
 import Types from 'Types';
-import ArticleTextContent from '../components/ArticleTextContent';
 import * as C from '../components/constants';
 import GridContainer from '../components/GridContainer';
 import LemmaArticle from '../components/LemmaArticle';
-import LemmaList from '../components/LemmaList';
 import NavBar from '../components/NavBar';
 import WordClickHandler from '../components/WordClickHandler';
 import { useSettingsContext } from '../contexts/settings';
@@ -79,33 +76,11 @@ const ArticlePage: React.FC<Props> = props => {
       return null;
     }
 
-    if (document.kind === 'lemmas') {
-      return (
-        <React.Fragment>
-          <MediaQuery
-            query={`(min-device-width: ${props.theme.breakpoints.values.sm +
-              1}px)`}
-          >
-            <LemmaArticle document={document} />
-          </MediaQuery>
-          <MediaQuery
-            query={`(max-device-width: ${props.theme.breakpoints.values.sm}px)`}
-          >
-            <LemmaList
-              document={document}
-              showVocalization={showVocalization}
-              showTranscription={showTranscription}
-              romanizationStandard={romanizationStandard}
-              voiceName={voiceName}
-            />
-          </MediaQuery>
-        </React.Fragment>
-      );
-    }
-
-    if (document.kind === 'text') {
-      return <ArticleTextContent document={document} />;
-    }
+    return (
+      <React.Fragment>
+        <LemmaArticle document={document} />
+      </React.Fragment>
+    );
   };
 
   if (goBack) {

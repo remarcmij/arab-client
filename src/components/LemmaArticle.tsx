@@ -9,6 +9,10 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Types from 'Types';
 import LemmaTable from './LemmaTable';
+import markdownIt from 'markdown-it';
+
+const md = markdownIt();
+const arabicRegExp = /[\u0600-\u06ff]+/g;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,16 +27,23 @@ const styles = (theme: Theme) =>
       paddingRight: theme.spacing.unit * 3,
       paddingLeft: theme.spacing.unit * 3,
     },
+    content: {
+      '& span[lang="ar"]': {
+        fontSize: 28,
+        cursor: 'pointer',
+        color: theme.palette.primary.dark,
+      },
+    },
   });
 
 interface OwnProps {
-  document: Types.LemmaDocument;
+  document: Types.AppDocument;
 }
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
 const LemmaArticle: React.FC<Props> = ({ document, classes }) => {
-  const { title, subtitle, prolog, epilog, body: lemmas } = document;
+  const { title, subtitle, sections, lemmas } = document;
 
   return (
     <Paper className={classes.root}>
@@ -46,19 +57,26 @@ const LemmaArticle: React.FC<Props> = ({ document, classes }) => {
           className={classes.mdPadding}
         />
       )}
-      {prolog && (
-        <section
-          dangerouslySetInnerHTML={{ __html: prolog }}
-          className={`markdown-body ${classes.mdPadding}`}
-        />
-      )}
-      <LemmaTable lemmas={lemmas} />
-      {epilog && (
-        <section
-          dangerouslySetInnerHTML={{ __html: epilog }}
-          className={`markdown-body ${classes.mdPadding}`}
-        />
-      )}
+      {sections.map((section, index) => {
+        const html = md
+          .render(section)
+          .replace(arabicRegExp, '<span lang="ar">$&</span>');
+        const sectionLemmas = lemmas.filter(
+          lemma => lemma.sectionNum === index,
+        );
+        return (
+          <>
+            <section
+              key={index}
+              dangerouslySetInnerHTML={{ __html: html }}
+              className={`markdown-body ${classes.mdPadding} ${
+                classes.content
+              }`}
+            />
+            <LemmaTable lemmas={sectionLemmas} />
+          </>
+        );
+      })}
     </Paper>
   );
 };

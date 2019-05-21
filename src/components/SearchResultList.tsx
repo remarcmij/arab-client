@@ -20,11 +20,11 @@ const styles = (theme: Theme) =>
       gridTemplateColumns: '1fr 1fr max-content',
       gridTemplateRows: '2fr 1fr',
     },
-    source: {
+    nl: {
       gridColumn: '1 / 2',
       gridRow: '1 / 2',
     },
-    target: {
+    ar: {
       gridColumn: '2 / 3',
       gridRow: '1 / 2',
       fontSize: 28,
@@ -59,12 +59,16 @@ const SearchResultList: React.FC<Props> = props => {
     <>
       {props.lemmas.map(lemma => (
         <Paper classes={{ root: classes.root }} key={lemma._id}>
-          <Typography variant="subtitle1" classes={{ root: classes.source }}>
-            {lemma.source}
+          <Typography variant="subtitle1" classes={{ root: classes.nl }}>
+            {lemma.nl}
           </Typography>
-          <Typography variant="subtitle1" classes={{ root: classes.target }}>
+          <Typography
+            variant="subtitle1"
+            classes={{ root: classes.ar }}
+            title={lemma.rom || ''}
+          >
             <span dir="rtl" lang="ar">
-              {lemma.target}
+              {lemma.ar}
             </span>
           </Typography>
           <Typography variant="caption">{lemma.title}</Typography>
