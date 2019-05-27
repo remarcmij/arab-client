@@ -5,7 +5,7 @@ import { getToken, removeToken, setToken } from '../services/token-service';
 
 export interface UserProfile {
   email: string;
-  role: string;
+  status: string;
   photo: string;
 }
 

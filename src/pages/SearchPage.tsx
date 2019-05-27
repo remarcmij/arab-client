@@ -50,9 +50,10 @@ const SearchPage: React.FC<Props> = props => {
   );
 
   const handleChange = (option: ValueType<WordOption>) => {
-    if (option && !Array.isArray(option)) {
-      setSearchTerm(option.value);
-      props.history.push(encodeURI(`/search?q=${option.value}`));
+    if (option) {
+      const { value } = option as WordOption;
+      setSearchTerm(value);
+      props.history.push(encodeURI(`/search?q=${value}`));
     }
   };
 
