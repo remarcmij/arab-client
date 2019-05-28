@@ -56,8 +56,8 @@ const SearchResultList: React.FC<Props> = props => {
   const { classes } = props;
 
   const lemmaMap = props.lemmas.reduce((map, lemma) => {
-    if (!map.has(lemma._topicId)) {
-      map.set(lemma._topicId, lemma);
+    if (!map.has(lemma.topic)) {
+      map.set(lemma.topic, lemma);
     }
     return map;
   }, new Map<string, Types.Lemma>());

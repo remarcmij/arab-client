@@ -15,7 +15,8 @@ import FlashcardPage from '../pages/FlashcardsPage';
 import LoginPage from '../pages/LoginPage';
 import PublicationListPage from '../pages/PublicationListPage';
 import SearchPage from '../pages/SearchPage';
-import { getToken } from '../services/token-service';
+import Signup from './auth/Signup';
+// import { getToken } from '../services/token-service';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
 const styles = createStyles({
@@ -30,9 +31,9 @@ const styles = createStyles({
 
 type Props = WithStyles<typeof styles>;
 
-const ProtectedRoute: React.FC<any> = ({ ...props }) => {
-  return getToken() ? <Route {...props} /> : <Redirect to="/login" />;
-};
+// const ProtectedRoute: React.FC<any> = ({ ...props }) => {
+//   return getToken() ? <Route {...props} /> : <Redirect to="/login" />;
+// };
 
 const App: React.FC<Props> = ({ classes }) => {
   return (
@@ -42,23 +43,30 @@ const App: React.FC<Props> = ({ classes }) => {
           <SettingsProvider>
             <Switch>
               <Redirect exact={true} from="/" to="/content" />
-              <ProtectedRoute
+              <Route
                 exact={true}
                 path="/content/:publication"
                 component={ArticleListPage}
               />
-              <ProtectedRoute
+              <Route
+                exact={true}
                 path="/content/:publication/:article/flashcards"
                 component={FlashcardPage}
               />
-              <ProtectedRoute
+              <Route
+                exact={true}
                 path="/content/:publication/:article"
                 component={ArticlePage}
               />
-              <ProtectedRoute path="/content" component={PublicationListPage} />
-              <ProtectedRoute path="/search" component={SearchPage} />
-              <Route path="/about" component={AboutPage} />
-              <Route path="/login" component={LoginPage} />
+              <Route
+                exact={true}
+                path="/content"
+                component={PublicationListPage}
+              />
+              <Route exact={true} path="/search" component={SearchPage} />
+              <Route exact={true} path="/about" component={AboutPage} />
+              <Route exact={true} path="/login" component={LoginPage} />
+              <Route exact={true} path="/signup" component={Signup} />
               <Route render={() => <div>404</div>} />
             </Switch>
           </SettingsProvider>

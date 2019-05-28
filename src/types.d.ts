@@ -7,7 +7,7 @@ declare module 'Types' {
     filename: string;
     sectionNum: number;
     title?: string;
-    _topicId: string;
+    topic: string;
   }
 
   interface DocumentBase {
