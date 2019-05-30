@@ -14,8 +14,8 @@ import Types from 'Types';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing.unit * 2,
-      margin: theme.spacing.unit * 2,
+      padding: theme.spacing(2),
+      margin: theme.spacing(2),
       display: 'grid',
       gridTemplateColumns: '1fr 1fr max-content',
       gridTemplateRows: '2fr 1fr',

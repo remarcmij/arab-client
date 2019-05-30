@@ -13,11 +13,16 @@ import {
 } from '@material-ui/core/styles';
 import InfoIcon from '@material-ui/icons/Info';
 import Settings from '@material-ui/icons/Settings';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { UserProfileContext } from '../contexts/UserProfileProvider';
-import * as C from './constants';
+import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { logout } from '../actions/auth';
+import * as C from '../constants';
+import { RootState } from '../reducers';
 import SettingsDialog from './SettingsDialog';
+import clsx from 'clsx';
+import Icon from '@material-ui/core/Icon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -25,7 +30,10 @@ const styles = (theme: Theme) =>
       width: 250,
     },
     avatar: {
-      margin: theme.spacing.unit * 2,
+      margin: theme.spacing(2),
+    },
+    icon: {
+      margin: theme.spacing(2),
     },
   });
 
@@ -34,29 +42,36 @@ interface OwnProps {
   toggleDrawer: () => void;
 }
 
-type Props = OwnProps & WithStyles<typeof styles>;
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+  bindActionCreators({ logout }, dispatch);
+
+const mapStateToProps = (state: RootState) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
+});
+
+type ReduxProps = ReturnType<typeof mapDispatchToProps> &
+  ReturnType<typeof mapStateToProps>;
+
+type Props = OwnProps & WithStyles<typeof styles> & ReduxProps;
 
 const MainDrawer: React.FC<Props> = props => {
   const { classes, open, toggleDrawer } = props;
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
-  const { profile, clearProfile } = useContext(UserProfileContext);
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
-  const AboutLink = (p: {}) => <Link to="/about" {...p} />;
+  const { user } = props;
 
-  const logout = () => {
-    clearProfile();
-    setLoggingOut(true);
-  };
+  const AboutLink = (p: any) => <Link to="/about" {...p} />;
 
   const sideList = (
     <div className={classes.list}>
-      {profile && (
+      {user ? (
         <>
-          {profile.photo && (
+          {user.photo && (
             <Avatar
               alt="User avatar"
-              src={profile.photo}
+              src={user.photo}
               className={classes.avatar}
             />
           )}
@@ -70,15 +85,24 @@ const MainDrawer: React.FC<Props> = props => {
             </ListItem>
           </List>
           <List>
-            <ListItem button={true} onClick={logout}>
+            <ListItem button={true} onClick={props.logout}>
               <ListItemIcon>
-                <Settings />
+                <Icon className={clsx(classes.icon, 'fa fa-sign-out-alt')} />
               </ListItemIcon>
-              <ListItemText primary={'Logout'} />
+              <ListItemText primary={C.LOGOUT} />
             </ListItem>
           </List>
           <Divider />
         </>
+      ) : (
+        <List>
+          <ListItem button={true} onClick={() => setRedirectToLogin(true)}>
+            <ListItemIcon>
+              <Icon className={clsx(classes.icon, 'fa fa-sign-in-alt')} />
+            </ListItemIcon>
+            <ListItemText primary={C.LOGIN} />
+          </ListItem>
+        </List>
       )}
       <List>
         <ListItem component={AboutLink}>
@@ -91,7 +115,7 @@ const MainDrawer: React.FC<Props> = props => {
     </div>
   );
 
-  if (loggingOut) {
+  if (redirectToLogin) {
     return <Redirect to="/login" />;
   }
 
@@ -115,4 +139,7 @@ const MainDrawer: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(MainDrawer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withStyles(styles)(MainDrawer));

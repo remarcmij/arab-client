@@ -18,9 +18,9 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.up('md')]: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
       },
-      padding: theme.spacing.unit * 4,
+      padding: theme.spacing(4),
       userSelect: 'none',
     },
     mdPadding: {
@@ -37,7 +37,7 @@ const styles = (theme: Theme) =>
   });
 
 interface OwnProps {
-  document: Types.AppDocument;
+  document: Types.Topic;
 }
 
 type Props = OwnProps & WithStyles<typeof styles>;
@@ -55,25 +55,25 @@ const LemmaArticle: React.FC<Props> = ({ document, classes }) => {
           className={classes.mdPadding}
         />
       )}
-      {sections.map((section, index) => {
-        const html = md
-          .render(section)
-          .replace(arabicRegExp, '<span lang="ar">$&</span>');
-        const sectionLemmas = lemmas.filter(
-          lemma => lemma.sectionNum === index,
-        );
-        return (
-          <React.Fragment key={index}>
-            <section
-              dangerouslySetInnerHTML={{ __html: html }}
-              className={`markdown-body ${classes.mdPadding} ${
-                classes.content
-              }`}
-            />
-            <LemmaList lemmas={sectionLemmas} />
-          </React.Fragment>
-        );
-      })}
+      {sections &&
+        sections.map((section, index) => {
+          const html = md
+            .render(section)
+            .replace(arabicRegExp, '<span lang="ar">$&</span>');
+          const sectionLemmas =
+            lemmas && lemmas.filter(lemma => lemma.sectionNum === index);
+          return (
+            <React.Fragment key={index}>
+              <section
+                dangerouslySetInnerHTML={{ __html: html }}
+                className={`markdown-body ${classes.mdPadding} ${
+                  classes.content
+                }`}
+              />
+              {sectionLemmas && <LemmaList lemmas={sectionLemmas} />}
+            </React.Fragment>
+          );
+        })}
     </Paper>
   );
 };

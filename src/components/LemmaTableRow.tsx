@@ -22,9 +22,9 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      marginTop: theme.spacing.unit,
+      marginTop: theme.spacing(1),
       overflowX: 'auto',
-      padding: theme.spacing.unit * 4,
+      padding: theme.spacing(4),
     },
     foreignCell: {
       cursor: 'pointer',

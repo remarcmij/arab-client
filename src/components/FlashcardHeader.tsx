@@ -12,9 +12,9 @@ import Types from 'Types';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
       overflowX: 'auto',
-      padding: theme.spacing.unit * 3,
+      padding: theme.spacing(3),
     },
     flexContainer: {
       display: 'flex',
@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
   });
 
 interface OwnPropProps {
-  document: Types.AppDocument;
+  document: Types.Topic;
   index: number;
   length: number;
 }

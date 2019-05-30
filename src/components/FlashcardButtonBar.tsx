@@ -13,13 +13,13 @@ import * as React from 'react';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
     },
     button: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
       flexGrow: 1,
       maxWidth: 200,
     },

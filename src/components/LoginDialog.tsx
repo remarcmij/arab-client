@@ -20,11 +20,11 @@ const styles = (theme: Theme) =>
       minWidth: 400,
     },
     divider: {
-      marginTop: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
     },
     button: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
     },
   });
 

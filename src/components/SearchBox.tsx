@@ -1,10 +1,14 @@
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import axios from 'axios';
 import latinize from 'latinize';
 import React, { useState } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import { ValueType } from 'react-select/lib/types';
-import { getToken } from '../services/token-service';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -26,6 +30,7 @@ export interface WordOption {
 
 interface OwnProps {
   onChange: (option: ValueType<WordOption>) => void;
+  searchLemmas: (term: string) => void;
 }
 
 type Props = WithStyles<typeof styles> & OwnProps;
@@ -36,15 +41,12 @@ interface LookupResponse {
 }
 
 const promiseOptions = (input: string) => {
-  const token = getToken();
-  if (!input || !token) {
+  if (!input) {
     return Promise.resolve([]);
   }
 
-  const headers = { Authorization: `Bearer ${token}` };
-
   return axios
-    .get<LookupResponse>(`/api/lookup?term=${input}`, { headers })
+    .get<LookupResponse>(`/api/lookup?term=${input}`)
     .then(({ data }) => {
       const options = data.words.map(word => ({
         value: word.word,
@@ -74,13 +76,20 @@ const SearchBox: React.FC<Props> = props => {
     setInputValue(value);
   };
 
+  const handleChange = (option: ValueType<WordOption>) => {
+    if (option) {
+      const { value } = option as WordOption;
+      props.searchLemmas(value);
+    }
+  };
+
   return (
     <AsyncSelect
       placeholder="Zoek..."
       cacheOptions={true}
       loadOptions={promiseOptions}
       className={props.classes.select}
-      onChange={props.onChange}
+      onChange={handleChange}
       onInputChange={handleInputChange}
       inputValue={inputValue}
       isRtl={isRtl}

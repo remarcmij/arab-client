@@ -21,16 +21,16 @@ const styles = (theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: 280,
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
       cursor: 'pointer',
       userSelect: 'none',
     },
     ar: {
       fontFamily: 'Arial',
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
     },
     native: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
     },
     htmlTooltip: {
       backgroundColor: '#f5f5f9',

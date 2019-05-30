@@ -20,7 +20,7 @@ const styles = (theme: Theme) =>
   });
 
 interface OwnProps {
-  document: Types.AppDocument;
+  document: Types.Topic;
   showVocalization: boolean;
   voiceName: string;
 }
@@ -33,6 +33,10 @@ const LemmaFlashcards: React.FC<Props> = props => {
 
   const [index, setIndex] = useState<number>(0);
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
+
+  if (!lemmas) {
+    return null;
+  }
 
   const handleNext = () => {
     if (!showTranslation) {

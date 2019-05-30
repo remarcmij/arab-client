@@ -10,19 +10,13 @@ declare module 'Types' {
     topic: string;
   }
 
-  interface DocumentBase {
+  export interface Topic {
     filename: string;
+    publication: string;
+    article: string;
     title: string;
-    prolog: string;
-    epilog: string;
-    subtitle: string | null;
-  }
-
-  export interface AppDocument {
-    filename: string;
-    title: string;
-    subtitle: string | null;
-    sections: string[];
-    lemmas: Lemma[];
+    subtitle?: string;
+    sections?: string[];
+    lemmas?: Lemma[];
   }
 }

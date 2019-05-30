@@ -14,7 +14,7 @@ import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import Types from 'Types';
 import { useSettingsContext } from '../contexts/settings';
 import Transcoder from '../services/Transcoder';
-import * as C from './constants';
+import * as C from '../constants';
 
 configureAnchors({
   offset: -73,
@@ -24,28 +24,27 @@ configureAnchors({
 const arabicWordRegExp = /[\u0600-\u06FF]+/g;
 
 const styles = (theme: Theme) => {
-  const { unit } = theme.spacing;
   return createStyles({
     buttonContainer: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      margin: unit,
+      margin: theme.spacing(1),
     },
     list: {
       listStyleType: 'none',
       userSelect: 'none',
       backgroundColor: grey[100],
-      padding: unit * 2,
+      padding: theme.spacing(2),
       margin: 0,
-      marginBottom: unit * 4,
+      marginBottom: theme.spacing(4),
     },
     listItem: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginRight: unit * 2,
+      marginRight: theme.spacing(2),
     },
     nl: {
       flex: 1,
@@ -59,7 +58,7 @@ const styles = (theme: Theme) => {
       '&>span[lang="ar"]': {
         cursor: 'pointer',
       },
-      marginRight: unit * 2,
+      marginRight: theme.spacing(2),
     },
     rom: {
       flex: 1,

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { useSettingsContext } from '../contexts/settings/SettingsProvider';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
-import * as C from './constants';
+import * as C from '../constants';
 
 const WordClickHandler: React.FC<RouteComponentProps> = props => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

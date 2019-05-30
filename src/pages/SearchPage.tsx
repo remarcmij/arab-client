@@ -4,62 +4,49 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import React, { useState, useEffect } from 'react';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router';
-import { ValueType } from 'react-select/lib/types';
-import Types from 'Types';
-import * as C from '../components/constants';
-import GridContainer from '../components/GridContainer';
-import NavBar from '../components/NavBar';
-import SearchBox, { WordOption } from '../components/SearchBox';
+import React, { useEffect, useState } from 'react';
+import { Redirect, RouteComponentProps } from 'react-router';
+import { Lemma } from 'Types';
 import SearchResultList from '../components/SearchResultList';
+import withNavBar from '../components/withNavBar';
 import WordClickHandler from '../components/WordClickHandler';
-import useFetch from '../hooks/useFetch';
-import useGoBack from '../hooks/useGoBack';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      marginTop: theme.spacing.unit,
+      marginTop: theme.spacing(1),
       overflowX: 'auto',
-      padding: theme.spacing.unit * 4,
+      padding: theme.spacing(4),
     },
   });
 
-type Props = RouteComponentProps & WithStyles<typeof styles>;
+type OwnProps = {
+  lemmas: Lemma[];
+  searchLemmas: (term: string) => void;
+  setNavBackRoute: (to: string) => void;
+};
+
+type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const SearchPage: React.FC<Props> = props => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [lemma, setLemma] = useState<Types.Lemma | null>(null);
+  const [lemma, setLemma] = useState<Lemma | null>(null);
 
-  const [goBack, handleBack] = useGoBack();
+  const {
+    searchLemmas,
+    history: {
+      location: { search },
+    },
+  } = props;
 
   useEffect(() => {
-    const { search } = props.history.location;
     if (search) {
       const matches = decodeURI(search).match(/\bq=(.*)$/);
       if (matches) {
-        setSearchTerm(matches[1]);
+        searchLemmas(matches[1]);
       }
     }
-  }, [props.history.location]);
-  const { data: lemmas } = useFetch<Types.Lemma[]>(
-    searchTerm ? `/api/search?term=${searchTerm}` : null,
-    searchTerm,
-  );
-
-  const handleChange = (option: ValueType<WordOption>) => {
-    if (option) {
-      const { value } = option as WordOption;
-      setSearchTerm(value);
-      props.history.push(encodeURI(`/search?q=${value}`));
-    }
-  };
-
-  if (goBack) {
-    return <Redirect to="/content" />;
-  }
+  }, [searchLemmas, search]);
 
   if (lemma) {
     const [publication, article] = lemma.filename.split('.');
@@ -69,19 +56,11 @@ const SearchPage: React.FC<Props> = props => {
 
   return (
     <WordClickHandler>
-      <NavBar
-        title={C.SEARCH}
-        onBack={handleBack}
-        rightHandButtons={<SearchBox onChange={handleChange} />}
-        hideSearchButton={true}
-      />
-      <GridContainer>
-        {lemmas && (
-          <SearchResultList lemmas={lemmas} onButtonClick={setLemma} />
-        )}
-      </GridContainer>
+      {props.lemmas && (
+        <SearchResultList lemmas={props.lemmas} onButtonClick={setLemma} />
+      )}
     </WordClickHandler>
   );
 };
 
-export default withRouter(withStyles(styles)(SearchPage));
+export default withNavBar(withStyles(styles)(SearchPage));

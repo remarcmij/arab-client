@@ -29,7 +29,7 @@ import {
 } from '../contexts/settings/actions';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
-import * as C from './constants';
+import * as C from '../constants';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -64,7 +64,9 @@ const SettingsDialog: React.FC<Props> = props => {
       </InputLabel>
       <Select
         value={romanizationStandard}
-        onChange={event => dispatch(setRomanizationSystem(event.target.value))}
+        onChange={event =>
+          dispatch(setRomanizationSystem(event.target.value as string))
+        }
         inputProps={{
           name: 'romanization',
           id: 'romanizationStandard-select',
@@ -84,7 +86,7 @@ const SettingsDialog: React.FC<Props> = props => {
       <InputLabel htmlFor="voice-select">{C.VOICE_NAME}</InputLabel>
       <Select
         value={voiceName}
-        onChange={event => dispatch(setVoiceName(event.target.value))}
+        onChange={event => dispatch(setVoiceName(event.target.value as string))}
         inputProps={{
           name: 'voice',
           id: 'voice-select',
