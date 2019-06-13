@@ -1,16 +1,25 @@
 import Menu from '@material-ui/core/Menu/Menu';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { useSettingsContext } from '../contexts/settings/SettingsProvider';
+import { LOOK_UP, READ_ALOUD } from '../constants';
+import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
-import * as C from '../constants';
 
-const WordClickHandler: React.FC<RouteComponentProps> = props => {
+const mapStateToProps = (state: RootState) => ({
+  voiceName: state.settings.voiceName,
+});
+
+type OwnProps = {
+  voiceName: string;
+};
+
+type Props = OwnProps & RouteComponentProps;
+
+const WordClickHandler: React.FC<Props> = props => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const { settings } = useSettingsContext();
-
-  const { voiceName } = settings;
+  const { voiceName } = props;
 
   const openMenu = (e: React.MouseEvent) => {
     const { target } = e;
@@ -27,12 +36,11 @@ const WordClickHandler: React.FC<RouteComponentProps> = props => {
     setAnchorEl(null);
   };
 
-  const speak = () => {
+  const speak = async () => {
     if (anchorEl instanceof HTMLElement) {
       const text = anchorEl.textContent!;
       closeMenu();
-      // tslint:disable-next-line:no-floating-promises
-      SpeechSynthesizer.speak(voiceName, text);
+      await SpeechSynthesizer.speak(voiceName, text);
     }
   };
 
@@ -54,12 +62,12 @@ const WordClickHandler: React.FC<RouteComponentProps> = props => {
         onClose={closeMenu}
       >
         <MenuItem disabled={!voiceName} onClick={speak}>
-          {C.READ_ALOUD}
+          {READ_ALOUD}
         </MenuItem>
-        <MenuItem onClick={searchWord}>{C.LOOK_UP}</MenuItem>
+        <MenuItem onClick={searchWord}>{LOOK_UP}</MenuItem>
       </Menu>
     </>
   );
 };
 
-export default withRouter(WordClickHandler);
+export default connect(mapStateToProps)(withRouter(WordClickHandler));

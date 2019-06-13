@@ -1,11 +1,17 @@
 import Grid from '@material-ui/core/Grid';
 import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { match } from 'react-router';
 import { Topic } from 'Types';
 import LemmaFlashcards from '../components/LemmaFlashcards';
 import withNavBar from '../components/withNavBar';
-import { useSettingsContext } from '../contexts/settings';
+import { RootState } from '../reducers';
+
+const mapStateToProps = (state: RootState) => ({
+  showVocalization: state.settings.showVocalization,
+  voiceName: state.settings.voiceName,
+});
 
 interface Params {
   publication: string;
@@ -19,17 +25,23 @@ type OwnProps = {
   topic: Topic | null;
   loading: boolean;
   error: any;
+  showVocalization: boolean;
+  voiceName: string;
 };
 
 type Props = OwnProps & WithTheme;
 
 const Flashcards: React.FC<Props> = props => {
-  const { fetchArticle, topic, loading, error, setNavBackRoute } = props;
+  const {
+    fetchArticle,
+    topic,
+    loading,
+    error,
+    setNavBackRoute,
+    showVocalization,
+    voiceName,
+  } = props;
   const { publication, article } = props.match.params;
-
-  const { settings } = useSettingsContext();
-
-  const { showVocalization, voiceName } = settings;
 
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;
@@ -67,4 +79,4 @@ const Flashcards: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(withTheme(Flashcards));
+export default connect(mapStateToProps)(withNavBar(withTheme(Flashcards)));

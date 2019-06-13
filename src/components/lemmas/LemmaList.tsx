@@ -9,12 +9,19 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, withRouter, Redirect, match } from 'react-router';
+import { match, Redirect, RouteComponentProps, withRouter } from 'react-router';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
-import Types from 'Types';
-import { useSettingsContext } from '../contexts/settings';
-import Transcoder from '../services/Transcoder';
-import * as C from '../constants';
+import { Lemma } from 'Types';
+import * as C from '../../constants';
+import Transcoder from '../../services/Transcoder';
+import { connect } from 'react-redux';
+import { RootState } from '../../reducers';
+
+const mapStateToProps = (state: RootState) => ({
+  showVocalization: state.settings.showVocalization,
+  showTranscription: state.settings.showTranscription,
+  romanizationStandard: state.settings.romanizationStandard,
+});
 
 configureAnchors({
   offset: -73,
@@ -76,23 +83,27 @@ interface Params {
   publication: string;
   article: string;
 }
+
 interface OwnProps {
   match: match<Params>;
-  lemmas: Types.Lemma[];
+  lemmas: Lemma[];
+  showVocalization: boolean;
+  showTranscription: boolean;
+  romanizationStandard: string;
 }
 
 type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const LemmaList: React.FC<Props> = props => {
-  const { lemmas, classes, history } = props;
-  const { publication, article } = props.match.params;
-
-  const { settings } = useSettingsContext();
   const {
+    lemmas,
+    classes,
+    history,
     showVocalization,
     showTranscription,
     romanizationStandard,
-  } = settings;
+  } = props;
+  const { publication, article } = props.match.params;
 
   const [hashId, setHashId] = useState('');
   const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
@@ -105,7 +116,7 @@ const LemmaList: React.FC<Props> = props => {
 
   const onGoFlashcards = () => setGoFlashcards(true);
 
-  const renderLemma = (lemma: Types.Lemma, index: number) => {
+  const renderLemma = (lemma: Lemma, index: number) => {
     const arabicText = showVocalization
       ? lemma.ar
       : Transcoder.stripTashkeel(lemma.ar);
@@ -154,4 +165,6 @@ const LemmaList: React.FC<Props> = props => {
   );
 };
 
-export default withRouter(withStyles(styles)(LemmaList));
+export default connect(mapStateToProps)(
+  withRouter(withStyles(styles)(LemmaList)),
+);

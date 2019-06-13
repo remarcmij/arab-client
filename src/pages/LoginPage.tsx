@@ -13,6 +13,9 @@ import { localLogin } from '../actions/auth';
 import * as C from '../constants';
 import { RootState } from '../reducers';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 interface FormData {
   [key: string]: string;
@@ -31,16 +34,20 @@ type ReduxProps = ReturnType<typeof mapDispatchToProps> &
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
-      marginTop: theme.spacing(1),
-      overflowX: 'auto',
       padding: theme.spacing(4),
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
     },
   });
 
 type Props = WithStyles<typeof styles> & ReduxProps;
 
 const LoginPage: React.FC<Props> = props => {
+  const { classes } = props;
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -61,43 +68,57 @@ const LoginPage: React.FC<Props> = props => {
   }
 
   return (
-    <>
-      <section className="container">
-        <h1 className="large text-primary">{C.LOGIN}</h1>
-        <p className="lead">
-          <i className="fas fa-user" /> {C.LOGIN_PROMPT}
-        </p>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder={C.EMAIL_ADDRESS}
-              name="email"
-              required={true}
-              value={email}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder={C.PASSWORD}
-              name="password"
-              minLength={8}
-              value={password}
-              onChange={handleChange}
-            />
-          </div>
-          <input type="submit" className="btn btn-primary" value={C.LOGIN} />
-        </form>
-        <p className="my-1">
-          {C.NO_ACCOUNT_YET} <Link to="/signup">{C.SIGNUP}</Link>
-        </p>
-      </section>
+    <Paper classes={{ root: classes.root }}>
+      <Typography variant="h4">{C.LOGIN}</Typography>
+      <Typography variant="subtitle1">
+        <i className="fas fa-user" /> {C.LOGIN_PROMPT}
+      </Typography>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <TextField
+            id="standard-password-input"
+            label={C.EMAIL_ADDRESS}
+            name="email"
+            className={classes.textField}
+            type="email"
+            autoComplete="current-email"
+            margin="normal"
+            required={true}
+            value={email}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <TextField
+            id="standard-password-input"
+            label={C.PASSWORD}
+            className={classes.textField}
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            margin="normal"
+            inputProps={{ minLength: 8 }}
+            value={password}
+            onChange={handleChange}
+          />
+          {/* <input
+            type="password"
+            placeholder={C.PASSWORD}
+            name="password"
+            minLength={8}
+            value={password}
+            onChange={handleChange}
+          /> */}
+        </div>
+        <input type="submit" className="btn btn-primary" value={C.LOGIN} />
+      </form>
+      <p className="my-1">
+        {C.NO_ACCOUNT_YET} <Link to="/signup">{C.SIGNUP}</Link>
+      </p>
       <Button href="http://localhost:8080/auth/google">
         Login with Google
       </Button>
-    </>
+    </Paper>
   );
 };
 

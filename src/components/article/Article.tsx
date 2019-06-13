@@ -2,9 +2,22 @@ import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
 import { match } from 'react-router';
 import { Topic } from 'Types';
-import LemmaArticle from '../components/LemmaArticle';
-import withNavBar from '../components/withNavBar';
-import WordClickHandler from '../components/WordClickHandler';
+import ArticleContent from './ArticleContent';
+import withNavBar from '../withNavBar';
+import WordClickHandler from '../WordClickHandler';
+import { connect } from 'react-redux';
+import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { fetchArticle } from '../../actions/content';
+import { RootState } from '../../reducers';
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+  bindActionCreators({ fetchArticle }, dispatch);
+
+const mapStateToProps = (state: RootState) => ({
+  topic: state.content.article,
+  loading: state.content.loading,
+  error: state.content.error,
+});
 
 interface Params {
   publication: string;
@@ -23,7 +36,13 @@ interface OwnProps {
 type Props = OwnProps & WithTheme;
 
 const Article: React.FC<Props> = props => {
-  const { fetchArticle, topic, loading, error, setNavBackRoute } = props;
+  const {
+    fetchArticle: fetchIt,
+    topic,
+    loading,
+    error,
+    setNavBackRoute,
+  } = props;
   const { publication, article } = props.match.params;
 
   const filename = `${publication}.${article}`;
@@ -33,9 +52,9 @@ const Article: React.FC<Props> = props => {
   useEffect(() => {
     setNavBackRoute(backTo);
     if (!topicLoaded) {
-      fetchArticle(filename);
+      fetchIt(filename);
     }
-  }, [fetchArticle, filename, topicLoaded, setNavBackRoute, backTo]);
+  }, [fetchIt, filename, topicLoaded, setNavBackRoute, backTo]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -47,9 +66,12 @@ const Article: React.FC<Props> = props => {
 
   return (
     <WordClickHandler>
-      <LemmaArticle document={topic} />
+      <ArticleContent topic={topic} />
     </WordClickHandler>
   );
 };
 
-export default withNavBar(withTheme(Article));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withNavBar(withTheme(Article)));

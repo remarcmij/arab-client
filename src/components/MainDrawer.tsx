@@ -62,7 +62,7 @@ const MainDrawer: React.FC<Props> = props => {
 
   const { user } = props;
 
-  const AboutLink = (p: any) => <Link to="/about" {...p} />;
+  const AboutLink = (p: any, ref: any) => <Link to="/about" {...p} />;
 
   const sideList = (
     <div className={classes.list}>
@@ -105,7 +105,7 @@ const MainDrawer: React.FC<Props> = props => {
         </List>
       )}
       <List>
-        <ListItem component={AboutLink}>
+        <ListItem component={React.forwardRef(AboutLink)}>
           <ListItemIcon>
             <InfoIcon />
           </ListItemIcon>

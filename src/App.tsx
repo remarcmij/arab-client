@@ -1,3 +1,4 @@
+import Container from '@material-ui/core/Container';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
@@ -5,11 +6,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { loadUser } from './actions/auth';
-import GridContainer from './components/GridContainer';
 import Routes from './components/routes/Routes';
 import NavBarContainer from './containers/NavBarContainer';
-import { SettingsProvider } from './contexts/settings';
-import { UserProfileProvider } from './contexts/UserProfileProvider';
 import Welcome from './pages/welcome/Welcome';
 import { RootState } from './reducers';
 import store from './store';
@@ -47,17 +45,13 @@ const App: React.FC<Props> = ({ classes }) => {
     <Provider store={store}>
       <Router>
         <div className={classes.root}>
-          <UserProfileProvider>
-            <SettingsProvider>
-              <NavBarContainer />
-              <GridContainer>
-                <Switch>
-                  <Route exact={true} path="/welcome" component={Welcome} />
-                  <Route component={Routes} />
-                </Switch>
-              </GridContainer>
-            </SettingsProvider>
-          </UserProfileProvider>
+          <NavBarContainer />
+          <Container maxWidth="md">
+            <Switch>
+              <Route exact={true} path="/welcome" component={Welcome} />
+              <Route component={Routes} />
+            </Switch>
+          </Container>
         </div>
       </Router>
     </Provider>

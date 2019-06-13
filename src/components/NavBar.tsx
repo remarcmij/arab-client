@@ -1,4 +1,5 @@
 import AppBar from '@material-ui/core/AppBar';
+import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,7 +12,6 @@ import React, { useState } from 'react';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
 import * as C from '../constants';
 import SearchBoxContainer from '../containers/SearchBoxContainer';
-import GridContainer from './GridContainer';
 import MainDrawer from './MainDrawer';
 
 const styles = createStyles({
@@ -63,7 +63,7 @@ const NavBar: React.FC<Props> = props => {
 
   return (
     <AppBar position="fixed">
-      <GridContainer>
+      <Container maxWidth="md">
         <Toolbar>
           {onMainPage ? (
             <IconButton
@@ -104,7 +104,7 @@ const NavBar: React.FC<Props> = props => {
         {onMainPage && (
           <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
         )}
-      </GridContainer>
+      </Container>
     </AppBar>
   );
 };

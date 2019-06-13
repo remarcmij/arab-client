@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import ArticleContainer from '../../containers/ArticleContainer';
+import Article from '../article/Article';
 import ArticleListContainer from '../../containers/ArticleListContainer';
 import FlashcardsContainer from '../../containers/FlashcardsContainer';
 import PublicationListContainer from '../../containers/PublicationListContainer';
@@ -29,7 +29,7 @@ const Routes: React.FC<{}> = () => {
         <Route
           exact={true}
           path="/content/:publication/:article"
-          component={ArticleContainer}
+          component={Article}
         />
         <Route
           exact={true}

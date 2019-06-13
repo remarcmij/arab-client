@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
-import Types from 'Types';
-import LemmaList from './LemmaList';
+import { Topic } from 'Types';
+import LemmaList from '../lemmas/LemmaList';
 import markdownIt from 'markdown-it';
 
 const md = markdownIt();
@@ -37,13 +37,13 @@ const styles = (theme: Theme) =>
   });
 
 interface OwnProps {
-  document: Types.Topic;
+  topic: Topic;
 }
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
-const LemmaArticle: React.FC<Props> = ({ document, classes }) => {
-  const { title, subtitle, sections, lemmas } = document;
+const ArticleContent: React.FC<Props> = ({ topic, classes }) => {
+  const { title, subtitle, sections, lemmas } = topic;
 
   return (
     <Paper className={classes.root}>
@@ -78,4 +78,4 @@ const LemmaArticle: React.FC<Props> = ({ document, classes }) => {
   );
 };
 
-export default withStyles(styles)(LemmaArticle);
+export default withStyles(styles)(ArticleContent);
