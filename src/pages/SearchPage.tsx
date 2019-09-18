@@ -1,4 +1,3 @@
-import Paper from '@material-ui/core/Paper';
 import {
   createStyles,
   Theme,
@@ -6,92 +5,62 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import React, { useEffect, useState } from 'react';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router';
-import { ValueType } from 'react-select/lib/types';
-import Types from 'Types';
-import GridContainer from '../components/GridContainer';
-import LemmaTable from '../components/LemmaTable';
-import NavBar from '../components/NavBar';
-import SearchBox, { WordOption } from '../components/SearchBox';
-import useFetch from '../hooks/useFetch';
-import useGoBack from '../hooks/useGoBack';
-import * as S from '../components/strings';
+import { Redirect, RouteComponentProps } from 'react-router';
+import { Lemma } from 'Types';
+import SearchResultList from '../components/SearchResultList';
+import withNavBar from '../components/withNavBar';
+import WordClickHandler from '../components/WordClickHandler';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      marginTop: theme.spacing.unit,
+      marginTop: theme.spacing(1),
       overflowX: 'auto',
-      padding: theme.spacing.unit * 4,
+      padding: theme.spacing(4),
     },
   });
 
-type Props = RouteComponentProps & WithStyles<typeof styles>;
+type OwnProps = {
+  lemmas: Lemma[];
+  searchLemmas: (term: string) => void;
+  setNavBackRoute: (to: string) => void;
+};
+
+type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const SearchPage: React.FC<Props> = props => {
-  const { classes, history } = props;
+  const [lemma, setLemma] = useState<Lemma | null>(null);
 
-  const [selectedWord, setSelectedWord] = useState('');
-  const [lemma, setLemma] = useState<Types.Lemma | null>(null);
-
-  const [goBack, handleBack] = useGoBack();
+  const {
+    searchLemmas,
+    history: {
+      location: { search },
+    },
+  } = props;
 
   useEffect(() => {
-    const { search } = history.location;
     if (search) {
       const matches = decodeURI(search).match(/\bq=(.*)$/);
       if (matches) {
-        setSelectedWord(matches[1]);
+        searchLemmas(matches[1]);
       }
     }
-  }, []);
-
-  const { data: lemmas, error, loading } = useFetch<Types.Lemma[]>(
-    selectedWord ? `/api/search?term=${selectedWord}` : null,
-    [selectedWord],
-  );
-
-  const handleChange = (option: ValueType<WordOption>) => {
-    if (option && !Array.isArray(option)) {
-      setSelectedWord(option.value);
-      props.history.push(encodeURI(`/search?q=${option.value}`));
-    }
-  };
-
-  if (goBack) {
-    return <Redirect to="/content" />;
-  }
+  }, [searchLemmas, search]);
 
   if (lemma) {
     const [publication, article] = lemma.filename.split('.');
-    const url = encodeURI(
-      `/content/${publication}/${article}?id=${lemma.id}&q=${selectedWord}`,
-    );
+    const url = encodeURI(`/content/${publication}/${article}#${lemma._id}`);
     return <Redirect to={url} />;
   }
 
   return (
-    <React.Fragment>
-      <NavBar
-        title={S.SEARCH}
-        onBack={handleBack}
-        rightHandButtons={<SearchBox onChange={handleChange} />}
-        hideSearchButton={true}
-      />
-      <GridContainer>
-        {lemmas && (
-          <Paper className={classes.root}>
-            <LemmaTable
-              lemmas={lemmas}
-              onButtonClick={setLemma}
-              showButtons={true}
-            />
-          </Paper>
-        )}
-      </GridContainer>
-    </React.Fragment>
+    <WordClickHandler>
+      {props.lemmas && (
+        <SearchResultList lemmas={props.lemmas} onButtonClick={setLemma} />
+      )}
+    </WordClickHandler>
   );
 };
 
-export default withRouter(withStyles(styles)(SearchPage));
+export default withNavBar(withStyles(styles)(SearchPage));

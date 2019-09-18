@@ -3,11 +3,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import {
   createStyles,
@@ -17,68 +17,100 @@ import {
 } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import withMobileDialog, {
-  InjectedProps,
+  WithMobileDialog,
 } from '@material-ui/core/withMobileDialog';
 import React from 'react';
-import SpeechSynthesizer from '../services/SpeechSynthesizer';
-import { romanizationStandards } from '../services/Transcoder';
-import { useSettingsContext } from '../contexts/settings';
+import { connect } from 'react-redux';
+import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import {
   setRomanizationSystem,
   setVoiceName,
-  toggleVocalization,
   toggleTranscription,
-} from '../contexts/settings/actions';
-import * as S from './strings';
+  toggleVocalization,
+} from '../actions/settings';
+import {
+  ROMANIZATION_SYSTEM,
+  VOICE_NAME,
+  NULL_VOICE,
+  EDIT_SETTINGS,
+  SHOW_VOCALIZATION,
+  SHOW_TRANSCRIPTION,
+} from '../constants';
+import { RootState } from '../reducers';
+import SpeechSynthesizer from '../services/SpeechSynthesizer';
+import { romanizationStandards } from '../services/Transcoder';
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+  bindActionCreators(
+    {
+      setRomanizationSystem,
+      setVoiceName,
+      toggleTranscription,
+      toggleVocalization,
+    },
+    dispatch,
+  );
+
+const mapStateToProps = (state: RootState) => ({
+  showVocalization: state.settings.showVocalization,
+  showTranscription: state.settings.showTranscription,
+  romanizationStandard: state.settings.romanizationStandard,
+  voiceName: state.settings.voiceName,
+});
 
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 400,
     },
-    divider: {
-      marginTop: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
-    },
   });
 
 interface OwnProps {
   open: boolean;
   onClose: () => void;
+  showVocalization: boolean;
+  showTranscription: boolean;
+  romanizationStandard: string;
+  voiceName: string;
+  setRomanizationSystem: (value: string) => void;
+  setVoiceName: (value: string) => void;
+  toggleVocalization: () => void;
+  toggleTranscription: () => void;
 }
 
-type Props = OwnProps & InjectedProps & WithStyles<typeof styles>;
+type Props = OwnProps & WithMobileDialog & WithStyles<typeof styles>;
 
 const SettingsDialog: React.FC<Props> = props => {
-  const { fullScreen, classes, onClose, open } = props;
-
-  const { settings, dispatch } = useSettingsContext();
-
   const {
+    fullScreen,
+    classes,
+    onClose,
+    open,
     showVocalization,
     showTranscription,
     romanizationStandard,
     voiceName,
-  } = settings;
+  } = props;
 
   const renderRomanizationSelect = () => (
     <FormControl>
       <InputLabel htmlFor="romanizationStandard-select">
-        {S.ROMANIZATION_SYSTEM}
+        {ROMANIZATION_SYSTEM}
       </InputLabel>
       <Select
-        native={true}
         value={romanizationStandard}
-        onChange={event => dispatch(setRomanizationSystem(event.target.value))}
+        onChange={event =>
+          props.setRomanizationSystem(event.target.value as string)
+        }
         inputProps={{
-          name: 'Romanization',
+          name: 'romanization',
           id: 'romanizationStandard-select',
         }}
       >
         {Object.entries(romanizationStandards).map(([key, value]) => (
-          <option key={key} value={key}>
+          <MenuItem key={key} value={key}>
             {value.name}
-          </option>
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
@@ -86,25 +118,24 @@ const SettingsDialog: React.FC<Props> = props => {
 
   const renderVoiceSelect = () => (
     <FormControl>
-      <InputLabel htmlFor="romanizationStandard-select">
-        {S.VOICE_NAME}
-      </InputLabel>
+      <InputLabel htmlFor="voice-select">{VOICE_NAME}</InputLabel>
       <Select
-        native={true}
         value={voiceName}
-        onChange={event => dispatch(setVoiceName(event.target.value))}
+        onChange={event => props.setVoiceName(event.target.value as string)}
         inputProps={{
-          name: 'Romanization',
-          id: 'romanizationStandard-select',
+          name: 'voice',
+          id: 'voice-select',
         }}
       >
-        <option value="none">{S.NULL_VOICE}</option>
+        <MenuItem value="">
+          <em>{NULL_VOICE}</em>
+        </MenuItem>
         {SpeechSynthesizer.getVoices()
           .filter(voice => voice.lang.startsWith('ar-'))
           .map(voice => (
-            <option key={voice.voiceURI} value={voice.name}>
+            <MenuItem key={voice.voiceURI} value={voice.name}>
               {`${voice.name} (${voice.lang})`}
-            </option>
+            </MenuItem>
           ))}
       </Select>
     </FormControl>
@@ -118,29 +149,28 @@ const SettingsDialog: React.FC<Props> = props => {
       aria-labelledby="responsive-dialog-title"
       classes={{ paper: classes.paper }}
     >
-      <DialogTitle id="responsive-dialog-title">{S.EDIT_SETTINGS}</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">{EDIT_SETTINGS}</DialogTitle>
       <DialogContent>
         <FormGroup>
           <FormControlLabel
             control={
               <Switch
                 checked={showVocalization}
-                onChange={() => dispatch(toggleVocalization())}
+                onChange={() => props.toggleVocalization()}
               />
             }
-            label={S.SHOW_VOCALIZATION}
+            label={SHOW_VOCALIZATION}
           />
           <FormControlLabel
             control={
               <Switch
                 checked={showTranscription}
-                onChange={() => dispatch(toggleTranscription())}
+                onChange={() => props.toggleTranscription()}
               />
             }
-            label={S.SHOW_TRANSCRIPTION}
+            label={SHOW_TRANSCRIPTION}
           />
           {renderRomanizationSelect()}
-          <Divider className={classes.divider} />
           {renderVoiceSelect()}
         </FormGroup>
       </DialogContent>
@@ -153,4 +183,7 @@ const SettingsDialog: React.FC<Props> = props => {
   );
 };
 
-export default withMobileDialog<OwnProps>()(withStyles(styles)(SettingsDialog));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withMobileDialog<OwnProps>()(withStyles(styles)(SettingsDialog)));

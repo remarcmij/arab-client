@@ -1,4 +1,5 @@
 import AppBar from '@material-ui/core/AppBar';
+import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,12 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MenuIcon from '@material-ui/icons/Menu';
 import Search from '@material-ui/icons/Search';
-import Settings from '@material-ui/icons/Settings';
 import React, { useState } from 'react';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router';
-import GridContainer from './GridContainer';
+import { Route, RouteComponentProps, withRouter } from 'react-router';
+import * as C from '../constants';
+import SearchBoxContainer from '../containers/SearchBoxContainer';
 import MainDrawer from './MainDrawer';
-import * as S from './strings';
 
 const styles = createStyles({
   root: {
@@ -28,10 +28,10 @@ const styles = createStyles({
 });
 
 interface OwnProps {
-  title: string;
   rightHandButtons?: React.ReactElement<any> | null;
   hideSearchButton?: boolean;
-  onBack?: () => void;
+  navBackRoute: string | null;
+  setNavBackRoute: (path: string) => void;
   onLeftMenu?: () => void;
   onRightMenu?: () => void;
 }
@@ -40,56 +40,32 @@ type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const NavBar: React.FC<Props> = props => {
   const {
-    title,
-    onBack,
-    rightHandButtons = null,
-    hideSearchButton = false,
     classes,
-    history,
+    location: { pathname },
   } = props;
 
   const [mainDrawerOpen, setMainDrawerOpen] = useState(false);
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
-  const [goSearch, setGoSearch] = useState(false);
 
-  const handleOpenDialog = () => {
-    setSettingsDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setSettingsDialogOpen(false);
-  };
-
-  const handleToggleDrawer = () => {
-    setMainDrawerOpen(!mainDrawerOpen);
-  };
+  const handleToggleDrawer = () => setMainDrawerOpen(!mainDrawerOpen);
 
   const handleSearch = () => {
-    setGoSearch(true);
+    props.setNavBackRoute(props.history.location.pathname);
+    props.history.push('/search');
   };
 
-  if (goSearch) {
-    let url = '/search';
-    const { search } = history.location;
-    if (search) {
-      url += search;
-    }
-    return <Redirect to={url} />;
+  const handleBack = () => props.history.push(props.navBackRoute || '/content');
+
+  if (pathname === '/welcome') {
+    return null;
   }
+
+  const onMainPage = pathname === '/content';
 
   return (
     <AppBar position="fixed">
-      <GridContainer>
+      <Container maxWidth="md">
         <Toolbar>
-          {onBack ? (
-            <IconButton
-              className={classes.leftButton}
-              onClick={onBack}
-              color="inherit"
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          ) : (
+          {onMainPage ? (
             <IconButton
               className={classes.leftButton}
               onClick={handleToggleDrawer}
@@ -97,28 +73,38 @@ const NavBar: React.FC<Props> = props => {
             >
               <MenuIcon />
             </IconButton>
+          ) : (
+            <IconButton
+              className={classes.leftButton}
+              onClick={handleBack}
+              color="inherit"
+            >
+              <ArrowBackIcon />
+            </IconButton>
           )}
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {title}
+            {C.APP_TITLE}
           </Typography>
-          {rightHandButtons}
-          {!hideSearchButton && (
-            <Tooltip title={S.SEARCH} aria-label={S.SEARCH}>
-              <IconButton
-                aria-owns={open ? 'menu-appbar' : undefined}
-                aria-haspopup={true}
-                onClick={handleSearch}
-                color="inherit"
-              >
-                <Search />
-              </IconButton>
-            </Tooltip>
-          )}
+          <Route
+            path="/search"
+            exact={true}
+            render={() => <SearchBoxContainer onChange={() => undefined} />}
+          />
+          <Route
+            path="/content"
+            render={() => (
+              <Tooltip title={C.SEARCH} aria-label={C.SEARCH}>
+                <IconButton onClick={handleSearch} color="inherit">
+                  <Search />
+                </IconButton>
+              </Tooltip>
+            )}
+          />
         </Toolbar>
-        {!onBack && (
+        {onMainPage && (
           <MainDrawer open={mainDrawerOpen} toggleDrawer={handleToggleDrawer} />
         )}
-      </GridContainer>
+      </Container>
     </AppBar>
   );
 };

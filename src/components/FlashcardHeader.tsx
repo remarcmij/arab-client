@@ -1,20 +1,20 @@
-import * as React from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Types from 'Types';
 import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
+import Types from 'Types';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
       overflowX: 'auto',
-      padding: theme.spacing.unit * 3,
+      padding: theme.spacing(3),
     },
     flexContainer: {
       display: 'flex',
@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
   });
 
 interface OwnPropProps {
-  document: Types.LemmaDocument;
+  document: Types.Topic;
   index: number;
   length: number;
 }

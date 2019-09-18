@@ -9,9 +9,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import React, { useContext } from 'react';
 import Types from 'Types';
+import LanguageContext from '../contexts/LanguageContext';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import Transcoder from '../services/Transcoder';
-import LanguageContext from '../contexts/LanguageContext';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -21,16 +21,16 @@ const styles = (theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: 280,
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
       cursor: 'pointer',
       userSelect: 'none',
     },
-    target: {
+    ar: {
       fontFamily: 'Arial',
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
     },
     native: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
     },
     htmlTooltip: {
       backgroundColor: '#f5f5f9',
@@ -48,7 +48,6 @@ interface OwnProps {
   lemma: Types.Lemma;
   showTranslation: boolean;
   showVocalization: boolean;
-  voiceEnabled: boolean;
   voiceName: string;
 }
 
@@ -57,13 +56,9 @@ type Props = OwnProps & WithStyles<typeof styles>;
 // tslint:disable:no-floating-promises
 
 const handleClick = (props: Props) => {
-  const { lemma, showTranslation, voiceEnabled, voiceName } = props;
-  if (voiceName !== 'none' && voiceEnabled) {
-    SpeechSynthesizer.speak(
-      voiceName,
-      lemma.target,
-      showTranslation ? 0.6 : 0.8,
-    );
+  const { lemma, showTranslation, voiceName } = props;
+  if (voiceName) {
+    SpeechSynthesizer.speak(voiceName, lemma.ar, showTranslation ? 0.6 : 0.8);
   }
 };
 
@@ -72,18 +67,13 @@ const Flashcard: React.FC<Props> = props => {
     lemma,
     showTranslation,
     showVocalization,
-    voiceEnabled,
     voiceName,
     classes,
   } = props;
   const { sourceLang, targetLang } = useContext(LanguageContext);
 
-  if (voiceEnabled && voiceName !== 'none') {
-    SpeechSynthesizer.speak(
-      voiceName,
-      lemma.target,
-      showTranslation ? 0.6 : 0.8,
-    );
+  if (voiceName) {
+    SpeechSynthesizer.speak(voiceName, lemma.ar, showTranslation ? 0.6 : 0.8);
   }
 
   return (
@@ -94,18 +84,16 @@ const Flashcard: React.FC<Props> = props => {
     >
       <Tooltip
         classes={{ tooltip: classes.htmlTooltip }}
-        title={<Typography color="inherit">{lemma.roman}</Typography>}
+        title={<Typography color="inherit">{lemma.rom}</Typography>}
       >
         <Typography
           variant="h4"
           align="center"
           lang={targetLang}
           dir="rtl"
-          className={classes.target}
+          className={classes.ar}
         >
-          {showVocalization
-            ? lemma.target
-            : Transcoder.stripTashkeel(lemma.target)}
+          {showVocalization ? lemma.ar : Transcoder.stripTashkeel(lemma.ar)}
         </Typography>
       </Tooltip>
       <Typography
@@ -115,7 +103,7 @@ const Flashcard: React.FC<Props> = props => {
         color="textSecondary"
         className={classes.native}
       >
-        {showTranslation ? lemma.source : '•••'}
+        {showTranslation ? lemma.nl : '•••'}
       </Typography>
     </Paper>
   );

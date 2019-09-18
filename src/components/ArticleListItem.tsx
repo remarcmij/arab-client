@@ -5,11 +5,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import Code from '@material-ui/icons/Code';
-import Notes from '@material-ui/icons/Notes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Types from 'Types';
+import { LinkProps } from '@material-ui/core/Link';
 
 const styles = () =>
   createStyles({
@@ -24,35 +23,30 @@ const styles = () =>
   });
 
 interface OwnProps {
-  readonly publication: Types.AppDocument;
+  readonly publication: Types.Topic;
 }
 
 type Props = OwnProps & WithStyles<typeof styles>;
 
 const ArticleListItem: React.FC<Props> = props => {
   const { classes } = props;
-  const { filename, title, subtitle, kind } = props.publication;
+  const { filename, title, subtitle } = props.publication;
   const [publication, article] = filename.split('.');
 
-  const ItemLink = (p: {}) => (
-    <Link to={`/content/${publication}/${article}`} {...p} />
-  );
+  // const ItemLink = (p: any) => (
+  //   <Link to={`/content/${publication}/${article}`} {...p} />
+  // );
+  const ItemLink = React.forwardRef<LinkProps, any>((p, ref) => (
+    <Link ref={ref} to={`/content/${publication}/${article}`} {...p} />
+  ));
 
   return (
     <ListItem component={ItemLink} button={true}>
-      {kind === 'lemmas' ? (
-        <ListItemAvatar className={classes.pinkAvatar}>
-          <Avatar>
-            <Code />
-          </Avatar>
-        </ListItemAvatar>
-      ) : (
-        <ListItemAvatar className={classes.greenAvatar}>
-          <Avatar>
-            <Notes color="inherit" />
-          </Avatar>
-        </ListItemAvatar>
-      )}
+      <ListItemAvatar>
+        <Avatar classes={{ colorDefault: classes.greenAvatar }}>
+          {title[0]}
+        </Avatar>
+      </ListItemAvatar>
       <ListItemText
         primary={title}
         secondary={
