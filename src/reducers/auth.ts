@@ -53,6 +53,7 @@ export default function(
       return {
         ...state,
         token: null,
+        user: null,
         isAuthenticated: false,
         loading: false,
       };

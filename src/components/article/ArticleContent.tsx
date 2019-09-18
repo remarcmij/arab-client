@@ -61,7 +61,7 @@ const ArticleContent: React.FC<Props> = ({ topic, classes }) => {
             .render(section)
             .replace(arabicRegExp, '<span lang="ar">$&</span>');
           const sectionLemmas =
-            lemmas && lemmas.filter(lemma => lemma.sectionNum === index);
+            lemmas && lemmas.filter(lemma => lemma.sectionIndex === index);
           return (
             <React.Fragment key={index}>
               <section

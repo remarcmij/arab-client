@@ -5,7 +5,7 @@ declare module 'Types' {
     ar: string;
     rom?: string;
     filename: string;
-    sectionNum: number;
+    sectionIndex: number;
     title?: string;
     topic: string;
   }
