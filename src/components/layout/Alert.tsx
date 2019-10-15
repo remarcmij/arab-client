@@ -4,7 +4,7 @@ import { RootState } from '../../reducers';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
-import { createStyles, withStyles, WithStyles } from '@material-ui/styles';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 
 const styles = () =>
   createStyles({

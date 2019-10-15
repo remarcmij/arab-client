@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import latinize from 'latinize';
 import React, { useState } from 'react';
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async';
 import { ValueType } from 'react-select/lib/types';
 
 const styles = (theme: Theme) =>

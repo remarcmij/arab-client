@@ -118,8 +118,8 @@ const LemmaList: React.FC<Props> = props => {
 
   const renderLemma = (lemma: Lemma, index: number) => {
     const arabicText = showVocalization
-      ? lemma.ar
-      : Transcoder.stripTashkeel(lemma.ar);
+      ? lemma.foreign
+      : Transcoder.stripTashkeel(lemma.foreign);
     const arabicHtml = arabicText.replace(
       arabicWordRegExp,
       '<span lang="ar">$&</span>',
@@ -132,16 +132,16 @@ const LemmaList: React.FC<Props> = props => {
       <ScrollableAnchor key={index} id={lemma._id}>
         <li className={listClasses}>
           <Typography variant="body1" className={classes.nl}>
-            {lemma.nl}
+            {lemma.native}
           </Typography>
           <Typography
             dir="rtl"
             className={classes.ar}
             dangerouslySetInnerHTML={{ __html: arabicHtml }}
           />
-          {lemma.rom && showTranscription && (
+          {lemma.roman && showTranscription && (
             <Typography variant="body1" className={classes.rom}>
-              {Transcoder.applyRomanization(lemma.rom, romanizationStandard)}
+              {Transcoder.applyRomanization(lemma.roman, romanizationStandard)}
             </Typography>
           )}
         </li>

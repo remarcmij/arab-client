@@ -67,15 +67,15 @@ const SearchResultList: React.FC<Props> = props => {
       {Array.from(lemmaMap.values()).map(lemma => (
         <Paper classes={{ root: classes.root }} key={lemma._id}>
           <Typography variant="subtitle1" classes={{ root: classes.nl }}>
-            {lemma.nl}
+            {lemma.native}
           </Typography>
           <Typography
             variant="subtitle1"
             classes={{ root: classes.ar }}
-            title={lemma.rom || ''}
+            title={lemma.roman || ''}
           >
             <span dir="rtl" lang="ar">
-              {lemma.ar}
+              {lemma.foreign}
             </span>
           </Typography>
           <Typography variant="caption">{lemma.title}</Typography>

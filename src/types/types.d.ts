@@ -1,9 +1,9 @@
 declare module 'Types' {
   export interface Lemma {
     _id: string;
-    nl: string;
-    ar: string;
-    rom?: string;
+    native: string;
+    foreign: string;
+    roman?: string;
     filename: string;
     sectionIndex: number;
     title?: string;

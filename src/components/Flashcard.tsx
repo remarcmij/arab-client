@@ -58,7 +58,11 @@ type Props = OwnProps & WithStyles<typeof styles>;
 const handleClick = (props: Props) => {
   const { lemma, showTranslation, voiceName } = props;
   if (voiceName) {
-    SpeechSynthesizer.speak(voiceName, lemma.ar, showTranslation ? 0.6 : 0.8);
+    SpeechSynthesizer.speak(
+      voiceName,
+      lemma.foreign,
+      showTranslation ? 0.6 : 0.8,
+    );
   }
 };
 
@@ -73,7 +77,11 @@ const Flashcard: React.FC<Props> = props => {
   const { sourceLang, targetLang } = useContext(LanguageContext);
 
   if (voiceName) {
-    SpeechSynthesizer.speak(voiceName, lemma.ar, showTranslation ? 0.6 : 0.8);
+    SpeechSynthesizer.speak(
+      voiceName,
+      lemma.foreign,
+      showTranslation ? 0.6 : 0.8,
+    );
   }
 
   return (
@@ -84,7 +92,7 @@ const Flashcard: React.FC<Props> = props => {
     >
       <Tooltip
         classes={{ tooltip: classes.htmlTooltip }}
-        title={<Typography color="inherit">{lemma.rom}</Typography>}
+        title={<Typography color="inherit">{lemma.roman}</Typography>}
       >
         <Typography
           variant="h4"
@@ -93,7 +101,9 @@ const Flashcard: React.FC<Props> = props => {
           dir="rtl"
           className={classes.ar}
         >
-          {showVocalization ? lemma.ar : Transcoder.stripTashkeel(lemma.ar)}
+          {showVocalization
+            ? lemma.foreign
+            : Transcoder.stripTashkeel(lemma.foreign)}
         </Typography>
       </Tooltip>
       <Typography
@@ -103,7 +113,7 @@ const Flashcard: React.FC<Props> = props => {
         color="textSecondary"
         className={classes.native}
       >
-        {showTranslation ? lemma.nl : '•••'}
+        {showTranslation ? lemma.native : '•••'}
       </Typography>
     </Paper>
   );
