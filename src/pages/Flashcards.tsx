@@ -18,7 +18,7 @@ interface Params {
   article: string;
 }
 
-type OwnProps = {
+type Props = {
   match: match<Params>;
   setNavBackRoute: (to: string) => void;
   fetchArticle: (filename: string) => void;
@@ -27,9 +27,7 @@ type OwnProps = {
   error: any;
   showVocalization: boolean;
   voiceName: string;
-};
-
-type Props = OwnProps & WithTheme;
+} & WithTheme;
 
 const Flashcards: React.FC<Props> = props => {
   const {

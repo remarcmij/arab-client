@@ -21,13 +21,12 @@ const styles = (theme: Theme) =>
     },
   });
 
-type OwnProps = {
+type Props = {
   lemmas: Lemma[];
   searchLemmas: (term: string) => void;
   setNavBackRoute: (to: string) => void;
-};
-
-type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
+} & RouteComponentProps &
+  WithStyles<typeof styles>;
 
 const SearchPage: React.FC<Props> = props => {
   const [lemma, setLemma] = useState<Lemma | null>(null);

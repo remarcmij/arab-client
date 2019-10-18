@@ -19,13 +19,11 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface OwnProps {
+type Props = {
   document: Types.Topic;
   showVocalization: boolean;
   voiceName: string;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const LemmaFlashcards: React.FC<Props> = props => {
   const { document, showVocalization, voiceName, classes } = props;

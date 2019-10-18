@@ -22,11 +22,9 @@ const styles = () =>
     },
   });
 
-interface OwnProps {
+type Props = {
   readonly publication: Types.Topic;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const ArticleListItem: React.FC<Props> = props => {
   const { classes } = props;

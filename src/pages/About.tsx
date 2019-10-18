@@ -19,11 +19,9 @@ const styles = (theme: Theme) =>
     },
   });
 
-type OwnProps = {
+type Props = {
   setNavBackRoute: (to: string) => void;
-};
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const About: React.FC<Props> = props => {
   const { setNavBackRoute } = props;

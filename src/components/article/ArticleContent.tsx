@@ -36,11 +36,9 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface OwnProps {
+type Props = {
   topic: Topic;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const ArticleContent: React.FC<Props> = ({ topic, classes }) => {
   const { title, subtitle, sections, lemmas } = topic;
@@ -66,9 +64,7 @@ const ArticleContent: React.FC<Props> = ({ topic, classes }) => {
             <React.Fragment key={index}>
               <section
                 dangerouslySetInnerHTML={{ __html: html }}
-                className={`markdown-body ${classes.mdPadding} ${
-                  classes.content
-                }`}
+                className={`markdown-body ${classes.mdPadding} ${classes.content}`}
               />
               {sectionLemmas && <LemmaList lemmas={sectionLemmas} />}
             </React.Fragment>

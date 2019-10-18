@@ -17,11 +17,9 @@ const styles = () =>
     },
   });
 
-interface OwnProps {
+type Props = {
   publication: Types.Topic;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const PublicationListItem: React.FC<Props> = props => {
   const {

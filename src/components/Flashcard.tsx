@@ -44,14 +44,12 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface OwnProps {
+type Props = {
   lemma: Types.Lemma;
   showTranslation: boolean;
   showVocalization: boolean;
   voiceName: string;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 // tslint:disable:no-floating-promises
 

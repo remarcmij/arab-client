@@ -9,7 +9,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import withMobileDialog, {
-  InjectedProps,
+  WithMobileDialog,
 } from '@material-ui/core/withMobileDialog';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -33,7 +33,7 @@ interface OwnProps {
   onClose: () => void;
 }
 
-type Props = OwnProps & InjectedProps & WithStyles<typeof styles>;
+type Props = OwnProps & WithMobileDialog & WithStyles<typeof styles>;
 
 const LoginDialog: React.FC<Props> = props => {
   const [authUrl, setAuthUrl] = useState('');

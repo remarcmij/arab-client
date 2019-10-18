@@ -25,16 +25,14 @@ interface Params {
   article: string;
 }
 
-interface OwnProps {
+type Props = {
   match: match<Params>;
   setNavBackRoute: (to: string) => void;
   fetchArticles: (publication: string) => void;
   topics: Topic[];
   loading: boolean;
   error: any;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const ArticleList: React.FC<Props> = props => {
   const { fetchArticles, topics, loading, error, setNavBackRoute } = props;

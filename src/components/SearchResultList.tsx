@@ -45,12 +45,10 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface OwnProps {
+type Props = {
   lemmas: Types.Lemma[];
   onButtonClick: (lemma: Types.Lemma) => void;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const SearchResultList: React.FC<Props> = props => {
   const { classes } = props;

@@ -84,15 +84,14 @@ interface Params {
   article: string;
 }
 
-interface OwnProps {
+type Props = {
   match: match<Params>;
   lemmas: Lemma[];
   showVocalization: boolean;
   showTranscription: boolean;
   romanizationStandard: string;
-}
-
-type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
+} & RouteComponentProps &
+  WithStyles<typeof styles>;
 
 const LemmaList: React.FC<Props> = props => {
   const {

@@ -25,12 +25,10 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface OwnProps {
+type Props = {
   onNext: () => void;
   onPrev: () => void;
-}
-
-type Props = OwnProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const FlashcardButtonBar: React.FC<Props> = ({ classes, onNext, onPrev }) => (
   <Paper className={classes.root} square={true} elevation={1}>

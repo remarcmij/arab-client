@@ -24,13 +24,11 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface OwnPropProps {
+type Props = {
   document: Types.Topic;
   index: number;
   length: number;
-}
-
-type Props = OwnPropProps & WithStyles<typeof styles>;
+} & WithStyles<typeof styles>;
 
 const FlashcardHeader: React.FC<Props> = props => {
   const { document, index, length, classes } = props;
