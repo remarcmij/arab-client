@@ -11,7 +11,7 @@ import { Topic } from 'Types';
 import LemmaList from '../lemmas/LemmaList';
 import markdownIt from 'markdown-it';
 
-const md = markdownIt();
+const md = markdownIt({ html: true });
 const arabicRegExp = /[\u0600-\u06ff]+/g;
 
 const styles = (theme: Theme) =>
