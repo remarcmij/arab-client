@@ -2,7 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { match } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { Topic } from 'Types';
 import LemmaFlashcards from '../components/LemmaFlashcards';
 import withNavBar from '../components/withNavBar';
@@ -19,7 +19,6 @@ interface Params {
 }
 
 type Props = {
-  match: match<Params>;
   setNavBackRoute: (to: string) => void;
   fetchArticle: (filename: string) => void;
   topic: Topic | null;
@@ -39,7 +38,7 @@ const Flashcards: React.FC<Props> = props => {
     showVocalization,
     voiceName,
   } = props;
-  const { publication, article } = props.match.params;
+  const { publication, article } = useParams();
 
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;

@@ -1,21 +1,19 @@
 import Container from '@material-ui/core/Container';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import React, { Suspense, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import { loadUser } from './actions/auth';
+import Spinner from './components/common/Spinner';
 import Routes from './components/routes/Routes';
 import NavBarContainer from './containers/NavBarContainer';
 import Welcome from './pages/welcome/Welcome';
-import { RootState } from './reducers';
 import store from './store';
-import setAuthToken from './utils/setAuthToken';
-import { getToken } from './utils/storedToken';
+import { storeToken } from './utils/token';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
-const styles = createStyles({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
     paddingTop: 56,
@@ -25,37 +23,38 @@ const styles = createStyles({
   },
 });
 
-type Props = WithStyles<typeof styles>;
-
 // const ProtectedRoute: React.FC<any> = ({ ...props }) => {
 //   return getToken() ? <Route {...props} /> : <Redirect to="/login" />;
 // };
 
-const token = getToken();
-if (token) {
-  setAuthToken(token);
-}
+const App: React.FC<{}> = () => {
+  const [cookies, , removeCookie] = useCookies();
+  const classes = useStyles();
+  const { token } = cookies;
+  if (token) {
+    storeToken(token);
+    removeCookie('token');
+  }
 
-const App: React.FC<Props> = ({ classes }) => {
-  useEffect(() => {
-    (store.dispatch as ThunkDispatch<RootState, void, AnyAction>)(loadUser());
-  }, []);
+  useEffect(() => void store.dispatch(loadUser()), []);
 
   return (
-    <Provider store={store}>
-      <Router>
-        <div className={classes.root}>
-          <NavBarContainer />
-          <Container maxWidth="md">
-            <Switch>
-              <Route exact={true} path="/welcome" component={Welcome} />
-              <Route component={Routes} />
-            </Switch>
-          </Container>
-        </div>
-      </Router>
-    </Provider>
+    <Suspense fallback={<Spinner />}>
+      <Provider store={store}>
+        <Router>
+          <div className={classes.root}>
+            <NavBarContainer />
+            <Container maxWidth="md">
+              <Switch>
+                <Route exact={true} path="/welcome" component={Welcome} />
+                <Route component={Routes} />
+              </Switch>
+            </Container>
+          </div>
+        </Router>
+      </Provider>
+    </Suspense>
   );
 };
 
-export default withStyles(styles)(App);
+export default App;

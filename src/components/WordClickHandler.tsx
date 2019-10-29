@@ -2,7 +2,7 @@ import Menu from '@material-ui/core/Menu/Menu';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { LOOK_UP, READ_ALOUD } from '../constants';
 import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
@@ -11,13 +11,12 @@ const mapStateToProps = (state: RootState) => ({
   voiceName: state.settings.voiceName,
 });
 
-type OwnProps = {
+type Props = {
   voiceName: string;
 };
 
-type Props = OwnProps & RouteComponentProps;
-
 const WordClickHandler: React.FC<Props> = props => {
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { voiceName } = props;
 
@@ -48,7 +47,7 @@ const WordClickHandler: React.FC<Props> = props => {
     if (anchorEl instanceof HTMLElement) {
       const text = anchorEl.textContent!.replace(/[^\u0621-\u064a]/g, '');
       closeMenu();
-      props.history.push(encodeURI(`/search?q=${text}`));
+      history.push(encodeURI(`/search?q=${text}`));
     }
   };
 
@@ -70,4 +69,4 @@ const WordClickHandler: React.FC<Props> = props => {
   );
 };
 
-export default connect(mapStateToProps)(withRouter(WordClickHandler));
+export default connect(mapStateToProps)(WordClickHandler);

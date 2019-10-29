@@ -1,9 +1,8 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
@@ -12,14 +11,23 @@ import { setAlert } from '../actions/alert';
 import { localLogin } from '../actions/auth';
 import * as C from '../constants';
 import { RootState } from '../reducers';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 
 interface FormData {
   [key: string]: string;
 }
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(4),
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
+    },
+  }),
+);
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators({ setAlert, localLogin }, dispatch);
@@ -31,22 +39,10 @@ const mapStateToProps = (state: RootState) => ({
 type ReduxProps = ReturnType<typeof mapDispatchToProps> &
   ReturnType<typeof mapStateToProps>;
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(4),
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
-    },
-  });
-
-type Props = WithStyles<typeof styles> & ReduxProps;
+type Props = Readonly<ReduxProps>;
 
 const LoginPage: React.FC<Props> = props => {
-  const { classes } = props;
+  const classes = useStyles();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -125,4 +121,4 @@ const LoginPage: React.FC<Props> = props => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withStyles(styles)(LoginPage));
+)(LoginPage);

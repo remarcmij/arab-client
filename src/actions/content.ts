@@ -1,16 +1,15 @@
 import axios from 'axios';
-import { ThunkAction } from 'redux-thunk';
 import { Topic } from 'Types';
 import { action } from 'typesafe-actions';
 import handleApiError from '../utils/handleApiErrors';
 import {
-  FETCH_START,
-  FETCH_PUBLICATIONS_SUCCESS,
   FETCH_ARTICLES_SUCCESS,
   FETCH_ARTICLE_SUCCESS,
   FETCH_ERROR,
+  FETCH_PUBLICATIONS_SUCCESS,
+  FETCH_START,
 } from './constants';
-import { AnyAction } from 'redux';
+import { ThunkDispatchAny } from './types';
 
 const fetchStart = () => action(FETCH_START);
 
@@ -32,12 +31,7 @@ export type ContentActions =
   | ReturnType<typeof fetchArticleSuccess>
   | ReturnType<typeof fetchError>;
 
-export const fetchPublications = (): ThunkAction<
-  void,
-  void,
-  void,
-  AnyAction
-> => async dispatch => {
+export const fetchPublications = () => async (dispatch: ThunkDispatchAny) => {
   try {
     dispatch(fetchStart());
     const res = await axios('/api');
@@ -47,9 +41,9 @@ export const fetchPublications = (): ThunkAction<
   }
 };
 
-export const fetchArticles = (
-  publication: string,
-): ThunkAction<void, void, void, AnyAction> => async dispatch => {
+export const fetchArticles = (publication: string) => async (
+  dispatch: ThunkDispatchAny,
+) => {
   try {
     dispatch(fetchStart());
     const res = await axios(`/api/index/${publication}`);
@@ -65,9 +59,9 @@ export const fetchArticles = (
   }
 };
 
-export const fetchArticle = (
-  filename: string,
-): ThunkAction<void, void, void, AnyAction> => async dispatch => {
+export const fetchArticle = (filename: string) => async (
+  dispatch: ThunkDispatchAny,
+) => {
   try {
     dispatch(fetchStart());
     const res = await axios(`/api/article/${filename}`);

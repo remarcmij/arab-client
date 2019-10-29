@@ -1,19 +1,17 @@
 import axios from 'axios';
-import { ThunkAction } from 'redux-thunk';
 import { action } from 'typesafe-actions';
 import handleApiErrors from '../utils/handleApiErrors';
-import setAuthToken from '../utils/setAuthToken';
-import { getToken } from '../utils/storedToken';
-import { setAlert } from './alert';
+import { removeToken, storeToken as saveToken } from '../utils/token';
 import {
   AUTH_ERROR,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
-  SIGNUP_FAIL,
-  SIGNUP_SUCCESS,
+  REGISTER_FAIL,
   USER_LOADED,
 } from './constants';
+import { fetchPublications } from './content';
+import { ThunkDispatchAny } from './types';
 
 type Credentials = {
   name?: string;
@@ -39,47 +37,34 @@ const authError = () => action(AUTH_ERROR);
 type LoadUserActions = ReturnType<typeof userLoaded | typeof authError>;
 // Load user
 
-export const loadUser = (): ThunkAction<
-  void,
-  void,
-  void,
-  any
-> => async dispatch => {
-  const token = getToken();
-  if (token) {
-    setAuthToken(token);
-  }
+export const loadUser = () => async (dispatch: ThunkDispatchAny) => {
   try {
     const res = await axios.get('/auth');
     dispatch(userLoaded(res.data));
+    await dispatch(fetchPublications());
   } catch (err) {
     dispatch(authError());
   }
 };
 
-const signupSuccess = (token: string) => action(SIGNUP_SUCCESS, token);
-const signupFailure = () => action(SIGNUP_FAIL);
+const registerFail = () => action(REGISTER_FAIL);
+type RegisterActions = ReturnType<typeof registerFail>;
 
-type SignupActions = ReturnType<typeof signupSuccess | typeof signupFailure>;
-
-export const signup = ({
-  name,
-  email,
-  password,
-}: Credentials): ThunkAction<void, void, void, any> => async dispatch => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+/**
+ * Register a new user
+ */
+export const register = ({ name, email, password }: Credentials) => async (
+  dispatch: ThunkDispatchAny,
+) => {
   const body = JSON.stringify({ name, email, password });
   try {
-    const res = await axios.post('/auth/signup', body, config);
-    dispatch(signupSuccess(res.data.token));
-    dispatch(loadUser());
+    const res = await axios.post('/auth/signup', body);
+    saveToken(res.data.token);
+    await dispatch(loadUser());
   } catch (err) {
+    removeToken();
+    dispatch(registerFail());
     handleApiErrors(err, dispatch);
-    dispatch(signupFailure());
   }
 };
 
@@ -88,10 +73,9 @@ const loginFailure = () => action(LOGIN_FAIL);
 
 type LoginActions = ReturnType<typeof loginSuccess | typeof loginFailure>;
 
-export const localLogin = ({
-  email,
-  password,
-}: Credentials): ThunkAction<void, void, void, any> => async dispatch => {
+export const localLogin = ({ email, password }: Credentials) => async (
+  dispatch: ThunkDispatchAny,
+) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -100,39 +84,27 @@ export const localLogin = ({
   const body = JSON.stringify({ email, password });
   try {
     const res = await axios.post('/auth/login', body, config);
-    dispatch(loginSuccess(res.data.token));
-    dispatch(loadUser());
+    saveToken(res.data.token);
+    await dispatch(loadUser());
   } catch (err) {
-    if (err.response) {
-      const { errors, message } = err.response.data;
-      if (errors) {
-        errors.forEach((error: { msg: string }) =>
-          dispatch(setAlert(error.msg, 'danger')),
-        );
-      } else if (message) {
-        dispatch(setAlert(message, 'danger'));
-      } else {
-        dispatch(setAlert('An unknown error occurred.', 'danger'));
-      }
-    } else if (err.request) {
-      dispatch(setAlert('The server did not respond', 'danger'));
-    } else {
-      dispatch(setAlert('An unknown error occurred.', 'danger'));
-    }
+    handleApiErrors(err, dispatch);
+    removeToken();
     dispatch(loginFailure());
   }
 };
 
 const logoutAction = () => action(LOGOUT);
 
-export const logout = (): ThunkAction<void, void, void, any> => dispatch => {
+export const logout = () => async (dispatch: ThunkDispatchAny) => {
+  removeToken();
   dispatch(logoutAction());
+  await dispatch(loadUser());
 };
 
 type LogoutActions = ReturnType<typeof logoutAction>;
 
 export type AuthActions =
   | LoadUserActions
-  | SignupActions
+  | RegisterActions
   | LoginActions
   | LogoutActions;

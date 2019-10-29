@@ -1,32 +1,29 @@
-import {
-  createStyles,
-  Theme,
-  WithStyles,
-  withStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import Types from 'Types';
 import Flashcard from './Flashcard';
 import FlashcardButtonBar from './FlashcardButtonBar';
 import FlashcardHeader from './FlashcardHeader';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       // To fix IE11 flex min-height bug
       display: 'flex',
       flexDirection: 'column',
     },
-  });
+  }),
+);
 
-type Props = {
+type Props = Readonly<{
   document: Types.Topic;
   showVocalization: boolean;
   voiceName: string;
-} & WithStyles<typeof styles>;
+}>;
 
 const LemmaFlashcards: React.FC<Props> = props => {
-  const { document, showVocalization, voiceName, classes } = props;
+  const classes = useStyles();
+  const { document, showVocalization, voiceName } = props;
   const { lemmas } = document;
 
   const [index, setIndex] = useState<number>(0);
@@ -72,4 +69,4 @@ const LemmaFlashcards: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(LemmaFlashcards);
+export default LemmaFlashcards;

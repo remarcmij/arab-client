@@ -1,29 +1,28 @@
 import Avatar from '@material-ui/core/Avatar';
 import blue from '@material-ui/core/colors/blue';
+import { LinkProps } from '@material-ui/core/Link';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Types from 'Types';
-import { LinkProps } from '@material-ui/core/Link';
 
-const styles = () =>
-  createStyles({
-    blueAvatar: {
-      color: '#fff',
-      backgroundColor: blue[500],
-    },
-  });
+const useStyles = makeStyles({
+  blueAvatar: {
+    color: '#fff',
+    backgroundColor: blue[500],
+  },
+});
 
-type Props = {
+type Props = Readonly<{
   publication: Types.Topic;
-} & WithStyles<typeof styles>;
+}>;
 
 const PublicationListItem: React.FC<Props> = props => {
+  const classes = useStyles();
   const {
-    classes,
     publication: { filename, title, subtitle },
   } = props;
   const [publication] = filename.split('.');
@@ -49,4 +48,4 @@ const PublicationListItem: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(PublicationListItem);
+export default PublicationListItem;

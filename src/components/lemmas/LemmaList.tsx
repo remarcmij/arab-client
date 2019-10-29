@@ -1,21 +1,16 @@
 import Button from '@material-ui/core/Button';
 import grey from '@material-ui/core/colors/grey';
 import pink from '@material-ui/core/colors/pink';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect, useState } from 'react';
-import { match, Redirect, RouteComponentProps, withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import { Lemma } from 'Types';
 import * as C from '../../constants';
-import Transcoder from '../../services/Transcoder';
-import { connect } from 'react-redux';
 import { RootState } from '../../reducers';
+import Transcoder from '../../services/Transcoder';
 
 const mapStateToProps = (state: RootState) => ({
   showVocalization: state.settings.showVocalization,
@@ -30,8 +25,8 @@ configureAnchors({
 
 const arabicWordRegExp = /[\u0600-\u06FF]+/g;
 
-const styles = (theme: Theme) => {
-  return createStyles({
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
     buttonContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -76,33 +71,27 @@ const styles = (theme: Theme) => {
     hashMatch: {
       backgroundColor: `${pink[50]}!important`,
     },
-  });
-};
+  }),
+);
 
-interface Params {
-  publication: string;
-  article: string;
-}
-
-type Props = {
-  match: match<Params>;
+type Props = Readonly<{
   lemmas: Lemma[];
   showVocalization: boolean;
   showTranscription: boolean;
   romanizationStandard: string;
-} & RouteComponentProps &
-  WithStyles<typeof styles>;
+}>;
 
 const LemmaList: React.FC<Props> = props => {
+  const classes = useStyles();
   const {
     lemmas,
-    classes,
-    history,
     showVocalization,
     showTranscription,
     romanizationStandard,
   } = props;
-  const { publication, article } = props.match.params;
+
+  const history = useHistory();
+  const { publication, article } = useParams();
 
   const [hashId, setHashId] = useState('');
   const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
@@ -164,6 +153,4 @@ const LemmaList: React.FC<Props> = props => {
   );
 };
 
-export default connect(mapStateToProps)(
-  withRouter(withStyles(styles)(LemmaList)),
-);
+export default connect(mapStateToProps)(LemmaList);

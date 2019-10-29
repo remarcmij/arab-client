@@ -1,18 +1,18 @@
-import { applyMiddleware, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
-import { saveState } from './utils/persistState';
 import throttle from 'lodash.throttle';
+import { AnyAction, applyMiddleware, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk, { ThunkMiddleware } from 'redux-thunk';
+import rootReducer, { RootState } from './reducers';
+import { saveState } from './utils/persistState';
 
 const initialState = {};
-
-const middleware = [thunk];
 
 const store = createStore(
   rootReducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleware)),
+  composeWithDevTools(
+    applyMiddleware(thunk as ThunkMiddleware<RootState, AnyAction>),
+  ),
 );
 
 store.subscribe(

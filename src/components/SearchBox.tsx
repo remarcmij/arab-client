@@ -1,22 +1,18 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
 import latinize from 'latinize';
 import React, { useState } from 'react';
 import AsyncSelect from 'react-select/async';
 import { ValueType } from 'react-select/lib/types';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     select: {
       width: 200,
       color: theme.palette.text.primary,
     },
-  });
+  }),
+);
 
 interface WordDef {
   word: string;
@@ -28,12 +24,10 @@ export interface WordOption {
   label: string;
 }
 
-interface OwnProps {
+type Props = Readonly<{
   onChange: (option: ValueType<WordOption>) => void;
   searchLemmas: (term: string) => void;
-}
-
-type Props = WithStyles<typeof styles> & OwnProps;
+}>;
 
 interface LookupResponse {
   words: WordDef[];
@@ -61,6 +55,7 @@ const promiseOptions = (input: string) => {
 };
 
 const SearchBox: React.FC<Props> = props => {
+  const classes = useStyles();
   const [inputValue, setInputValue] = useState('');
   const [isRtl, setIsRtl] = useState(false);
 
@@ -88,7 +83,7 @@ const SearchBox: React.FC<Props> = props => {
       placeholder="Zoek..."
       cacheOptions={true}
       loadOptions={promiseOptions}
-      className={props.classes.select}
+      className={classes.select}
       onChange={handleChange}
       onInputChange={handleInputChange}
       inputValue={inputValue}
@@ -98,4 +93,4 @@ const SearchBox: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(SearchBox);
+export default SearchBox;

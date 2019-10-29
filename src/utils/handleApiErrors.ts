@@ -1,22 +1,30 @@
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { setAlert } from '../actions/alert';
+import { setAlert, AlertType } from '../actions/alert';
+import { ThunkDispatchAny } from '../actions/types';
 
-export default (err: any, dispatch: ThunkDispatch<void, void, AnyAction>) => {
+export default (err: any, dispatch: ThunkDispatchAny) => {
   if (err.response) {
     const { errors, message } = err.response.data;
+
     if (errors) {
-      errors.forEach((error: { msg: string }) =>
-        dispatch(setAlert(error.msg, 'danger')),
+      return void errors.forEach((error: { msg: string }) =>
+        dispatch(setAlert(error.msg, AlertType.Danger)),
       );
-    } else if (message) {
-      dispatch(setAlert(message, 'danger'));
-    } else {
-      dispatch(setAlert('An unknown error occurred.', 'danger'));
     }
-  } else if (err.request) {
-    dispatch(setAlert('The server did not respond', 'danger'));
-  } else {
-    dispatch(setAlert('An unknown error occurred.', 'danger'));
+
+    if (message) {
+      return void dispatch(setAlert(message, AlertType.Danger));
+    }
+
+    return void dispatch(
+      setAlert('An unknown error occurred.', AlertType.Danger),
+    );
   }
+
+  if (err.request) {
+    return void dispatch(
+      setAlert('The server did not respond', AlertType.Danger),
+    );
+  }
+
+  dispatch(setAlert('An unknown error occurred.', AlertType.Danger));
 };

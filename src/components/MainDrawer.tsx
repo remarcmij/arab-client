@@ -1,18 +1,15 @@
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
+import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InfoIcon from '@material-ui/icons/Info';
 import Settings from '@material-ui/icons/Settings';
+import clsx from 'clsx';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
@@ -21,10 +18,8 @@ import { logout } from '../actions/auth';
 import * as C from '../constants';
 import { RootState } from '../reducers';
 import SettingsDialog from './SettingsDialog';
-import clsx from 'clsx';
-import Icon from '@material-ui/core/Icon';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     list: {
       width: 250,
@@ -35,7 +30,8 @@ const styles = (theme: Theme) =>
     icon: {
       margin: theme.spacing(2),
     },
-  });
+  }),
+);
 
 interface OwnProps {
   open: boolean;
@@ -53,10 +49,11 @@ const mapStateToProps = (state: RootState) => ({
 type ReduxProps = ReturnType<typeof mapDispatchToProps> &
   ReturnType<typeof mapStateToProps>;
 
-type Props = OwnProps & WithStyles<typeof styles> & ReduxProps;
+type Props = Readonly<OwnProps & ReduxProps>;
 
 const MainDrawer: React.FC<Props> = props => {
-  const { classes, open, toggleDrawer } = props;
+  const classes = useStyles();
+  const { open, toggleDrawer } = props;
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
 
@@ -142,4 +139,4 @@ const MainDrawer: React.FC<Props> = props => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withStyles(styles)(MainDrawer));
+)(MainDrawer);

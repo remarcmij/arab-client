@@ -5,7 +5,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {
   createStyles,
   Theme,
-  withStyles,
+  makeStyles,
   WithStyles,
 } from '@material-ui/core/styles';
 import withMobileDialog, {
@@ -14,7 +14,7 @@ import withMobileDialog, {
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 400,
@@ -26,16 +26,18 @@ const styles = (theme: Theme) =>
     button: {
       margin: theme.spacing(1),
     },
-  });
+  }),
+);
 
-interface OwnProps {
+type OwnProps = Readonly<{
   open: boolean;
   onClose: () => void;
-}
+}>;
 
-type Props = OwnProps & WithMobileDialog & WithStyles<typeof styles>;
+type Props = OwnProps & WithMobileDialog;
 
 const LoginDialog: React.FC<Props> = props => {
+  const classes = useStyles();
   const [authUrl, setAuthUrl] = useState('');
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const LoginDialog: React.FC<Props> = props => {
       .catch(err => console.log(err));
   }, [authUrl]);
 
-  const { fullScreen, classes, onClose, open } = props;
+  const { fullScreen, onClose, open } = props;
 
   return (
     <Dialog
@@ -74,4 +76,4 @@ const LoginDialog: React.FC<Props> = props => {
   );
 };
 
-export default withMobileDialog<OwnProps>()(withStyles(styles)(LoginDialog));
+export default withMobileDialog<OwnProps>()(LoginDialog);

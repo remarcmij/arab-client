@@ -1,24 +1,24 @@
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../../reducers';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 
-const styles = () =>
-  createStyles({
-    root: {
-      backgroundColor: 'red',
-      marginTop: 2,
-    },
-  });
+const useStyles = makeStyles({
+  root: {
+    backgroundColor: 'red',
+    marginTop: 2,
+  },
+});
 
 const mapStateToProps = (state: RootState) => ({ alerts: state.alert });
 
-type Props = ReturnType<typeof mapStateToProps> & WithStyles<typeof styles>;
+type Props = Readonly<ReturnType<typeof mapStateToProps>>;
 
-const Alert: React.FC<Props> = ({ alerts, classes }) => {
+const Alert: React.FC<Props> = ({ alerts }) => {
+  const classes = useStyles();
   if (alerts.length === 0) {
     return null;
   }
@@ -34,4 +34,4 @@ const Alert: React.FC<Props> = ({ alerts, classes }) => {
   );
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(Alert));
+export default connect(mapStateToProps)(Alert);

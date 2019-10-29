@@ -1,34 +1,28 @@
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
 import { Topic } from 'Types';
 import PublicationListItem from '../components/PublicationListItem';
 import withNavbar from '../components/withNavBar';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       margin: theme.spacing(1),
     },
-  });
+  }),
+);
 
-type OwnProps = {
+type Props = Readonly<{
   fetchPublications: () => void;
   topics: Topic[];
   loading: boolean;
   error: any;
-};
-
-type Props = OwnProps & WithStyles<typeof styles>;
+}>;
 
 const PublicationList: React.FC<Props> = props => {
-  const { classes } = props;
+  const classes = useStyles();
 
   const { fetchPublications, topics, loading, error } = props;
 
@@ -59,4 +53,4 @@ const PublicationList: React.FC<Props> = props => {
   );
 };
 
-export default withNavbar(withStyles(styles)(PublicationList));
+export default withNavbar(PublicationList);

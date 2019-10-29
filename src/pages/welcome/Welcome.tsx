@@ -1,11 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import markdownIt from 'markdown-it';
 import React, { useMemo, useState } from 'react';
 import { Redirect } from 'react-router-dom';
@@ -13,7 +8,7 @@ import mdText from './welcome-nl';
 
 const md = markdownIt();
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
@@ -21,12 +16,11 @@ const styles = (theme: Theme) =>
       overflowX: 'auto',
       padding: theme.spacing(4),
     },
-  });
+  }),
+);
 
-type Props = WithStyles<typeof styles>;
-
-const Welcome: React.FC<Props> = props => {
-  const { classes } = props;
+const Welcome: React.FC<{}> = () => {
+  const classes = useStyles();
   const [done, setDone] = useState(false);
 
   const htmlText = useMemo(() => md.render(mdText), []);
@@ -48,4 +42,4 @@ const Welcome: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(Welcome);
+export default Welcome;

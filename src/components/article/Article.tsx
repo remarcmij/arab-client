@@ -1,6 +1,6 @@
 import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
-import { match } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { Topic } from 'Types';
 import ArticleContent from './ArticleContent';
 import withNavBar from '../withNavBar';
@@ -25,7 +25,6 @@ interface Params {
 }
 
 type Props = {
-  match: match<Params>;
   setNavBackRoute: (to: string) => void;
   fetchArticle: (filename: string) => void;
   topic: Topic | null;
@@ -41,7 +40,7 @@ const Article: React.FC<Props> = props => {
     error,
     setNavBackRoute,
   } = props;
-  const { publication, article } = props.match.params;
+  const { publication, article } = useParams();
 
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;

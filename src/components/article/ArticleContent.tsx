@@ -1,20 +1,15 @@
 import Paper from '@material-ui/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import markdownIt from 'markdown-it';
 import * as React from 'react';
 import { Topic } from 'Types';
 import LemmaList from '../lemmas/LemmaList';
-import markdownIt from 'markdown-it';
 
 const md = markdownIt({ html: true });
 const arabicRegExp = /[\u0600-\u06ff]+/g;
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.up('md')]: {
@@ -34,13 +29,15 @@ const styles = (theme: Theme) =>
         color: theme.palette.primary.dark,
       },
     },
-  });
+  }),
+);
 
 type Props = {
   topic: Topic;
-} & WithStyles<typeof styles>;
+};
 
-const ArticleContent: React.FC<Props> = ({ topic, classes }) => {
+const ArticleContent: React.FC<Props> = ({ topic }) => {
+  const classes = useStyles();
   const { title, subtitle, sections, lemmas } = topic;
 
   return (
@@ -74,4 +71,4 @@ const ArticleContent: React.FC<Props> = ({ topic, classes }) => {
   );
 };
 
-export default withStyles(styles)(ArticleContent);
+export default ArticleContent;

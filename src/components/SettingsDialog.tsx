@@ -9,12 +9,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import withMobileDialog, {
   WithMobileDialog,
@@ -29,12 +24,12 @@ import {
   toggleVocalization,
 } from '../actions/settings';
 import {
-  ROMANIZATION_SYSTEM,
-  VOICE_NAME,
-  NULL_VOICE,
   EDIT_SETTINGS,
-  SHOW_VOCALIZATION,
+  NULL_VOICE,
+  ROMANIZATION_SYSTEM,
   SHOW_TRANSCRIPTION,
+  SHOW_VOCALIZATION,
+  VOICE_NAME,
 } from '../constants';
 import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
@@ -58,12 +53,13 @@ const mapStateToProps = (state: RootState) => ({
   voiceName: state.settings.voiceName,
 });
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 400,
     },
-  });
+  }),
+);
 
 interface OwnProps {
   open: boolean;
@@ -78,12 +74,12 @@ interface OwnProps {
   toggleTranscription: () => void;
 }
 
-type Props = OwnProps & WithMobileDialog & WithStyles<typeof styles>;
+type Props = Readonly<OwnProps & WithMobileDialog>;
 
 const SettingsDialog: React.FC<Props> = props => {
+  const classes = useStyles();
   const {
     fullScreen,
-    classes,
     onClose,
     open,
     showVocalization,
@@ -186,4 +182,4 @@ const SettingsDialog: React.FC<Props> = props => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withMobileDialog<OwnProps>()(withStyles(styles)(SettingsDialog)));
+)(withMobileDialog<OwnProps>()(SettingsDialog));

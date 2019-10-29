@@ -2,17 +2,33 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
-import { setAlert } from '../../actions/alert';
-import { signup } from '../../actions/auth';
+import { AlertType, setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 import * as C from '../../constants';
 import { RootState } from '../../reducers';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
+import Button from '@material-ui/core/Button';
 
 interface FormData {
   [key: string]: string;
 }
 
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  },
+}));
+
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ setAlert, signup }, dispatch);
+  bindActionCreators({ setAlert, register }, dispatch);
 
 const mapStateToProps = (state: RootState) => ({
   isAuthenticated: state.auth.isAuthenticated,
@@ -34,6 +50,8 @@ const Signup: React.FC<Props> = props => {
     password: '',
     password2: '',
   } as FormData);
+  const classes = useStyles();
+  const { t } = useTranslation();
 
   const { name, email, password, password2 } = formData;
 
@@ -43,9 +61,9 @@ const Signup: React.FC<Props> = props => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== password2) {
-      props.setAlert('Passwords do not match.', 'danger');
+      props.setAlert('Passwords do not match.', AlertType.Danger);
     } else {
-      props.signup({ name, email, password });
+      props.register({ name, email, password });
     }
   };
 
@@ -60,48 +78,66 @@ const Signup: React.FC<Props> = props => {
         <p className="lead">
           <i className="fas fa-user" /> {C.CREATE_ACCOUNT}
         </p>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder={C.NAME}
+        <form
+          className={classes.container}
+          onSubmit={handleSubmit}
+          noValidate={true}
+          autoComplete="off"
+        >
+          <div>
+            <TextField
+              label={t('label.name')}
+              className={classes.textField}
               name="name"
               required={true}
+              margin="normal"
               value={name}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <input
+          <div>
+            <TextField
+              className={classes.textField}
               type="email"
-              placeholder={C.EMAIL_ADDRESS}
+              label={t('label.email')}
               name="email"
               required={true}
+              margin="normal"
               value={email}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <input
+          <div>
+            <TextField
+              className={classes.textField}
               type="password"
-              placeholder={C.PASSWORD}
+              label={t('label.password')}
               name="password"
-              minLength={8}
+              inputProps={{ minLength: 8 }}
+              required={true}
+              margin="normal"
               value={password}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <input
+          <div>
+            <TextField
+              className={classes.textField}
               type="password"
-              placeholder={C.REPEAT_PASSWORD}
+              label={t('label.repeat_password')}
               name="password2"
-              minLength={8}
+              inputProps={{ minLength: 8 }}
+              required={true}
+              margin="normal"
               value={password2}
               onChange={handleChange}
             />
           </div>
-          <input type="submit" className="btn btn-primary" value={C.SIGNUP} />
+          <div>
+            <Button type="submit" variant="contained">
+              {t('register_button')}
+            </Button>
+          </div>
         </form>
         <p className="my-1">
           {C.ALREADY_HAVE_ACCOUNT} <Link to="/login">{C.LOGIN}</Link>
