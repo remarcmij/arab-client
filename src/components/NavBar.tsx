@@ -10,9 +10,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Search from '@material-ui/icons/Search';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, useHistory, useLocation } from 'react-router-dom';
-import SearchBoxContainer from '../containers/SearchBoxContainer';
+import { setNavBackRoute } from '../actions/navbar';
+import { RootState } from '../reducers';
 import MainDrawer from './MainDrawer';
+import SearchBox from './SearchBox';
 
 const useStyles = makeStyles({
   root: {
@@ -30,13 +33,13 @@ const useStyles = makeStyles({
 type Props = Readonly<{
   rightHandButtons?: React.ReactElement<any> | null;
   hideSearchButton?: boolean;
-  navBackRoute: string | null;
-  setNavBackRoute: (path: string) => void;
   onLeftMenu?: () => void;
   onRightMenu?: () => void;
 }>;
 
 const NavBar: React.FC<Props> = props => {
+  const dispatch = useDispatch();
+  const { navBackRoute } = useSelector((state: RootState) => state.navbar);
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
@@ -47,11 +50,11 @@ const NavBar: React.FC<Props> = props => {
   const handleToggleDrawer = () => setMainDrawerOpen(!mainDrawerOpen);
 
   const handleSearch = () => {
-    props.setNavBackRoute(history.location.pathname);
+    dispatch(setNavBackRoute(history.location.pathname));
     history.push('/search');
   };
 
-  const handleBack = () => history.push(props.navBackRoute || '/content');
+  const handleBack = () => history.push(navBackRoute || '/content');
 
   if (pathname === '/welcome') {
     return null;
@@ -86,7 +89,7 @@ const NavBar: React.FC<Props> = props => {
           <Route
             path="/search"
             exact={true}
-            render={() => <SearchBoxContainer onChange={() => undefined} />}
+            render={() => <SearchBox onChange={() => undefined} />}
           />
           <Route
             path="/content"

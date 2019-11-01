@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import { Lemma } from 'Types';
+import { searchLemmas } from '../actions/search';
 import SearchResultList from '../components/SearchResultList';
 import withNavBar from '../components/withNavBar';
 import WordClickHandler from '../components/WordClickHandler';
+import { RootState } from '../reducers';
 
 type Props = Readonly<{
-  lemmas: Lemma[];
-  searchLemmas: (term: string) => void;
   setNavBackRoute: (to: string) => void;
 }>;
 
 const SearchPage: React.FC<Props> = props => {
+  const dispatch = useDispatch();
+  const { lemmas } = useSelector((state: RootState) => state.search);
   const [lemma, setLemma] = useState<Lemma | null>(null);
-
-  const { searchLemmas } = props;
 
   const {
     location: { search },
@@ -24,10 +25,10 @@ const SearchPage: React.FC<Props> = props => {
     if (search) {
       const matches = decodeURI(search).match(/\bq=(.*)$/);
       if (matches) {
-        searchLemmas(matches[1]);
+        dispatch(searchLemmas(matches[1]));
       }
     }
-  }, [searchLemmas, search]);
+  }, [dispatch, search]);
 
   if (lemma) {
     const [publication, article] = lemma.filename.split('.');
@@ -37,9 +38,7 @@ const SearchPage: React.FC<Props> = props => {
 
   return (
     <WordClickHandler>
-      {props.lemmas && (
-        <SearchResultList lemmas={props.lemmas} onButtonClick={setLemma} />
-      )}
+      {lemmas && <SearchResultList lemmas={lemmas} onButtonClick={setLemma} />}
     </WordClickHandler>
   );
 };

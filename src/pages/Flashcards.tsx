@@ -1,43 +1,23 @@
 import Grid from '@material-ui/core/Grid';
-import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Topic } from 'Types';
+import { fetchArticle } from '../actions/content';
 import LemmaFlashcards from '../components/LemmaFlashcards';
 import withNavBar from '../components/withNavBar';
 import { RootState } from '../reducers';
 
-const mapStateToProps = (state: RootState) => ({
-  showVocalization: state.settings.showVocalization,
-  voiceName: state.settings.voiceName,
-});
-
-interface Params {
-  publication: string;
-  article: string;
-}
-
-type Props = {
+type Props = Readonly<{
   setNavBackRoute: (to: string) => void;
-  fetchArticle: (filename: string) => void;
-  topic: Topic | null;
-  loading: boolean;
-  error: any;
-  showVocalization: boolean;
-  voiceName: string;
-} & WithTheme;
+}>;
 
 const Flashcards: React.FC<Props> = props => {
+  const dispatch = useDispatch();
   const {
-    fetchArticle,
-    topic,
-    loading,
-    error,
-    setNavBackRoute,
-    showVocalization,
-    voiceName,
-  } = props;
+    content: { article: topic, loading, error },
+    settings: { showVocalization, voiceName },
+  } = useSelector((state: RootState) => state);
+  const { setNavBackRoute } = props;
   const { publication, article } = useParams();
 
   const filename = `${publication}.${article}`;
@@ -47,9 +27,9 @@ const Flashcards: React.FC<Props> = props => {
   useEffect(() => {
     setNavBackRoute(backTo);
     if (!topicLoaded) {
-      fetchArticle(filename);
+      dispatch(fetchArticle(filename));
     }
-  }, [fetchArticle, filename, topicLoaded, setNavBackRoute, backTo]);
+  }, [dispatch, filename, topicLoaded, setNavBackRoute, backTo]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -76,4 +56,4 @@ const Flashcards: React.FC<Props> = props => {
   );
 };
 
-export default connect(mapStateToProps)(withNavBar(withTheme(Flashcards)));
+export default withNavBar(Flashcards);

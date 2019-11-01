@@ -4,19 +4,13 @@ import pink from '@material-ui/core/colors/pink';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import { Lemma } from 'Types';
 import * as C from '../../constants';
 import { RootState } from '../../reducers';
 import Transcoder from '../../services/Transcoder';
-
-const mapStateToProps = (state: RootState) => ({
-  showVocalization: state.settings.showVocalization,
-  showTranscription: state.settings.showTranscription,
-  romanizationStandard: state.settings.romanizationStandard,
-});
 
 configureAnchors({
   offset: -73,
@@ -74,25 +68,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = Readonly<{
-  lemmas: Lemma[];
-  showVocalization: boolean;
-  showTranscription: boolean;
-  romanizationStandard: string;
-}>;
+type Props = Readonly<{ lemmas: Lemma[] }>;
 
-const LemmaList: React.FC<Props> = props => {
+const LemmaList: React.FC<Props> = ({ lemmas }) => {
   const classes = useStyles();
   const {
-    lemmas,
     showVocalization,
     showTranscription,
     romanizationStandard,
-  } = props;
-
+  } = useSelector((state: RootState) => state.settings);
   const history = useHistory();
   const { publication, article } = useParams();
-
   const [hashId, setHashId] = useState('');
   const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
 
@@ -153,4 +139,4 @@ const LemmaList: React.FC<Props> = props => {
   );
 };
 
-export default connect(mapStateToProps)(LemmaList);
+export default LemmaList;

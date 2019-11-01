@@ -3,7 +3,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../reducers';
 
 const useStyles = makeStyles({
@@ -13,12 +13,9 @@ const useStyles = makeStyles({
   },
 });
 
-const mapStateToProps = (state: RootState) => ({ alerts: state.alert });
-
-type Props = Readonly<ReturnType<typeof mapStateToProps>>;
-
-const Alert: React.FC<Props> = ({ alerts }) => {
+const Alert: React.FC<{}> = () => {
   const classes = useStyles();
+  const alerts = useSelector((state: RootState) => state.alert);
   if (alerts.length === 0) {
     return null;
   }
@@ -34,4 +31,4 @@ const Alert: React.FC<Props> = ({ alerts }) => {
   );
 };
 
-export default connect(mapStateToProps)(Alert);
+export default Alert;

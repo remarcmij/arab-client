@@ -4,10 +4,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
-import { setAlert } from '../actions/alert';
 import { localLogin } from '../actions/auth';
 import * as C from '../constants';
 import { RootState } from '../reducers';
@@ -29,19 +27,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ setAlert, localLogin }, dispatch);
-
-const mapStateToProps = (state: RootState) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-});
-
-type ReduxProps = ReturnType<typeof mapDispatchToProps> &
-  ReturnType<typeof mapStateToProps>;
-
-type Props = Readonly<ReduxProps>;
-
-const LoginPage: React.FC<Props> = props => {
+const LoginPage: React.FC<{}> = props => {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
 
   const [formData, setFormData] = useState({
@@ -56,10 +44,10 @@ const LoginPage: React.FC<Props> = props => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.localLogin({ email, password });
+    dispatch(localLogin({ email, password }));
   };
 
-  if (props.isAuthenticated) {
+  if (isAuthenticated) {
     return <Redirect to="/content" />;
   }
 
@@ -118,7 +106,4 @@ const LoginPage: React.FC<Props> = props => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(LoginPage);
+export default LoginPage;

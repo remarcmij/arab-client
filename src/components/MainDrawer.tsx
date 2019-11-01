@@ -11,9 +11,8 @@ import InfoIcon from '@material-ui/icons/Info';
 import Settings from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import { logout } from '../actions/auth';
 import * as C from '../constants';
 import { RootState } from '../reducers';
@@ -33,31 +32,18 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface OwnProps {
+type Props = Readonly<{
   open: boolean;
   toggleDrawer: () => void;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ logout }, dispatch);
-
-const mapStateToProps = (state: RootState) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user,
-});
-
-type ReduxProps = ReturnType<typeof mapDispatchToProps> &
-  ReturnType<typeof mapStateToProps>;
-
-type Props = Readonly<OwnProps & ReduxProps>;
+}>;
 
 const MainDrawer: React.FC<Props> = props => {
   const classes = useStyles();
-  const { open, toggleDrawer } = props;
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.user);
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
-
-  const { user } = props;
+  const { open, toggleDrawer } = props;
 
   const AboutLink = (p: any, ref: any) => <Link to="/about" {...p} />;
 
@@ -82,7 +68,7 @@ const MainDrawer: React.FC<Props> = props => {
             </ListItem>
           </List>
           <List>
-            <ListItem button={true} onClick={props.logout}>
+            <ListItem button={true} onClick={() => dispatch(logout())}>
               <ListItemIcon>
                 <Icon className={clsx(classes.icon, 'fa fa-sign-out-alt')} />
               </ListItemIcon>
@@ -136,7 +122,4 @@ const MainDrawer: React.FC<Props> = props => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(MainDrawer);
+export default MainDrawer;

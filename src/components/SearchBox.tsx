@@ -2,8 +2,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
 import latinize from 'latinize';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import AsyncSelect from 'react-select/async';
 import { ValueType } from 'react-select/lib/types';
+import { searchLemmas } from '../actions/search';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,7 +28,6 @@ export interface WordOption {
 
 type Props = Readonly<{
   onChange: (option: ValueType<WordOption>) => void;
-  searchLemmas: (term: string) => void;
 }>;
 
 interface LookupResponse {
@@ -55,6 +56,7 @@ const promiseOptions = (input: string) => {
 };
 
 const SearchBox: React.FC<Props> = props => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [inputValue, setInputValue] = useState('');
   const [isRtl, setIsRtl] = useState(false);
@@ -74,7 +76,7 @@ const SearchBox: React.FC<Props> = props => {
   const handleChange = (option: ValueType<WordOption>) => {
     if (option) {
       const { value } = option as WordOption;
-      props.searchLemmas(value);
+      dispatch(searchLemmas(value));
     }
   };
 

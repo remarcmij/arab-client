@@ -1,15 +1,14 @@
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import { AlertType, setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 import * as C from '../../constants';
 import { RootState } from '../../reducers';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
-import { useTranslation } from 'react-i18next';
-import Button from '@material-ui/core/Button';
 
 interface FormData {
   [key: string]: string;
@@ -27,31 +26,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ setAlert, register }, dispatch);
+const Signup: React.FC<{}> = () => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
 
-const mapStateToProps = (state: RootState) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-});
-
-type ReduxProps = ReturnType<typeof mapDispatchToProps> &
-  ReturnType<typeof mapStateToProps>;
-
-interface OwnProps {
-  // setAlert: () => any;
-}
-
-type Props = OwnProps & ReduxProps;
-
-const Signup: React.FC<Props> = props => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     password2: '',
   } as FormData);
-  const classes = useStyles();
-  const { t } = useTranslation();
 
   const { name, email, password, password2 } = formData;
 
@@ -61,13 +49,13 @@ const Signup: React.FC<Props> = props => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== password2) {
-      props.setAlert('Passwords do not match.', AlertType.Danger);
+      dispatch(setAlert('Passwords do not match.', AlertType.Danger));
     } else {
-      props.register({ name, email, password });
+      dispatch(register({ name, email, password }));
     }
   };
 
-  if (props.isAuthenticated) {
+  if (isAuthenticated) {
     return <Redirect to="/welcome" />;
   }
 
@@ -147,7 +135,4 @@ const Signup: React.FC<Props> = props => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Signup);
+export default Signup;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import ArticleListContainer from '../../containers/ArticleListContainer';
-import FlashcardsContainer from '../../containers/FlashcardsContainer';
-import PublicationListContainer from '../../containers/PublicationListContainer';
-import SearchPageContainer from '../../containers/SearchPageContainer';
+import ArticleList from '../../pages/ArticleList';
+import Flashcards from '../../pages/Flashcards';
+import PublicationList from '../../pages/PublicationList';
+import SearchPage from '../../pages/SearchPage';
 import AboutPage from '../../pages/About';
 import LoginPage from '../../pages/LoginPage';
 import Article from '../article/Article';
@@ -20,24 +20,20 @@ const Routes: React.FC<{}> = () => {
         <Route
           exact={true}
           path="/content/:publication"
-          component={ArticleListContainer}
+          component={ArticleList}
         />
         <Route
           exact={true}
           path="/content/:publication/:article/flashcards"
-          component={FlashcardsContainer}
+          component={Flashcards}
         />
         <Route
           exact={true}
           path="/content/:publication/:article"
           component={Article}
         />
-        <Route
-          exact={true}
-          path="/content"
-          component={PublicationListContainer}
-        />
-        <Route exact={true} path="/search" component={SearchPageContainer} />
+        <Route exact={true} path="/content" component={PublicationList} />
+        <Route exact={true} path="/search" component={SearchPage} />
         <Route exact={true} path="/about" component={AboutPage} />
         <Route exact={true} path="/login" component={LoginPage} />
         <Route exact={true} path="/signup" component={Signup} />

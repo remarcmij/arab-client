@@ -1,24 +1,16 @@
 import Menu from '@material-ui/core/Menu/Menu';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { LOOK_UP, READ_ALOUD } from '../constants';
 import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 
-const mapStateToProps = (state: RootState) => ({
-  voiceName: state.settings.voiceName,
-});
-
-type Props = {
-  voiceName: string;
-};
-
-const WordClickHandler: React.FC<Props> = props => {
+const WordClickHandler: React.FC<{}> = props => {
   const history = useHistory();
+  const { voiceName } = useSelector((state: RootState) => state.settings);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const { voiceName } = props;
 
   const openMenu = (e: React.MouseEvent) => {
     const { target } = e;
@@ -69,4 +61,4 @@ const WordClickHandler: React.FC<Props> = props => {
   );
 };
 
-export default connect(mapStateToProps)(WordClickHandler);
+export default WordClickHandler;

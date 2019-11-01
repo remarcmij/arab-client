@@ -2,9 +2,11 @@ import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
-import { Topic } from 'Types';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPublications } from '../actions/content';
 import PublicationListItem from '../components/PublicationListItem';
 import withNavbar from '../components/withNavBar';
+import { RootState } from '../reducers';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,25 +16,20 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = Readonly<{
-  fetchPublications: () => void;
-  topics: Topic[];
-  loading: boolean;
-  error: any;
-}>;
-
-const PublicationList: React.FC<Props> = props => {
+const PublicationList: React.FC<{}> = () => {
+  const dispatch = useDispatch();
+  const { publications: topics, loading, error } = useSelector(
+    (state: RootState) => state.content,
+  );
   const classes = useStyles();
-
-  const { fetchPublications, topics, loading, error } = props;
 
   const publicationsLoaded = topics.length !== 0;
 
   useEffect(() => {
     if (!publicationsLoaded) {
-      fetchPublications();
+      dispatch(fetchPublications());
     }
-  }, [fetchPublications, publicationsLoaded]);
+  }, [dispatch, publicationsLoaded]);
 
   if (loading) {
     return null;

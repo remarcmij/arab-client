@@ -2,11 +2,13 @@ import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Topic } from 'Types';
+import { fetchArticles } from '../actions/content';
 import ArticleListItem from '../components/ArticleListItem';
 import withNavBar from '../components/withNavBar';
 import LanguageContext from '../contexts/LanguageContext';
+import { RootState } from '../reducers';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,16 +20,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = Readonly<{
   setNavBackRoute: (to: string) => void;
-  fetchArticles: (publication: string) => void;
-  topics: Topic[];
-  loading: boolean;
-  error: any;
 }>;
 
 const ArticleList: React.FC<Props> = props => {
+  const dispatch = useDispatch();
+  const { articles: topics, loading, error } = useSelector(
+    (state: RootState) => state.content,
+  );
   const classes = useStyles();
-  const { fetchArticles, topics, loading, error, setNavBackRoute } = props;
   const { publication } = useParams();
+  const { setNavBackRoute } = props;
 
   const topicsLoaded =
     topics.length !== 0 && topics[0].publication === publication;
@@ -35,9 +37,9 @@ const ArticleList: React.FC<Props> = props => {
   useEffect(() => {
     setNavBackRoute('/content');
     if (!topicsLoaded && publication) {
-      fetchArticles(publication);
+      dispatch(fetchArticles(publication));
     }
-  }, [fetchArticles, publication, topicsLoaded, setNavBackRoute]);
+  }, [setNavBackRoute, dispatch, publication, topicsLoaded]);
 
   return (
     <React.Fragment>

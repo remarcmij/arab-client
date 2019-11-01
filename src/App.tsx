@@ -6,8 +6,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { loadUser } from './actions/auth';
 import Spinner from './components/common/Spinner';
+import NavBar from './components/NavBar';
 import Routes from './components/routes/Routes';
-import NavBarContainer from './containers/NavBarContainer';
 import Welcome from './pages/welcome/Welcome';
 import store from './store';
 import { storeToken } from './utils/token';
@@ -43,7 +43,7 @@ const App: React.FC<{}> = () => {
       <Provider store={store}>
         <Router>
           <div className={classes.root}>
-            <NavBarContainer />
+            <NavBar />
             <Container maxWidth="md">
               <Switch>
                 <Route exact={true} path="/welcome" component={Welcome} />
