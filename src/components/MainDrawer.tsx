@@ -11,10 +11,10 @@ import InfoIcon from '@material-ui/icons/Info';
 import Settings from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { logout } from '../actions/auth';
-import * as C from '../constants';
 import { RootState } from '../reducers';
 import SettingsDialog from './SettingsDialog';
 
@@ -41,6 +41,7 @@ const MainDrawer: React.FC<Props> = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
+  const { t } = useTranslation();
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const { open, toggleDrawer } = props;
@@ -64,7 +65,7 @@ const MainDrawer: React.FC<Props> = props => {
               <ListItemIcon>
                 <Settings />
               </ListItemIcon>
-              <ListItemText primary={C.EDIT_SETTINGS} />
+              <ListItemText primary={t('change_settings')} />
             </ListItem>
           </List>
           <List>
@@ -72,7 +73,7 @@ const MainDrawer: React.FC<Props> = props => {
               <ListItemIcon>
                 <Icon className={clsx(classes.icon, 'fa fa-sign-out-alt')} />
               </ListItemIcon>
-              <ListItemText primary={C.LOGOUT} />
+              <ListItemText primary={t('logout')} />
             </ListItem>
           </List>
           <Divider />
@@ -83,7 +84,7 @@ const MainDrawer: React.FC<Props> = props => {
             <ListItemIcon>
               <Icon className={clsx(classes.icon, 'fa fa-sign-in-alt')} />
             </ListItemIcon>
-            <ListItemText primary={C.LOGIN} />
+            <ListItemText primary={t('login')} />
           </ListItem>
         </List>
       )}
@@ -92,7 +93,7 @@ const MainDrawer: React.FC<Props> = props => {
           <ListItemIcon>
             <InfoIcon />
           </ListItemIcon>
-          <ListItemText primary={C.ABOUT_MENU_ITEM} />
+          <ListItemText primary={t('about')} />
         </ListItem>
       </List>
     </div>

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchArticles } from '../actions/content';
 import ArticleListItem from '../components/ArticleListItem';
-import withNavBar from '../components/withNavBar';
+import useNavBackRoute from '../components/useNavBackRoute';
 import LanguageContext from '../contexts/LanguageContext';
 import { RootState } from '../reducers';
 
@@ -18,28 +18,23 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = Readonly<{
-  setNavBackRoute: (to: string) => void;
-}>;
-
-const ArticleList: React.FC<Props> = props => {
+const ArticleList: React.FC = () => {
   const dispatch = useDispatch();
   const { articles: topics, loading, error } = useSelector(
     (state: RootState) => state.content,
   );
   const classes = useStyles();
   const { publication } = useParams();
-  const { setNavBackRoute } = props;
 
   const topicsLoaded =
     topics.length !== 0 && topics[0].publication === publication;
 
+  useNavBackRoute('/content');
   useEffect(() => {
-    setNavBackRoute('/content');
     if (!topicsLoaded && publication) {
       dispatch(fetchArticles(publication));
     }
-  }, [setNavBackRoute, dispatch, publication, topicsLoaded]);
+  }, [dispatch, publication, topicsLoaded]);
 
   return (
     <React.Fragment>
@@ -69,4 +64,4 @@ const ArticleList: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(ArticleList);
+export default ArticleList;

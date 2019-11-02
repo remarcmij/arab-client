@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPublications } from '../actions/content';
 import PublicationListItem from '../components/PublicationListItem';
-import withNavbar from '../components/withNavBar';
 import { RootState } from '../reducers';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const PublicationList: React.FC<{}> = () => {
+const PublicationList: React.FC = () => {
   const dispatch = useDispatch();
   const { publications: topics, loading, error } = useSelector(
     (state: RootState) => state.content,
@@ -50,4 +49,4 @@ const PublicationList: React.FC<{}> = () => {
   );
 };
 
-export default withNavbar(PublicationList);
+export default PublicationList;

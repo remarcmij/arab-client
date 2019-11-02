@@ -3,32 +3,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchArticle } from '../../actions/content';
 import { RootState } from '../../reducers';
-import withNavBar from '../withNavBar';
+import useNavBackRoute from '../useNavBackRoute';
 import WordClickHandler from '../WordClickHandler';
 import ArticleContent from './ArticleContent';
 
-type Props = Readonly<{
-  setNavBackRoute: (to: string) => void;
-}>;
-
-const Article: React.FC<Props> = props => {
+const Article: React.FC = () => {
   const { publication, article } = useParams();
   const dispatch = useDispatch();
   const { article: topic, loading, error } = useSelector(
     (state: RootState) => state.content,
   );
-
-  const { setNavBackRoute } = props;
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;
-  const backTo = `/content/${publication}`;
 
+  useNavBackRoute(`/content/${publication}`);
   useEffect(() => {
-    setNavBackRoute(backTo);
     if (!topicLoaded) {
       dispatch(fetchArticle(filename));
     }
-  }, [dispatch, filename, topicLoaded, setNavBackRoute, backTo]);
+  }, [dispatch, filename, topicLoaded]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -45,4 +38,4 @@ const Article: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(Article);
+export default Article;

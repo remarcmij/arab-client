@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { AlertType, setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
-import * as C from '../../constants';
 import { RootState } from '../../reducers';
 
 interface FormData {
@@ -62,9 +61,9 @@ const Signup: React.FC<{}> = () => {
   return (
     <>
       <section className="container">
-        <h1 className="blue-text">{C.SIGNUP}</h1>
+        <h1 className="blue-text">{t('sign_up')}</h1>
         <p className="lead">
-          <i className="fas fa-user" /> {C.CREATE_ACCOUNT}
+          <i className="fas fa-user" /> {t('create_account')}
         </p>
         <form
           className={classes.container}
@@ -74,7 +73,7 @@ const Signup: React.FC<{}> = () => {
         >
           <div>
             <TextField
-              label={t('label.name')}
+              label={t('name_label')}
               className={classes.textField}
               name="name"
               required={true}
@@ -87,7 +86,7 @@ const Signup: React.FC<{}> = () => {
             <TextField
               className={classes.textField}
               type="email"
-              label={t('label.email')}
+              label={t('email_label')}
               name="email"
               required={true}
               margin="normal"
@@ -99,7 +98,7 @@ const Signup: React.FC<{}> = () => {
             <TextField
               className={classes.textField}
               type="password"
-              label={t('label.password')}
+              label={t('password_label')}
               name="password"
               inputProps={{ minLength: 8 }}
               required={true}
@@ -112,7 +111,7 @@ const Signup: React.FC<{}> = () => {
             <TextField
               className={classes.textField}
               type="password"
-              label={t('label.repeat_password')}
+              label={t('repeat_password_label')}
               name="password2"
               inputProps={{ minLength: 8 }}
               required={true}
@@ -128,7 +127,7 @@ const Signup: React.FC<{}> = () => {
           </div>
         </form>
         <p className="my-1">
-          {C.ALREADY_HAVE_ACCOUNT} <Link to="/login">{C.LOGIN}</Link>
+          {t('have_account_already')} <Link to="/login">{t('login')}</Link>
         </p>
       </section>
     </>

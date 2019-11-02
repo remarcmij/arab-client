@@ -4,32 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchArticle } from '../actions/content';
 import LemmaFlashcards from '../components/LemmaFlashcards';
-import withNavBar from '../components/withNavBar';
+import useNavBackRoute from '../components/useNavBackRoute';
 import { RootState } from '../reducers';
 
-type Props = Readonly<{
-  setNavBackRoute: (to: string) => void;
-}>;
-
-const Flashcards: React.FC<Props> = props => {
+const Flashcards: React.FC = () => {
   const dispatch = useDispatch();
   const {
     content: { article: topic, loading, error },
     settings: { showVocalization, voiceName },
   } = useSelector((state: RootState) => state);
-  const { setNavBackRoute } = props;
   const { publication, article } = useParams();
 
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;
-  const backTo = `/content/${publication}/${article}`;
 
+  useNavBackRoute(`/content/${publication}/${article}`);
   useEffect(() => {
-    setNavBackRoute(backTo);
     if (!topicLoaded) {
       dispatch(fetchArticle(filename));
     }
-  }, [dispatch, filename, topicLoaded, setNavBackRoute, backTo]);
+  }, [dispatch, filename, topicLoaded]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -56,4 +50,4 @@ const Flashcards: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(Flashcards);
+export default Flashcards;

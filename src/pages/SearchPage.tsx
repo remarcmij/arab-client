@@ -4,15 +4,10 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { Lemma } from 'Types';
 import { searchLemmas } from '../actions/search';
 import SearchResultList from '../components/SearchResultList';
-import withNavBar from '../components/withNavBar';
 import WordClickHandler from '../components/WordClickHandler';
 import { RootState } from '../reducers';
 
-type Props = Readonly<{
-  setNavBackRoute: (to: string) => void;
-}>;
-
-const SearchPage: React.FC<Props> = props => {
+const SearchPage: React.FC = () => {
   const dispatch = useDispatch();
   const { lemmas } = useSelector((state: RootState) => state.search);
   const [lemma, setLemma] = useState<Lemma | null>(null);
@@ -43,4 +38,4 @@ const SearchPage: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(SearchPage);
+export default SearchPage;

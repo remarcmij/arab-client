@@ -4,11 +4,11 @@ import pink from '@material-ui/core/colors/pink';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import { Lemma } from 'Types';
-import * as C from '../../constants';
 import { RootState } from '../../reducers';
 import Transcoder from '../../services/Transcoder';
 
@@ -78,6 +78,7 @@ const LemmaList: React.FC<Props> = ({ lemmas }) => {
     romanizationStandard,
   } = useSelector((state: RootState) => state.settings);
   const history = useHistory();
+  const { t } = useTranslation();
   const { publication, article } = useParams();
   const [hashId, setHashId] = useState('');
   const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
@@ -131,7 +132,7 @@ const LemmaList: React.FC<Props> = ({ lemmas }) => {
     <>
       <div className={classes.buttonContainer}>
         <Button variant="outlined" color="primary" onClick={onGoFlashcards}>
-          {C.FLASHCARDS}
+          {t('flashcards')}
         </Button>
       </div>
       <ul className={classes.list}>{lemmas.map(renderLemma)}</ul>

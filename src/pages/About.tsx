@@ -1,8 +1,8 @@
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect } from 'react';
-import withNavBar from '../components/withNavBar';
+import React from 'react';
+import useNavBackRoute from '../components/useNavBackRoute';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,17 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = Readonly<{
-  setNavBackRoute: (to: string) => void;
-}>;
-
-const About: React.FC<Props> = props => {
+const About: React.FC = () => {
   const classes = useStyles();
-  const { setNavBackRoute } = props;
-
-  useEffect(() => {
-    setNavBackRoute('/content');
-  }, [setNavBackRoute]);
+  useNavBackRoute('/content');
 
   return (
     <Paper className={classes.root}>
@@ -40,4 +32,4 @@ const About: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(About);
+export default About;

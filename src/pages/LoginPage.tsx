@@ -4,10 +4,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { localLogin } from '../actions/auth';
-import * as C from '../constants';
 import { RootState } from '../reducers';
 
 interface FormData {
@@ -31,6 +31,7 @@ const LoginPage: React.FC<{}> = props => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -53,15 +54,14 @@ const LoginPage: React.FC<{}> = props => {
 
   return (
     <Paper classes={{ root: classes.root }}>
-      <Typography variant="h4">{C.LOGIN}</Typography>
+      <Typography variant="h4">{t('login')}</Typography>
       <Typography variant="subtitle1">
-        <i className="fas fa-user" /> {C.LOGIN_PROMPT}
+        <i className="fas fa-user" /> {t('login_prompt')}
       </Typography>
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
           <TextField
-            id="standard-password-input"
-            label={C.EMAIL_ADDRESS}
+            label={t('email_address')}
             name="email"
             className={classes.textField}
             type="email"
@@ -74,30 +74,24 @@ const LoginPage: React.FC<{}> = props => {
         </div>
         <div className="form-group">
           <TextField
-            id="standard-password-input"
-            label={C.PASSWORD}
+            label={t('password_label')}
             className={classes.textField}
             type="password"
             name="password"
             autoComplete="current-password"
             margin="normal"
+            required={true}
             inputProps={{ minLength: 8 }}
             value={password}
             onChange={handleChange}
           />
-          {/* <input
-            type="password"
-            placeholder={C.PASSWORD}
-            name="password"
-            minLength={8}
-            value={password}
-            onChange={handleChange}
-          /> */}
         </div>
-        <input type="submit" className="btn btn-primary" value={C.LOGIN} />
+        <button type="submit" className="btn btn-primary">
+          {t('login')}
+        </button>
       </form>
       <p className="my-1">
-        {C.NO_ACCOUNT_YET} <Link to="/signup">{C.SIGNUP}</Link>
+        {t('no_account_yet')} <Link to="/signup">{t('sign_up')}</Link>
       </p>
       <Button href="http://localhost:8080/auth/google">
         Login with Google

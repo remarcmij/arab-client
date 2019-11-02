@@ -9,12 +9,16 @@ import FormGroup from '@material-ui/core/FormGroup';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  useTheme,
+} from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
-import withMobileDialog, {
-  WithMobileDialog,
-} from '@material-ui/core/withMobileDialog';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setRomanizationSystem,
@@ -22,14 +26,6 @@ import {
   toggleTranscription,
   toggleVocalization,
 } from '../actions/settings';
-import {
-  EDIT_SETTINGS,
-  NULL_VOICE,
-  ROMANIZATION_SYSTEM,
-  SHOW_TRANSCRIPTION,
-  SHOW_VOCALIZATION,
-  VOICE_NAME,
-} from '../constants';
 import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
@@ -42,12 +38,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface OwnProps {
+interface Props {
   open: boolean;
   onClose: () => void;
 }
-
-type Props = Readonly<OwnProps & WithMobileDialog>;
 
 const SettingsDialog: React.FC<Props> = props => {
   const dispatch = useDispatch();
@@ -57,13 +51,16 @@ const SettingsDialog: React.FC<Props> = props => {
     romanizationStandard,
     voiceName,
   } = useSelector((state: RootState) => state.settings);
+  const { t } = useTranslation();
   const classes = useStyles();
-  const { fullScreen, onClose, open } = props;
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const { onClose, open } = props;
 
   const renderRomanizationSelect = () => (
     <FormControl>
       <InputLabel htmlFor="romanizationStandard-select">
-        {ROMANIZATION_SYSTEM}
+        {t('transcription_system')}
       </InputLabel>
       <Select
         value={romanizationStandard}
@@ -86,7 +83,7 @@ const SettingsDialog: React.FC<Props> = props => {
 
   const renderVoiceSelect = () => (
     <FormControl>
-      <InputLabel htmlFor="voice-select">{VOICE_NAME}</InputLabel>
+      <InputLabel htmlFor="voice-select">{t('voice_name')}</InputLabel>
       <Select
         value={voiceName}
         onChange={event => dispatch(setVoiceName(event.target.value as string))}
@@ -96,7 +93,7 @@ const SettingsDialog: React.FC<Props> = props => {
         }}
       >
         <MenuItem value="">
-          <em>{NULL_VOICE}</em>
+          <em>{t('no_voice')}</em>
         </MenuItem>
         {SpeechSynthesizer.getVoices()
           .filter(voice => voice.lang.startsWith('ar-'))
@@ -117,7 +114,9 @@ const SettingsDialog: React.FC<Props> = props => {
       aria-labelledby="responsive-dialog-title"
       classes={{ paper: classes.paper }}
     >
-      <DialogTitle id="responsive-dialog-title">{EDIT_SETTINGS}</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">
+        {t('change_settings')}
+      </DialogTitle>
       <DialogContent>
         <FormGroup>
           <FormControlLabel
@@ -127,7 +126,7 @@ const SettingsDialog: React.FC<Props> = props => {
                 onChange={() => dispatch(toggleVocalization())}
               />
             }
-            label={SHOW_VOCALIZATION}
+            label={t('show_vocalization')}
           />
           <FormControlLabel
             control={
@@ -136,7 +135,7 @@ const SettingsDialog: React.FC<Props> = props => {
                 onChange={() => dispatch(toggleTranscription())}
               />
             }
-            label={SHOW_TRANSCRIPTION}
+            label={t('show_transcription')}
           />
           {renderRomanizationSelect()}
           {renderVoiceSelect()}
@@ -151,4 +150,4 @@ const SettingsDialog: React.FC<Props> = props => {
   );
 };
 
-export default withMobileDialog<OwnProps>()(SettingsDialog);
+export default SettingsDialog;
