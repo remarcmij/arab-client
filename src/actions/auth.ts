@@ -12,6 +12,7 @@ import {
 } from './constants';
 import { fetchPublications } from './content';
 import { ThunkDispatchAny } from './types';
+import { setAlert, AlertType } from './alert';
 
 type Credentials = {
   name?: string;
@@ -86,6 +87,7 @@ export const localLogin = ({ email, password }: Credentials) => async (
     const res = await axios.post('/auth/login', body, config);
     saveToken(res.data.token);
     await dispatch(loadUser());
+    dispatch(setAlert('Successfully logged in', AlertType.Success));
   } catch (err) {
     handleApiErrors(err, dispatch);
     removeToken();

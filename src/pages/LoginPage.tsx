@@ -8,7 +8,9 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { localLogin } from '../actions/auth';
+import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
 import { RootState } from '../reducers';
+import Box from '@material-ui/core/Box';
 
 interface FormData {
   [key: string]: string;
@@ -16,18 +18,48 @@ interface FormData {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    container: {
+      display: 'flex',
+      [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+      },
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+      },
+    },
+    pane: {
+      flex: 1,
       padding: theme.spacing(4),
     },
+    socialMediaPane: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
     textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
+      width: '100%',
+    },
+    googleButton: {
+      padding: 0,
+    },
+    signInButton: {
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
+    },
+    link: {
+      textDecoration: 'none',
+      color: theme.palette.primary.dark,
+      fontWeight: 'bold',
     },
   }),
 );
 
-const LoginPage: React.FC<{}> = props => {
+const googleUrl =
+  process.env.NODE_ENV === 'production'
+    ? '/auth/google'
+    : 'http://localhost:8080/auth/google';
+
+const LoginPage: React.FC = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
@@ -53,27 +85,34 @@ const LoginPage: React.FC<{}> = props => {
   }
 
   return (
-    <Paper classes={{ root: classes.root }}>
-      <Typography variant="h4">{t('login')}</Typography>
-      <Typography variant="subtitle1">
-        <i className="fas fa-user" /> {t('login_prompt')}
-      </Typography>
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="form-group">
+    <Box mt={2} className={classes.container}>
+      <Paper classes={{ root: `${classes.pane} ${classes.socialMediaPane}` }}>
+        <Button href={googleUrl} classes={{ root: classes.googleButton }}>
+          <img src={googleImage} alt="Google" />
+        </Button>
+      </Paper>
+      <Box m={1} />
+      <Paper classes={{ root: classes.pane }}>
+        <Typography variant="h4" gutterBottom={true}>
+          {t('login')}
+        </Typography>
+        <Typography variant="body2">{t('login_prompt')}</Typography>
+        <form onSubmit={handleSubmit}>
           <TextField
+            variant="outlined"
             label={t('email_address')}
             name="email"
             className={classes.textField}
             type="email"
-            autoComplete="current-email"
+            // autoComplete="email"
+            autoFocus={true}
             margin="normal"
             required={true}
             value={email}
             onChange={handleChange}
           />
-        </div>
-        <div className="form-group">
           <TextField
+            variant="outlined"
             label={t('password_label')}
             className={classes.textField}
             type="password"
@@ -81,22 +120,28 @@ const LoginPage: React.FC<{}> = props => {
             autoComplete="current-password"
             margin="normal"
             required={true}
-            inputProps={{ minLength: 8 }}
             value={password}
             onChange={handleChange}
           />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          {t('login')}
-        </button>
-      </form>
-      <p className="my-1">
-        {t('no_account_yet')} <Link to="/signup">{t('sign_up')}</Link>
-      </p>
-      <Button href="http://localhost:8080/auth/google">
-        Login with Google
-      </Button>
-    </Paper>
+          <Box textAlign="right" my={2}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              classes={{ root: classes.signInButton }}
+            >
+              {t('login')}
+            </Button>
+          </Box>
+        </form>
+        <Typography variant="body1">
+          {t('no_account_yet')}{' '}
+          <Link to="/signup" className={classes.link}>
+            {t('register')}
+          </Link>
+        </Typography>
+      </Paper>
+    </Box>
   );
 };
 
