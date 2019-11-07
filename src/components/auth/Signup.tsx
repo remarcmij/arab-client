@@ -9,10 +9,6 @@ import { AlertType, setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 import { RootState } from '../../reducers';
 
-interface FormData {
-  [key: string]: string;
-}
-
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
@@ -25,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Signup: React.FC<{}> = () => {
+const Signup: React.FC = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -38,7 +34,7 @@ const Signup: React.FC<{}> = () => {
     email: '',
     password: '',
     password2: '',
-  } as FormData);
+  });
 
   const { name, email, password, password2 } = formData;
 

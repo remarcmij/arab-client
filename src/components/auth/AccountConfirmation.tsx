@@ -3,9 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from '../common/Spinner';
 
-type Props = {};
-
-const AccountConfirmation: React.FC<Props> = props => {
+const AccountConfirmation: React.FC = () => {
   const { token } = useParams();
   const [loading, setLoading] = useState(true);
   const [expired, setExpired] = useState(false);

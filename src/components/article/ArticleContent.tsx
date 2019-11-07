@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import markdownIt from 'markdown-it';
 import * as React from 'react';
-import { Topic } from 'Types';
+import { ITopic } from 'Types';
 import LemmaList from '../lemmas/LemmaList';
 
 const md = markdownIt({ html: true });
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  topic: Topic;
+  topic: ITopic;
 };
 
 const ArticleContent: React.FC<Props> = ({ topic }) => {

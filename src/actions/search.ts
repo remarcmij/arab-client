@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { Lemma } from 'Types';
+import { ILemma } from 'Types';
 import { action } from 'typesafe-actions';
 import handleApiErrors from '../utils/handleApiErrors';
 import { SEARCH_SUCCESS } from './constants';
 import { ThunkDispatchAny } from './types';
 
-export const searchSuccess = (lemmas: Lemma[]) =>
+export const searchSuccess = (lemmas: ILemma[]) =>
   action(SEARCH_SUCCESS, { lemmas });
 
 export const searchLemmas = (term: string) => async (

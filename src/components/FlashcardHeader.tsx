@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = Readonly<{
-  document: Types.Topic;
+  document: Types.ITopic;
   index: number;
   length: number;
 }>;

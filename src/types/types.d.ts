@@ -1,5 +1,5 @@
 declare module 'Types' {
-  export interface Lemma {
+  export interface ILemma {
     _id: string;
     native: string;
     foreign: string;
@@ -10,13 +10,13 @@ declare module 'Types' {
     topic: string;
   }
 
-  export interface Topic {
+  export interface ITopic {
     filename: string;
     publication: string;
     article: string;
     title: string;
     subtitle?: string;
     sections?: string[];
-    lemmas?: Lemma[];
+    lemmas?: ILemma[];
   }
 }

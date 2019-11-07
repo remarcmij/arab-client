@@ -1,9 +1,9 @@
-import { Lemma } from 'Types';
+import { ILemma } from 'Types';
 import { SEARCH_SUCCESS } from '../actions/constants';
 import { SearchActions } from '../actions/search';
 
 type State = Readonly<{
-  lemmas: Lemma[];
+  lemmas: ILemma[];
 }>;
 
 const initialState: State = {

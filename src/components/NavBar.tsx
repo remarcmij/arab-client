@@ -30,14 +30,7 @@ const useStyles = makeStyles({
   },
 });
 
-type Props = Readonly<{
-  rightHandButtons?: React.ReactElement<any> | null;
-  hideSearchButton?: boolean;
-  onLeftMenu?: () => void;
-  onRightMenu?: () => void;
-}>;
-
-const NavBar: React.FC<Props> = props => {
+const NavBar: React.FC = () => {
   const dispatch = useDispatch();
   const { navBackRoute } = useSelector((state: RootState) => state.navbar);
   const classes = useStyles();

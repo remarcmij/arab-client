@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Topic } from 'Types';
+import { ITopic } from 'Types';
 import { action } from 'typesafe-actions';
 import handleApiError from '../utils/handleApiErrors';
 import {
@@ -13,13 +13,13 @@ import { ThunkDispatchAny } from './types';
 
 const fetchStart = () => action(FETCH_START);
 
-const fetchPublicationsSuccess = (publications: Topic[]) =>
+const fetchPublicationsSuccess = (publications: ITopic[]) =>
   action(FETCH_PUBLICATIONS_SUCCESS, publications);
 
-const fetchArticlesSuccess = (articles: Topic[]) =>
+const fetchArticlesSuccess = (articles: ITopic[]) =>
   action(FETCH_ARTICLES_SUCCESS, articles);
 
-const fetchArticleSuccess = (article: Topic) =>
+const fetchArticleSuccess = (article: ITopic) =>
   action(FETCH_ARTICLE_SUCCESS, article);
 
 export const fetchError = (error: any) => action(FETCH_ERROR, error);

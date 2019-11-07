@@ -30,7 +30,7 @@ import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((_theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 400,
@@ -38,12 +38,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface Props {
+interface IProps {
   open: boolean;
   onClose: () => void;
 }
 
-const SettingsDialog: React.FC<Props> = props => {
+const SettingsDialog: React.FC<IProps> = props => {
   const dispatch = useDispatch();
   const {
     showVocalization,

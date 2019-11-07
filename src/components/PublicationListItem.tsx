@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 });
 
 type Props = Readonly<{
-  publication: Types.Topic;
+  publication: Types.ITopic;
 }>;
 
 const PublicationListItem: React.FC<Props> = props => {
@@ -30,6 +30,7 @@ const PublicationListItem: React.FC<Props> = props => {
   const ItemLink = React.forwardRef<LinkProps, any>((p, ref) => (
     <Link ref={ref} to={`/content/${publication}`} {...p} />
   ));
+  ItemLink.displayName = 'ItemLink';
 
   return (
     <ListItem component={ItemLink} button={true}>

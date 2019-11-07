@@ -6,6 +6,8 @@ type RomanizationStandard = {
   substitutions?: SubstitutionTuple[];
 };
 
+/* eslint-disable @typescript-eslint/camelcase */
+
 // See: https://en.wikipedia.org/wiki/Romanization_of_Arabic
 // Note: source files are encoded with the DIN romanizationStandard standard
 export const romanizationStandards: { [key: string]: RomanizationStandard } = {
@@ -68,6 +70,7 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
   },
 };
 
+// eslint-disable-next-line no-misleading-character-class
 const tashkeelRegExp = /[\u064c-\u065f\u0640\u0670]/g;
 
 class Transcoder {

@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface LookupResponse {
+interface ILookupResponse {
   words: Array<{ word: string; lang: string }>;
   term: string;
 }
@@ -28,7 +28,7 @@ const promiseOptions = (input: string) => {
   }
 
   return axios
-    .get<LookupResponse>(`/api/lookup?term=${input}`)
+    .get<ILookupResponse>(`/api/lookup?term=${input}`)
     .then(({ data }) => {
       const options = data.words.map(word => ({
         value: word.word,

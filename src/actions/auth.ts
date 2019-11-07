@@ -11,8 +11,9 @@ import {
   USER_LOADED,
 } from './constants';
 import { fetchPublications } from './content';
+import { setToast } from './toast';
 import { ThunkDispatchAny } from './types';
-import { setAlert, AlertType } from './alert';
+import i18next from 'i18next';
 
 type Credentials = {
   name?: string;
@@ -87,7 +88,7 @@ export const localLogin = ({ email, password }: Credentials) => async (
     const res = await axios.post('/auth/login', body, config);
     saveToken(res.data.token);
     await dispatch(loadUser());
-    dispatch(setAlert('Successfully logged in', AlertType.Success));
+    dispatch(setToast('success', i18next.t('login_success')));
   } catch (err) {
     handleApiErrors(err, dispatch);
     removeToken();

@@ -12,10 +12,6 @@ import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
 import { RootState } from '../reducers';
 import Box from '@material-ui/core/Box';
 
-interface FormData {
-  [key: string]: string;
-}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -68,7 +64,7 @@ const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-  } as FormData);
+  });
 
   const { email, password } = formData;
 

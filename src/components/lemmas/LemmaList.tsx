@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
-import { Lemma } from 'Types';
+import { ILemma } from 'Types';
 import { RootState } from '../../reducers';
 import Transcoder from '../../services/Transcoder';
 
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = Readonly<{ lemmas: Lemma[] }>;
+type Props = Readonly<{ lemmas: ILemma[] }>;
 
 const LemmaList: React.FC<Props> = ({ lemmas }) => {
   const classes = useStyles();
@@ -91,7 +91,7 @@ const LemmaList: React.FC<Props> = ({ lemmas }) => {
 
   const onGoFlashcards = () => setGoFlashcards(true);
 
-  const renderLemma = (lemma: Lemma, index: number) => {
+  const renderLemma = (lemma: ILemma, index: number) => {
     const arabicText = showVocalization
       ? lemma.foreign
       : Transcoder.stripTashkeel(lemma.foreign);

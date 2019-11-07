@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = Readonly<{
-  lemma: Types.Lemma;
+  lemma: Types.ILemma;
   showTranslation: boolean;
   showVocalization: boolean;
   voiceName: string;

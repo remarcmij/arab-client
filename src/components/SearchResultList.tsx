@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = Readonly<{
-  lemmas: Types.Lemma[];
-  onButtonClick: (lemma: Types.Lemma) => void;
+  lemmas: Types.ILemma[];
+  onButtonClick: (lemma: Types.ILemma) => void;
 }>;
 
 const SearchResultList: React.FC<Props> = props => {
@@ -54,7 +54,7 @@ const SearchResultList: React.FC<Props> = props => {
       map.set(lemma.topic, lemma);
     }
     return map;
-  }, new Map<string, Types.Lemma>());
+  }, new Map<string, Types.ILemma>());
 
   return (
     <>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
-import { Lemma } from 'Types';
+import { ILemma } from 'Types';
 import { searchLemmas } from '../actions/search';
 import SearchResultList from '../components/SearchResultList';
 import WordClickHandler from '../components/WordClickHandler';
@@ -10,7 +10,7 @@ import { RootState } from '../reducers';
 const SearchPage: React.FC = () => {
   const dispatch = useDispatch();
   const { lemmas } = useSelector((state: RootState) => state.search);
-  const [lemma, setLemma] = useState<Lemma | null>(null);
+  const [lemma, setLemma] = useState<ILemma | null>(null);
 
   const {
     location: { search },

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Alert: React.FC<{}> = () => {
+const Alert: React.FC = () => {
   const classes = useStyles();
   const alerts = useSelector((state: RootState) => state.alert);
   if (alerts.length === 0) {

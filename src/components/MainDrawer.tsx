@@ -46,7 +46,7 @@ const MainDrawer: React.FC<Props> = props => {
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const { open, toggleDrawer } = props;
 
-  const AboutLink = (p: any, ref: any) => <Link to="/about" {...p} />;
+  const AboutLink = (p: any) => <Link to="/about" {...p} />;
 
   const sideList = (
     <div className={classes.list}>

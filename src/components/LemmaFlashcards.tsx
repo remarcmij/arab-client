@@ -5,7 +5,7 @@ import Flashcard from './Flashcard';
 import FlashcardButtonBar from './FlashcardButtonBar';
 import FlashcardHeader from './FlashcardHeader';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((_theme: Theme) =>
   createStyles({
     root: {
       // To fix IE11 flex min-height bug
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = Readonly<{
-  document: Types.Topic;
+  document: Types.ITopic;
   showVocalization: boolean;
   voiceName: string;
 }>;

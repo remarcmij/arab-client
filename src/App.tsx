@@ -11,6 +11,7 @@ import Routes from './components/routes/Routes';
 import Welcome from './pages/welcome/Welcome';
 import store from './store';
 import { storeToken } from './utils/token';
+import SnackbarContainer from './components/SnackbarContainer';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
 const useStyles = makeStyles({
@@ -44,6 +45,7 @@ const App: React.FC<{}> = () => {
         <Router>
           <div className={classes.root}>
             <NavBar />
+            <SnackbarContainer />
             <Container maxWidth="md">
               <Switch>
                 <Route exact={true} path="/welcome" component={Welcome} />

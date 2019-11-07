@@ -9,12 +9,12 @@ import {
 import { ContentActions } from '../actions/content';
 import { AuthActions } from '../actions/auth';
 
-import { Topic } from 'Types';
+import { ITopic } from 'Types';
 
 type State = Readonly<{
-  publications: Topic[];
-  articles: Topic[];
-  article: Topic | null;
+  publications: ITopic[];
+  articles: ITopic[];
+  article: ITopic | null;
   loading: boolean;
   error: any;
 }>;
