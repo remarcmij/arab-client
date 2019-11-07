@@ -1,6 +1,5 @@
 // tslint:disable no-import-side-effect
 
-import 'core-js/es7/object';
 import 'github-markdown-css';
 import 'normalize.css';
 import React from 'react';
