@@ -86,11 +86,7 @@ const NavBar: React.FC<Props> = props => {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {t('app_title')}
           </Typography>
-          <Route
-            path="/search"
-            exact={true}
-            render={() => <SearchBox onChange={() => undefined} />}
-          />
+          <Route path="/search" exact={true} render={() => <SearchBox />} />
           <Route
             path="/content"
             render={() => (

@@ -2,9 +2,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
 import latinize from 'latinize';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { ActionMeta, OptionTypeBase, ValueType } from 'react-select';
 import AsyncSelect from 'react-select/async';
-import { ValueType } from 'react-select/lib/types';
 import { searchLemmas } from '../actions/search';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,22 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface WordDef {
-  word: string;
-  lang: string;
-}
-
-export interface WordOption {
-  value: string;
-  label: string;
-}
-
-type Props = Readonly<{
-  onChange: (option: ValueType<WordOption>) => void;
-}>;
-
 interface LookupResponse {
-  words: WordDef[];
+  words: Array<{ word: string; lang: string }>;
   term: string;
 }
 
@@ -50,14 +37,15 @@ const promiseOptions = (input: string) => {
       return options;
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return [];
     });
 };
 
-const SearchBox: React.FC<Props> = props => {
+const SearchBox: React.FC = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState('');
   const [isRtl, setIsRtl] = useState(false);
 
@@ -73,16 +61,19 @@ const SearchBox: React.FC<Props> = props => {
     setInputValue(value);
   };
 
-  const handleChange = (option: ValueType<WordOption>) => {
-    if (option) {
-      const { value } = option as WordOption;
+  const handleChange = (
+    option: ValueType<OptionTypeBase>,
+    action: ActionMeta,
+  ) => {
+    if (action.action === 'select-option') {
+      const { value } = option as OptionTypeBase;
       dispatch(searchLemmas(value));
     }
   };
 
   return (
     <AsyncSelect
-      placeholder="Zoek..."
+      placeholder={t('search_placeholder')}
       cacheOptions={true}
       loadOptions={promiseOptions}
       className={classes.select}
