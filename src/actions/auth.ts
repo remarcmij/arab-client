@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { action } from 'typesafe-actions';
-import handleApiErrors from '../utils/handleApiErrors';
+import handleAxiosErrors from '../utils/handleAxiosErrors';
 import { removeToken, storeToken as saveToken } from '../utils/token';
 import {
   AUTH_ERROR,
@@ -66,7 +66,7 @@ export const register = ({ name, email, password }: Credentials) => async (
   } catch (err) {
     removeToken();
     dispatch(registerFail());
-    handleApiErrors(err, dispatch);
+    handleAxiosErrors(err, dispatch);
   }
 };
 
@@ -90,7 +90,7 @@ export const localLogin = ({ email, password }: Credentials) => async (
     await dispatch(loadUser());
     dispatch(setToast('success', i18next.t('login_success')));
   } catch (err) {
-    handleApiErrors(err, dispatch);
+    handleAxiosErrors(err, dispatch);
     removeToken();
     dispatch(loginFailure());
   }

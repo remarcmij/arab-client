@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ILemma } from 'Types';
 import { action } from 'typesafe-actions';
-import handleApiErrors from '../utils/handleApiErrors';
+import handleAxiosErrors from '../utils/handleAxiosErrors';
 import { SEARCH_SUCCESS } from './constants';
 import { ThunkDispatchAny } from './types';
 
@@ -15,7 +15,7 @@ export const searchLemmas = (term: string) => async (
     const res = await axios(`/api/search?term=${term}`);
     dispatch(searchSuccess(res.data));
   } catch (err) {
-    handleApiErrors(err, dispatch);
+    handleAxiosErrors(err, dispatch);
   }
 };
 

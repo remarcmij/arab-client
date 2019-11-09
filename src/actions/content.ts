@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ITopic } from 'Types';
 import { action } from 'typesafe-actions';
-import handleApiError from '../utils/handleApiErrors';
+import handleAxiosErrors from '../utils/handleAxiosErrors';
 import {
   FETCH_ARTICLES_SUCCESS,
   FETCH_ARTICLE_SUCCESS,
@@ -37,7 +37,7 @@ export const fetchPublications = () => async (dispatch: ThunkDispatchAny) => {
     const res = await axios('/api');
     dispatch(fetchPublicationsSuccess(res.data));
   } catch (err) {
-    handleApiError(err, dispatch);
+    handleAxiosErrors(err, dispatch);
   }
 };
 
@@ -55,7 +55,7 @@ export const fetchArticles = (publication: string) => async (
         status: err.response.status,
       }),
     );
-    handleApiError(err, dispatch);
+    handleAxiosErrors(err, dispatch);
   }
 };
 
@@ -67,6 +67,6 @@ export const fetchArticle = (filename: string) => async (
     const res = await axios(`/api/article/${filename}`);
     dispatch(fetchArticleSuccess(res.data));
   } catch (err) {
-    handleApiError(err, dispatch);
+    handleAxiosErrors(err, dispatch);
   }
 };

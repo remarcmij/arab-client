@@ -9,12 +9,10 @@ import LoginPage from '../../pages/LoginPage';
 import Article from '../article/Article';
 import AccountConfirmation from '../auth/AccountConfirmation';
 import Signup from '../auth/Signup';
-import Alert from '../layout/Alert';
 
 const Routes: React.FC<{}> = () => {
   return (
     <section>
-      <Alert />
       <Switch>
         <Redirect exact={true} from="/" to="/content" />
         <Route

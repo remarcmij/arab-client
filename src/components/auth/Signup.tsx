@@ -1,12 +1,13 @@
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import i18next from 'i18next';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { AlertType, setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
+import { setToast } from '../../actions/toast';
 import { RootState } from '../../reducers';
 
 const useStyles = makeStyles(theme => ({
@@ -44,7 +45,7 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== password2) {
-      dispatch(setAlert('Passwords do not match.', AlertType.Danger));
+      dispatch(setToast('error', i18next.t('passwords_mismatch')));
     } else {
       dispatch(register({ name, email, password }));
     }

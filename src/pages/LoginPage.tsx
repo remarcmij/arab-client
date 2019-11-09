@@ -100,7 +100,6 @@ const LoginPage: React.FC = () => {
             name="email"
             className={classes.textField}
             type="email"
-            // autoComplete="email"
             autoFocus={true}
             margin="normal"
             required={true}
