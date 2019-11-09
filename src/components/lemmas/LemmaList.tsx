@@ -1,27 +1,16 @@
 import Button from '@material-ui/core/Button';
 import grey from '@material-ui/core/colors/grey';
 import pink from '@material-ui/core/colors/pink';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect, useState } from 'react';
-import { match, Redirect, RouteComponentProps, withRouter } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
-import { Lemma } from 'Types';
-import * as C from '../../constants';
-import Transcoder from '../../services/Transcoder';
-import { connect } from 'react-redux';
+import { ILemma } from 'Types';
 import { RootState } from '../../reducers';
-
-const mapStateToProps = (state: RootState) => ({
-  showVocalization: state.settings.showVocalization,
-  showTranscription: state.settings.showTranscription,
-  romanizationStandard: state.settings.romanizationStandard,
-});
+import Transcoder from '../../services/Transcoder';
 
 configureAnchors({
   offset: -73,
@@ -30,8 +19,8 @@ configureAnchors({
 
 const arabicWordRegExp = /[\u0600-\u06FF]+/g;
 
-const styles = (theme: Theme) => {
-  return createStyles({
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
     buttonContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -76,34 +65,21 @@ const styles = (theme: Theme) => {
     hashMatch: {
       backgroundColor: `${pink[50]}!important`,
     },
-  });
-};
+  }),
+);
 
-interface Params {
-  publication: string;
-  article: string;
-}
+type Props = Readonly<{ lemmas: ILemma[] }>;
 
-type Props = {
-  match: match<Params>;
-  lemmas: Lemma[];
-  showVocalization: boolean;
-  showTranscription: boolean;
-  romanizationStandard: string;
-} & RouteComponentProps &
-  WithStyles<typeof styles>;
-
-const LemmaList: React.FC<Props> = props => {
+const LemmaList: React.FC<Props> = ({ lemmas }) => {
+  const classes = useStyles();
   const {
-    lemmas,
-    classes,
-    history,
     showVocalization,
     showTranscription,
     romanizationStandard,
-  } = props;
-  const { publication, article } = props.match.params;
-
+  } = useSelector((state: RootState) => state.settings);
+  const history = useHistory();
+  const { t } = useTranslation();
+  const { publication, article } = useParams();
   const [hashId, setHashId] = useState('');
   const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
 
@@ -115,7 +91,7 @@ const LemmaList: React.FC<Props> = props => {
 
   const onGoFlashcards = () => setGoFlashcards(true);
 
-  const renderLemma = (lemma: Lemma, index: number) => {
+  const renderLemma = (lemma: ILemma, index: number) => {
     const arabicText = showVocalization
       ? lemma.foreign
       : Transcoder.stripTashkeel(lemma.foreign);
@@ -156,7 +132,7 @@ const LemmaList: React.FC<Props> = props => {
     <>
       <div className={classes.buttonContainer}>
         <Button variant="outlined" color="primary" onClick={onGoFlashcards}>
-          {C.FLASHCARDS}
+          {t('flashcards')}
         </Button>
       </div>
       <ul className={classes.list}>{lemmas.map(renderLemma)}</ul>
@@ -164,6 +140,4 @@ const LemmaList: React.FC<Props> = props => {
   );
 };
 
-export default connect(mapStateToProps)(
-  withRouter(withStyles(styles)(LemmaList)),
-);
+export default LemmaList;

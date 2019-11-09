@@ -1,10 +1,5 @@
 import Paper from '@material-ui/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import React, { useContext } from 'react';
@@ -13,7 +8,7 @@ import LanguageContext from '../contexts/LanguageContext';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import Transcoder from '../services/Transcoder';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -42,14 +37,15 @@ const styles = (theme: Theme) =>
         fontWeight: theme.typography.fontWeightMedium,
       },
     },
-  });
+  }),
+);
 
-type Props = {
-  lemma: Types.Lemma;
+type Props = Readonly<{
+  lemma: Types.ILemma;
   showTranslation: boolean;
   showVocalization: boolean;
   voiceName: string;
-} & WithStyles<typeof styles>;
+}>;
 
 // tslint:disable:no-floating-promises
 
@@ -65,13 +61,8 @@ const handleClick = (props: Props) => {
 };
 
 const Flashcard: React.FC<Props> = props => {
-  const {
-    lemma,
-    showTranslation,
-    showVocalization,
-    voiceName,
-    classes,
-  } = props;
+  const { lemma, showTranslation, showVocalization, voiceName } = props;
+  const classes = useStyles();
   const { sourceLang, targetLang } = useContext(LanguageContext);
 
   if (voiceName) {
@@ -117,4 +108,4 @@ const Flashcard: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(Flashcard);
+export default Flashcard;

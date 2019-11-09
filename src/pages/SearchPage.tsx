@@ -1,51 +1,29 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
 import React, { useEffect, useState } from 'react';
-import { Redirect, RouteComponentProps } from 'react-router';
-import { Lemma } from 'Types';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, useHistory } from 'react-router-dom';
+import { ILemma } from 'Types';
+import { searchLemmas } from '../actions/search';
 import SearchResultList from '../components/SearchResultList';
-import withNavBar from '../components/withNavBar';
 import WordClickHandler from '../components/WordClickHandler';
+import { RootState } from '../reducers';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      marginTop: theme.spacing(1),
-      overflowX: 'auto',
-      padding: theme.spacing(4),
-    },
-  });
-
-type Props = {
-  lemmas: Lemma[];
-  searchLemmas: (term: string) => void;
-  setNavBackRoute: (to: string) => void;
-} & RouteComponentProps &
-  WithStyles<typeof styles>;
-
-const SearchPage: React.FC<Props> = props => {
-  const [lemma, setLemma] = useState<Lemma | null>(null);
+const SearchPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const { lemmas } = useSelector((state: RootState) => state.search);
+  const [lemma, setLemma] = useState<ILemma | null>(null);
 
   const {
-    searchLemmas,
-    history: {
-      location: { search },
-    },
-  } = props;
+    location: { search },
+  } = useHistory();
 
   useEffect(() => {
     if (search) {
       const matches = decodeURI(search).match(/\bq=(.*)$/);
       if (matches) {
-        searchLemmas(matches[1]);
+        dispatch(searchLemmas(matches[1]));
       }
     }
-  }, [searchLemmas, search]);
+  }, [dispatch, search]);
 
   if (lemma) {
     const [publication, article] = lemma.filename.split('.');
@@ -55,11 +33,9 @@ const SearchPage: React.FC<Props> = props => {
 
   return (
     <WordClickHandler>
-      {props.lemmas && (
-        <SearchResultList lemmas={props.lemmas} onButtonClick={setLemma} />
-      )}
+      {lemmas && <SearchResultList lemmas={lemmas} onButtonClick={setLemma} />}
     </WordClickHandler>
   );
 };
 
-export default withNavBar(withStyles(styles)(SearchPage));
+export default SearchPage;

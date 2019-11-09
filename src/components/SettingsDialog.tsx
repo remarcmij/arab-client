@@ -11,96 +11,61 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import {
   createStyles,
+  makeStyles,
   Theme,
-  withStyles,
-  WithStyles,
+  useTheme,
 } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
-import withMobileDialog, {
-  WithMobileDialog,
-} from '@material-ui/core/withMobileDialog';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React from 'react';
-import { connect } from 'react-redux';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   setRomanizationSystem,
   setVoiceName,
   toggleTranscription,
   toggleVocalization,
 } from '../actions/settings';
-import {
-  ROMANIZATION_SYSTEM,
-  VOICE_NAME,
-  NULL_VOICE,
-  EDIT_SETTINGS,
-  SHOW_VOCALIZATION,
-  SHOW_TRANSCRIPTION,
-} from '../constants';
 import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 import { romanizationStandards } from '../services/Transcoder';
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators(
-    {
-      setRomanizationSystem,
-      setVoiceName,
-      toggleTranscription,
-      toggleVocalization,
-    },
-    dispatch,
-  );
-
-const mapStateToProps = (state: RootState) => ({
-  showVocalization: state.settings.showVocalization,
-  showTranscription: state.settings.showTranscription,
-  romanizationStandard: state.settings.romanizationStandard,
-  voiceName: state.settings.voiceName,
-});
-
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((_theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 400,
     },
-  });
+  }),
+);
 
-interface OwnProps {
+interface IProps {
   open: boolean;
   onClose: () => void;
-  showVocalization: boolean;
-  showTranscription: boolean;
-  romanizationStandard: string;
-  voiceName: string;
-  setRomanizationSystem: (value: string) => void;
-  setVoiceName: (value: string) => void;
-  toggleVocalization: () => void;
-  toggleTranscription: () => void;
 }
 
-type Props = OwnProps & WithMobileDialog & WithStyles<typeof styles>;
-
-const SettingsDialog: React.FC<Props> = props => {
+const SettingsDialog: React.FC<IProps> = props => {
+  const dispatch = useDispatch();
   const {
-    fullScreen,
-    classes,
-    onClose,
-    open,
     showVocalization,
     showTranscription,
     romanizationStandard,
     voiceName,
-  } = props;
+  } = useSelector((state: RootState) => state.settings);
+  const { t } = useTranslation();
+  const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const { onClose, open } = props;
 
   const renderRomanizationSelect = () => (
     <FormControl>
       <InputLabel htmlFor="romanizationStandard-select">
-        {ROMANIZATION_SYSTEM}
+        {t('transcription_system')}
       </InputLabel>
       <Select
         value={romanizationStandard}
         onChange={event =>
-          props.setRomanizationSystem(event.target.value as string)
+          dispatch(setRomanizationSystem(event.target.value as string))
         }
         inputProps={{
           name: 'romanization',
@@ -118,17 +83,17 @@ const SettingsDialog: React.FC<Props> = props => {
 
   const renderVoiceSelect = () => (
     <FormControl>
-      <InputLabel htmlFor="voice-select">{VOICE_NAME}</InputLabel>
+      <InputLabel htmlFor="voice-select">{t('voice_name')}</InputLabel>
       <Select
         value={voiceName}
-        onChange={event => props.setVoiceName(event.target.value as string)}
+        onChange={event => dispatch(setVoiceName(event.target.value as string))}
         inputProps={{
           name: 'voice',
           id: 'voice-select',
         }}
       >
         <MenuItem value="">
-          <em>{NULL_VOICE}</em>
+          <em>{t('no_voice')}</em>
         </MenuItem>
         {SpeechSynthesizer.getVoices()
           .filter(voice => voice.lang.startsWith('ar-'))
@@ -149,26 +114,28 @@ const SettingsDialog: React.FC<Props> = props => {
       aria-labelledby="responsive-dialog-title"
       classes={{ paper: classes.paper }}
     >
-      <DialogTitle id="responsive-dialog-title">{EDIT_SETTINGS}</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">
+        {t('change_settings')}
+      </DialogTitle>
       <DialogContent>
         <FormGroup>
           <FormControlLabel
             control={
               <Switch
                 checked={showVocalization}
-                onChange={() => props.toggleVocalization()}
+                onChange={() => dispatch(toggleVocalization())}
               />
             }
-            label={SHOW_VOCALIZATION}
+            label={t('show_vocalization')}
           />
           <FormControlLabel
             control={
               <Switch
                 checked={showTranscription}
-                onChange={() => props.toggleTranscription()}
+                onChange={() => dispatch(toggleTranscription())}
               />
             }
-            label={SHOW_TRANSCRIPTION}
+            label={t('show_transcription')}
           />
           {renderRomanizationSelect()}
           {renderVoiceSelect()}
@@ -183,7 +150,4 @@ const SettingsDialog: React.FC<Props> = props => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withMobileDialog<OwnProps>()(withStyles(styles)(SettingsDialog)));
+export default SettingsDialog;

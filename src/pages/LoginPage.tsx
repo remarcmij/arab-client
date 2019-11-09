@@ -1,57 +1,70 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
-import { setAlert } from '../actions/alert';
-import { localLogin } from '../actions/auth';
-import * as C from '../constants';
-import { RootState } from '../reducers';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import { localLogin } from '../actions/auth';
+import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
+import { RootState } from '../reducers';
+import Box from '@material-ui/core/Box';
 
-interface FormData {
-  [key: string]: string;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ setAlert, localLogin }, dispatch);
-
-const mapStateToProps = (state: RootState) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-});
-
-type ReduxProps = ReturnType<typeof mapDispatchToProps> &
-  ReturnType<typeof mapStateToProps>;
-
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    container: {
+      display: 'flex',
+      [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+      },
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+      },
+    },
+    pane: {
+      flex: 1,
       padding: theme.spacing(4),
     },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
+    socialMediaPane: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
-  });
+    textField: {
+      width: '100%',
+    },
+    googleButton: {
+      padding: 0,
+    },
+    signInButton: {
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
+    },
+    link: {
+      textDecoration: 'none',
+      color: theme.palette.primary.dark,
+      fontWeight: 'bold',
+    },
+  }),
+);
 
-type Props = WithStyles<typeof styles> & ReduxProps;
+const googleUrl =
+  process.env.NODE_ENV === 'production'
+    ? '/auth/google'
+    : 'http://localhost:8080/auth/google';
 
-const LoginPage: React.FC<Props> = props => {
-  const { classes } = props;
+const LoginPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const classes = useStyles();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-  } as FormData);
+  });
 
   const { email, password } = formData;
 
@@ -60,69 +73,71 @@ const LoginPage: React.FC<Props> = props => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.localLogin({ email, password });
+    dispatch(localLogin({ email, password }));
   };
 
-  if (props.isAuthenticated) {
+  if (isAuthenticated) {
     return <Redirect to="/content" />;
   }
 
   return (
-    <Paper classes={{ root: classes.root }}>
-      <Typography variant="h4">{C.LOGIN}</Typography>
-      <Typography variant="subtitle1">
-        <i className="fas fa-user" /> {C.LOGIN_PROMPT}
-      </Typography>
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="form-group">
+    <Box mt={2} className={classes.container}>
+      <Paper classes={{ root: `${classes.pane} ${classes.socialMediaPane}` }}>
+        <Button href={googleUrl} classes={{ root: classes.googleButton }}>
+          <img src={googleImage} alt="Google" />
+        </Button>
+      </Paper>
+      <Box m={1} />
+      <Paper classes={{ root: classes.pane }}>
+        <Typography variant="h4" gutterBottom={true}>
+          {t('login')}
+        </Typography>
+        <Typography variant="body2">{t('login_prompt')}</Typography>
+        <form onSubmit={handleSubmit}>
           <TextField
-            id="standard-password-input"
-            label={C.EMAIL_ADDRESS}
+            variant="outlined"
+            label={t('email_address')}
             name="email"
             className={classes.textField}
             type="email"
-            autoComplete="current-email"
+            autoFocus={true}
             margin="normal"
             required={true}
             value={email}
             onChange={handleChange}
           />
-        </div>
-        <div className="form-group">
           <TextField
-            id="standard-password-input"
-            label={C.PASSWORD}
+            variant="outlined"
+            label={t('password_label')}
             className={classes.textField}
             type="password"
             name="password"
             autoComplete="current-password"
             margin="normal"
-            inputProps={{ minLength: 8 }}
+            required={true}
             value={password}
             onChange={handleChange}
           />
-          {/* <input
-            type="password"
-            placeholder={C.PASSWORD}
-            name="password"
-            minLength={8}
-            value={password}
-            onChange={handleChange}
-          /> */}
-        </div>
-        <input type="submit" className="btn btn-primary" value={C.LOGIN} />
-      </form>
-      <p className="my-1">
-        {C.NO_ACCOUNT_YET} <Link to="/signup">{C.SIGNUP}</Link>
-      </p>
-      <Button href="http://localhost:8080/auth/google">
-        Login with Google
-      </Button>
-    </Paper>
+          <Box textAlign="right" my={2}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              classes={{ root: classes.signInButton }}
+            >
+              {t('login')}
+            </Button>
+          </Box>
+        </form>
+        <Typography variant="body1">
+          {t('no_account_yet')}{' '}
+          <Link to="/signup" className={classes.link}>
+            {t('register')}
+          </Link>
+        </Typography>
+      </Paper>
+    </Box>
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(styles)(LoginPage));
+export default LoginPage;

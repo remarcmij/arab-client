@@ -1,17 +1,12 @@
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForwardIos';
 import React from 'react';
 import Types from 'Types';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(2),
@@ -43,22 +38,23 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'center',
     },
-  });
+  }),
+);
 
-type Props = {
-  lemmas: Types.Lemma[];
-  onButtonClick: (lemma: Types.Lemma) => void;
-} & WithStyles<typeof styles>;
+type Props = Readonly<{
+  lemmas: Types.ILemma[];
+  onButtonClick: (lemma: Types.ILemma) => void;
+}>;
 
 const SearchResultList: React.FC<Props> = props => {
-  const { classes } = props;
+  const classes = useStyles();
 
   const lemmaMap = props.lemmas.reduce((map, lemma) => {
     if (!map.has(lemma.topic)) {
       map.set(lemma.topic, lemma);
     }
     return map;
-  }, new Map<string, Types.Lemma>());
+  }, new Map<string, Types.ILemma>());
 
   return (
     <>
@@ -91,4 +87,4 @@ const SearchResultList: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(SearchResultList);
+export default SearchResultList;

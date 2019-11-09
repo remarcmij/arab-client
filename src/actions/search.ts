@@ -1,22 +1,21 @@
 import axios from 'axios';
-import { AnyAction } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-import { Lemma } from 'Types';
+import { ILemma } from 'Types';
 import { action } from 'typesafe-actions';
-import handleApiErrors from '../utils/handleApiErrors';
+import handleAxiosErrors from '../utils/handleAxiosErrors';
 import { SEARCH_SUCCESS } from './constants';
+import { ThunkDispatchAny } from './types';
 
-export const searchSuccess = (lemmas: Lemma[]) =>
+export const searchSuccess = (lemmas: ILemma[]) =>
   action(SEARCH_SUCCESS, { lemmas });
 
-export const searchLemmas = (
-  term: string,
-): ThunkAction<void, void, void, AnyAction> => async dispatch => {
+export const searchLemmas = (term: string) => async (
+  dispatch: ThunkDispatchAny,
+) => {
   try {
     const res = await axios(`/api/search?term=${term}`);
     dispatch(searchSuccess(res.data));
   } catch (err) {
-    handleApiErrors(err, dispatch);
+    handleAxiosErrors(err, dispatch);
   }
 };
 

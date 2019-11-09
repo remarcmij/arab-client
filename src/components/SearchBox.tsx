@@ -1,42 +1,24 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
 import latinize from 'latinize';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { ActionMeta, OptionTypeBase, ValueType } from 'react-select';
 import AsyncSelect from 'react-select/async';
-import { ValueType } from 'react-select/lib/types';
+import { searchLemmas } from '../actions/search';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     select: {
       width: 200,
       color: theme.palette.text.primary,
     },
-  });
+  }),
+);
 
-interface WordDef {
-  word: string;
-  lang: string;
-}
-
-export interface WordOption {
-  value: string;
-  label: string;
-}
-
-interface OwnProps {
-  onChange: (option: ValueType<WordOption>) => void;
-  searchLemmas: (term: string) => void;
-}
-
-type Props = WithStyles<typeof styles> & OwnProps;
-
-interface LookupResponse {
-  words: WordDef[];
+interface ILookupResponse {
+  words: Array<{ word: string; lang: string }>;
   term: string;
 }
 
@@ -46,7 +28,7 @@ const promiseOptions = (input: string) => {
   }
 
   return axios
-    .get<LookupResponse>(`/api/lookup?term=${input}`)
+    .get<ILookupResponse>(`/api/lookup?term=${input}`)
     .then(({ data }) => {
       const options = data.words.map(word => ({
         value: word.word,
@@ -55,12 +37,15 @@ const promiseOptions = (input: string) => {
       return options;
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return [];
     });
 };
 
-const SearchBox: React.FC<Props> = props => {
+const SearchBox: React.FC = () => {
+  const dispatch = useDispatch();
+  const classes = useStyles();
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState('');
   const [isRtl, setIsRtl] = useState(false);
 
@@ -76,19 +61,22 @@ const SearchBox: React.FC<Props> = props => {
     setInputValue(value);
   };
 
-  const handleChange = (option: ValueType<WordOption>) => {
-    if (option) {
-      const { value } = option as WordOption;
-      props.searchLemmas(value);
+  const handleChange = (
+    option: ValueType<OptionTypeBase>,
+    action: ActionMeta,
+  ) => {
+    if (action.action === 'select-option') {
+      const { value } = option as OptionTypeBase;
+      dispatch(searchLemmas(value));
     }
   };
 
   return (
     <AsyncSelect
-      placeholder="Zoek..."
+      placeholder={t('search_placeholder')}
       cacheOptions={true}
       loadOptions={promiseOptions}
-      className={props.classes.select}
+      className={classes.select}
       onChange={handleChange}
       onInputChange={handleInputChange}
       inputValue={inputValue}
@@ -98,4 +86,4 @@ const SearchBox: React.FC<Props> = props => {
   );
 };
 
-export default withStyles(styles)(SearchBox);
+export default SearchBox;

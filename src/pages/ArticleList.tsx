@@ -1,57 +1,45 @@
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
-import { match } from 'react-router';
-import { Topic } from 'Types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { fetchArticles } from '../actions/content';
 import ArticleListItem from '../components/ArticleListItem';
-import withNavBar from '../components/withNavBar';
+import useNavBackRoute from '../components/useNavBackRoute';
 import LanguageContext from '../contexts/LanguageContext';
+import { RootState } from '../reducers';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       margin: theme.spacing(1),
     },
-  });
+  }),
+);
 
-interface Params {
-  publication: string;
-  article: string;
-}
-
-type Props = {
-  match: match<Params>;
-  setNavBackRoute: (to: string) => void;
-  fetchArticles: (publication: string) => void;
-  topics: Topic[];
-  loading: boolean;
-  error: any;
-} & WithStyles<typeof styles>;
-
-const ArticleList: React.FC<Props> = props => {
-  const { fetchArticles, topics, loading, error, setNavBackRoute } = props;
-  const { publication } = props.match.params;
+const ArticleList: React.FC = () => {
+  const dispatch = useDispatch();
+  const { articles: topics, loading, error } = useSelector(
+    (state: RootState) => state.content,
+  );
+  const classes = useStyles();
+  const { publication } = useParams();
 
   const topicsLoaded =
     topics.length !== 0 && topics[0].publication === publication;
 
+  useNavBackRoute('/content');
   useEffect(() => {
-    setNavBackRoute('/content');
-    if (!topicsLoaded) {
-      fetchArticles(publication);
+    if (!topicsLoaded && publication) {
+      dispatch(fetchArticles(publication));
     }
-  }, [fetchArticles, publication, topicsLoaded, setNavBackRoute]);
+  }, [dispatch, publication, topicsLoaded]);
 
   return (
     <React.Fragment>
       {!loading && topics.length !== 0 && (
-        <Paper classes={{ root: props.classes.root }}>
+        <Paper classes={{ root: classes.root }}>
           {error ? (
             <div>Error: {error.message}</div>
           ) : (
@@ -76,4 +64,4 @@ const ArticleList: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(withStyles(styles)(ArticleList));
+export default ArticleList;

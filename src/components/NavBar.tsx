@@ -1,7 +1,7 @@
 import AppBar from '@material-ui/core/AppBar';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
@@ -9,12 +9,15 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MenuIcon from '@material-ui/icons/Menu';
 import Search from '@material-ui/icons/Search';
 import React, { useState } from 'react';
-import { Route, RouteComponentProps, withRouter } from 'react-router';
-import * as C from '../constants';
-import SearchBoxContainer from '../containers/SearchBoxContainer';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, useHistory, useLocation } from 'react-router-dom';
+import { setNavBackRoute } from '../actions/navbar';
+import { RootState } from '../reducers';
 import MainDrawer from './MainDrawer';
+import SearchBox from './SearchBox';
 
-const styles = createStyles({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
@@ -27,33 +30,24 @@ const styles = createStyles({
   },
 });
 
-interface OwnProps {
-  rightHandButtons?: React.ReactElement<any> | null;
-  hideSearchButton?: boolean;
-  navBackRoute: string | null;
-  setNavBackRoute: (path: string) => void;
-  onLeftMenu?: () => void;
-  onRightMenu?: () => void;
-}
-
-type Props = OwnProps & RouteComponentProps & WithStyles<typeof styles>;
-
-const NavBar: React.FC<Props> = props => {
-  const {
-    classes,
-    location: { pathname },
-  } = props;
+const NavBar: React.FC = () => {
+  const dispatch = useDispatch();
+  const { navBackRoute } = useSelector((state: RootState) => state.navbar);
+  const classes = useStyles();
+  const { t } = useTranslation();
+  const { pathname } = useLocation();
+  const history = useHistory();
 
   const [mainDrawerOpen, setMainDrawerOpen] = useState(false);
 
   const handleToggleDrawer = () => setMainDrawerOpen(!mainDrawerOpen);
 
   const handleSearch = () => {
-    props.setNavBackRoute(props.history.location.pathname);
-    props.history.push('/search');
+    dispatch(setNavBackRoute(history.location.pathname));
+    history.push('/search');
   };
 
-  const handleBack = () => props.history.push(props.navBackRoute || '/content');
+  const handleBack = () => history.push(navBackRoute || '/content');
 
   if (pathname === '/welcome') {
     return null;
@@ -83,17 +77,16 @@ const NavBar: React.FC<Props> = props => {
             </IconButton>
           )}
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {C.APP_TITLE}
+            {t('app_title')}
           </Typography>
-          <Route
-            path="/search"
-            exact={true}
-            render={() => <SearchBoxContainer onChange={() => undefined} />}
-          />
+          <Route path="/search" exact={true} render={() => <SearchBox />} />
           <Route
             path="/content"
             render={() => (
-              <Tooltip title={C.SEARCH} aria-label={C.SEARCH}>
+              <Tooltip
+                title={t('search_tooltip')}
+                aria-label={t('search_tooltip')}
+              >
                 <IconButton onClick={handleSearch} color="inherit">
                   <Search />
                 </IconButton>
@@ -109,4 +102,4 @@ const NavBar: React.FC<Props> = props => {
   );
 };
 
-export default withRouter(withStyles(styles)(NavBar));
+export default NavBar;

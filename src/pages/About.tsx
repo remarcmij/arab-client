@@ -1,15 +1,10 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect } from 'react';
-import withNavBar from '../components/withNavBar';
+import React from 'react';
+import useNavBackRoute from '../components/useNavBackRoute';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
@@ -17,21 +12,15 @@ const styles = (theme: Theme) =>
       overflowX: 'auto',
       padding: theme.spacing(4),
     },
-  });
+  }),
+);
 
-type Props = {
-  setNavBackRoute: (to: string) => void;
-} & WithStyles<typeof styles>;
-
-const About: React.FC<Props> = props => {
-  const { setNavBackRoute } = props;
-
-  useEffect(() => {
-    setNavBackRoute('/content');
-  }, [setNavBackRoute]);
+const About: React.FC = () => {
+  const classes = useStyles();
+  useNavBackRoute('/content');
 
   return (
-    <Paper className={props.classes.root}>
+    <Paper className={classes.root}>
       <Typography variant="h4" component="h1" gutterBottom={true}>
         Overzicht
       </Typography>
@@ -43,4 +32,4 @@ const About: React.FC<Props> = props => {
   );
 };
 
-export default withNavBar(withStyles(styles)(About));
+export default About;

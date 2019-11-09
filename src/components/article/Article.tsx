@@ -1,58 +1,27 @@
-import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
-import { match } from 'react-router';
-import { Topic } from 'Types';
-import ArticleContent from './ArticleContent';
-import withNavBar from '../withNavBar';
-import WordClickHandler from '../WordClickHandler';
-import { connect } from 'react-redux';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { fetchArticle } from '../../actions/content';
 import { RootState } from '../../reducers';
+import useNavBackRoute from '../useNavBackRoute';
+import WordClickHandler from '../WordClickHandler';
+import ArticleContent from './ArticleContent';
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ fetchArticle }, dispatch);
-
-const mapStateToProps = (state: RootState) => ({
-  topic: state.content.article,
-  loading: state.content.loading,
-  error: state.content.error,
-});
-
-interface Params {
-  publication: string;
-  article: string;
-}
-
-type Props = {
-  match: match<Params>;
-  setNavBackRoute: (to: string) => void;
-  fetchArticle: (filename: string) => void;
-  topic: Topic | null;
-  loading: boolean;
-  error: any;
-} & WithTheme;
-
-const Article: React.FC<Props> = props => {
-  const {
-    fetchArticle: fetchIt,
-    topic,
-    loading,
-    error,
-    setNavBackRoute,
-  } = props;
-  const { publication, article } = props.match.params;
-
+const Article: React.FC = () => {
+  const { publication, article } = useParams();
+  const dispatch = useDispatch();
+  const { article: topic, loading, error } = useSelector(
+    (state: RootState) => state.content,
+  );
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;
-  const backTo = `/content/${publication}`;
 
+  useNavBackRoute(`/content/${publication}`);
   useEffect(() => {
-    setNavBackRoute(backTo);
     if (!topicLoaded) {
-      fetchIt(filename);
+      dispatch(fetchArticle(filename));
     }
-  }, [fetchIt, filename, topicLoaded, setNavBackRoute, backTo]);
+  }, [dispatch, filename, topicLoaded]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -69,7 +38,4 @@ const Article: React.FC<Props> = props => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withNavBar(withTheme(Article)));
+export default Article;

@@ -1,25 +1,17 @@
 import Menu from '@material-ui/core/Menu/Menu';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { LOOK_UP, READ_ALOUD } from '../constants';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { RootState } from '../reducers';
 import SpeechSynthesizer from '../services/SpeechSynthesizer';
 
-const mapStateToProps = (state: RootState) => ({
-  voiceName: state.settings.voiceName,
-});
-
-type OwnProps = {
-  voiceName: string;
-};
-
-type Props = OwnProps & RouteComponentProps;
-
-const WordClickHandler: React.FC<Props> = props => {
+const WordClickHandler: React.FC<{}> = props => {
+  const history = useHistory();
+  const { voiceName } = useSelector((state: RootState) => state.settings);
+  const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const { voiceName } = props;
 
   const openMenu = (e: React.MouseEvent) => {
     const { target } = e;
@@ -48,7 +40,7 @@ const WordClickHandler: React.FC<Props> = props => {
     if (anchorEl instanceof HTMLElement) {
       const text = anchorEl.textContent!.replace(/[^\u0621-\u064a]/g, '');
       closeMenu();
-      props.history.push(encodeURI(`/search?q=${text}`));
+      history.push(encodeURI(`/search?q=${text}`));
     }
   };
 
@@ -62,12 +54,12 @@ const WordClickHandler: React.FC<Props> = props => {
         onClose={closeMenu}
       >
         <MenuItem disabled={!voiceName} onClick={speak}>
-          {READ_ALOUD}
+          {t('read_aloud')}
         </MenuItem>
-        <MenuItem onClick={searchWord}>{LOOK_UP}</MenuItem>
+        <MenuItem onClick={searchWord}>{t('look_up')}</MenuItem>
       </Menu>
     </>
   );
 };
 
-export default connect(mapStateToProps)(withRouter(WordClickHandler));
+export default WordClickHandler;

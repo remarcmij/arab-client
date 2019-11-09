@@ -1,56 +1,29 @@
 import Grid from '@material-ui/core/Grid';
-import { withTheme, WithTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { match } from 'react-router';
-import { Topic } from 'Types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { fetchArticle } from '../actions/content';
 import LemmaFlashcards from '../components/LemmaFlashcards';
-import withNavBar from '../components/withNavBar';
+import useNavBackRoute from '../components/useNavBackRoute';
 import { RootState } from '../reducers';
 
-const mapStateToProps = (state: RootState) => ({
-  showVocalization: state.settings.showVocalization,
-  voiceName: state.settings.voiceName,
-});
-
-interface Params {
-  publication: string;
-  article: string;
-}
-
-type Props = {
-  match: match<Params>;
-  setNavBackRoute: (to: string) => void;
-  fetchArticle: (filename: string) => void;
-  topic: Topic | null;
-  loading: boolean;
-  error: any;
-  showVocalization: boolean;
-  voiceName: string;
-} & WithTheme;
-
-const Flashcards: React.FC<Props> = props => {
+const Flashcards: React.FC = () => {
+  const dispatch = useDispatch();
   const {
-    fetchArticle,
-    topic,
-    loading,
-    error,
-    setNavBackRoute,
-    showVocalization,
-    voiceName,
-  } = props;
-  const { publication, article } = props.match.params;
+    content: { article: topic, loading, error },
+    settings: { showVocalization, voiceName },
+  } = useSelector((state: RootState) => state);
+  const { publication, article } = useParams();
 
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;
-  const backTo = `/content/${publication}/${article}`;
 
+  useNavBackRoute(`/content/${publication}/${article}`);
   useEffect(() => {
-    setNavBackRoute(backTo);
     if (!topicLoaded) {
-      fetchArticle(filename);
+      dispatch(fetchArticle(filename));
     }
-  }, [fetchArticle, filename, topicLoaded, setNavBackRoute, backTo]);
+  }, [dispatch, filename, topicLoaded]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -77,4 +50,4 @@ const Flashcards: React.FC<Props> = props => {
   );
 };
 
-export default connect(mapStateToProps)(withNavBar(withTheme(Flashcards)));
+export default Flashcards;

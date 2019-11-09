@@ -1,30 +1,24 @@
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
+import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InfoIcon from '@material-ui/icons/Info';
 import Settings from '@material-ui/icons/Settings';
+import clsx from 'clsx';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import { logout } from '../actions/auth';
-import * as C from '../constants';
 import { RootState } from '../reducers';
 import SettingsDialog from './SettingsDialog';
-import clsx from 'clsx';
-import Icon from '@material-ui/core/Icon';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     list: {
       width: 250,
@@ -35,34 +29,24 @@ const styles = (theme: Theme) =>
     icon: {
       margin: theme.spacing(2),
     },
-  });
+  }),
+);
 
-interface OwnProps {
+type Props = Readonly<{
   open: boolean;
   toggleDrawer: () => void;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ logout }, dispatch);
-
-const mapStateToProps = (state: RootState) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user,
-});
-
-type ReduxProps = ReturnType<typeof mapDispatchToProps> &
-  ReturnType<typeof mapStateToProps>;
-
-type Props = OwnProps & WithStyles<typeof styles> & ReduxProps;
+}>;
 
 const MainDrawer: React.FC<Props> = props => {
-  const { classes, open, toggleDrawer } = props;
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.user);
+  const { t } = useTranslation();
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
+  const { open, toggleDrawer } = props;
 
-  const { user } = props;
-
-  const AboutLink = (p: any, ref: any) => <Link to="/about" {...p} />;
+  const AboutLink = (p: any) => <Link to="/about" {...p} />;
 
   const sideList = (
     <div className={classes.list}>
@@ -81,15 +65,15 @@ const MainDrawer: React.FC<Props> = props => {
               <ListItemIcon>
                 <Settings />
               </ListItemIcon>
-              <ListItemText primary={C.EDIT_SETTINGS} />
+              <ListItemText primary={t('change_settings')} />
             </ListItem>
           </List>
           <List>
-            <ListItem button={true} onClick={props.logout}>
+            <ListItem button={true} onClick={() => dispatch(logout())}>
               <ListItemIcon>
                 <Icon className={clsx(classes.icon, 'fa fa-sign-out-alt')} />
               </ListItemIcon>
-              <ListItemText primary={C.LOGOUT} />
+              <ListItemText primary={t('logout')} />
             </ListItem>
           </List>
           <Divider />
@@ -100,7 +84,7 @@ const MainDrawer: React.FC<Props> = props => {
             <ListItemIcon>
               <Icon className={clsx(classes.icon, 'fa fa-sign-in-alt')} />
             </ListItemIcon>
-            <ListItemText primary={C.LOGIN} />
+            <ListItemText primary={t('login')} />
           </ListItem>
         </List>
       )}
@@ -109,7 +93,7 @@ const MainDrawer: React.FC<Props> = props => {
           <ListItemIcon>
             <InfoIcon />
           </ListItemIcon>
-          <ListItemText primary={C.ABOUT_MENU_ITEM} />
+          <ListItemText primary={t('about')} />
         </ListItem>
       </List>
     </div>
@@ -139,7 +123,4 @@ const MainDrawer: React.FC<Props> = props => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(styles)(MainDrawer));
+export default MainDrawer;
