@@ -4,8 +4,10 @@ import content from '../features/content/reducer';
 import search from '../features/search/reducer';
 import settings from '../features/settings/reducer';
 import layout from '../layout/reducer';
+import admin from '../features/admin/reducer';
 
 const rootReducer = combineReducers({
+  admin,
   auth,
   content,
   layout,
