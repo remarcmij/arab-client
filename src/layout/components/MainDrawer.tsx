@@ -52,7 +52,6 @@ const MainDrawer: React.FC<Props> = props => {
         <List>
           {user ? (
             <React.Fragment>
-              \{' '}
               <ListItem button={true} onClick={() => dispatch(logout())}>
                 <ListItemIcon>
                   <Icon className={'fa fa-fw fa-sign-out-alt'} />
