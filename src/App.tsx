@@ -25,10 +25,6 @@ const useStyles = makeStyles({
   },
 });
 
-// const ProtectedRoute: React.FC<any> = ({ ...props }) => {
-//   return getToken() ? <Route {...props} /> : <Redirect to="/login" />;
-// };
-
 const App: React.FC<{}> = () => {
   const [cookies, , removeCookie] = useCookies();
   const classes = useStyles();
@@ -38,7 +34,9 @@ const App: React.FC<{}> = () => {
     removeCookie('token');
   }
 
-  useEffect(() => void store.dispatch(loadUser()), []);
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
 
   return (
     <Suspense fallback={<Spinner />}>
