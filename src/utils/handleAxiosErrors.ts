@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import i18next from 'i18next';
-import { setToast } from '../actions/toast';
-import { ThunkDispatchAny } from '../actions/types';
+import { ThunkDispatchAny } from 'typesafe-actions';
+import { setToast } from '../layout/actions';
 
 type ErrorData = { message: string } | { errors: [{ msg: string }] };
 

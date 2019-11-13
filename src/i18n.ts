@@ -23,7 +23,7 @@ i18n
     fallbackLng: 'en-US',
     ns: ['client'],
     defaultNS: 'client',
-    debug: true,
+    debug: false,
 
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
