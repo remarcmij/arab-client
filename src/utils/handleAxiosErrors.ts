@@ -1,14 +1,16 @@
 import { AxiosError } from 'axios';
 import i18next from 'i18next';
-import { setToast } from '../actions/toast';
-import { ThunkDispatchAny } from '../actions/types';
+import { ThunkDispatchAny } from 'typesafe-actions';
+import { setToast } from '../layout/actions';
 
 type ErrorData = { message: string } | { errors: [{ msg: string }] };
 
 export default (err: AxiosError<ErrorData>, dispatch: ThunkDispatchAny) => {
   if (err.response) {
     const { data } = err.response;
-    if ('errors' in data) {
+    if (typeof data === 'string') {
+      dispatch(setToast('error', data));
+    } else if (typeof data === 'object' && 'errors' in data) {
       data.errors.forEach((error: { msg: string }) => {
         console.error(error.msg);
       });

@@ -11,6 +11,7 @@ declare module 'Types' {
   }
 
   export interface ITopic {
+    _id: string;
     filename: string;
     publication: string;
     article: string;

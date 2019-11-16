@@ -4,14 +4,15 @@ import React, { Suspense, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { loadUser } from './actions/auth';
-import Spinner from './components/common/Spinner';
-import NavBar from './components/NavBar';
-import Routes from './components/routes/Routes';
-import Welcome from './pages/welcome/Welcome';
+import Routes from './routes/Routes';
+import { loadUser } from './features/auth/actions';
+import SettingsDialog from './features/settings/components/SettingsDialog';
+import NavBar from './layout/components/NavBar';
+import SnackbarContainer from './layout/components/SnackbarContainer';
+import Spinner from './layout/components/Spinner';
+import Welcome from './layout/components/Welcome';
 import store from './store';
 import { storeToken } from './utils/token';
-import SnackbarContainer from './components/SnackbarContainer';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
 const useStyles = makeStyles({
@@ -24,10 +25,6 @@ const useStyles = makeStyles({
   },
 });
 
-// const ProtectedRoute: React.FC<any> = ({ ...props }) => {
-//   return getToken() ? <Route {...props} /> : <Redirect to="/login" />;
-// };
-
 const App: React.FC<{}> = () => {
   const [cookies, , removeCookie] = useCookies();
   const classes = useStyles();
@@ -37,7 +34,9 @@ const App: React.FC<{}> = () => {
     removeCookie('token');
   }
 
-  useEffect(() => void store.dispatch(loadUser()), []);
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
 
   return (
     <Suspense fallback={<Spinner />}>
@@ -46,6 +45,7 @@ const App: React.FC<{}> = () => {
           <div className={classes.root}>
             <NavBar />
             <SnackbarContainer />
+            <SettingsDialog />
             <Container maxWidth="md">
               <Switch>
                 <Route exact={true} path="/welcome" component={Welcome} />

@@ -5,12 +5,12 @@
   "dependencies": {
     "@material-ui/core": "^4.6.0",
     "@material-ui/icons": "^4.5.1",
-    "@types/jest": "24.0.22",
+    "@types/jest": "^24.0.22",
     "@types/latinize": "^0.2.15",
     "@types/lodash.throttle": "^4.1.6",
     "@types/lru-cache": "^5.1.0",
     "@types/markdown-it": "^0.0.9",
-    "@types/node": "12.12.6",
+    "@types/node": "^12.12.6",
     "@types/react-dom": "16.9.4",
     "@types/react-redux": "^7.1.5",
     "@types/react-responsive": "^8.0.2",
@@ -36,6 +36,7 @@
     "react-app-polyfill": "^1.0.4",
     "react-cookie": "^4.0.1",
     "react-dom": "^16.11.0",
+    "react-dropzone": "^10.1.10",
     "react-i18next": "^11.1.0",
     "react-moment": "^0.9.6",
     "react-redux": "^7.1.3",
@@ -75,6 +76,6 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.2.0",
-    "prettier": "^1.19.0"
+    "prettier": "^1.19.1"
   }
 }
