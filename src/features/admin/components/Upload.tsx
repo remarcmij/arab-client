@@ -20,6 +20,8 @@ import { RootState } from 'typesafe-actions';
 import { clearUploads, uploadFile } from '../actions';
 import uploadImg from '../assets/File-upload-01.svg';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import orange from '@material-ui/core/colors/orange';
+import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,13 +45,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const getStatusIcon = (status: string) => {
   switch (status) {
     case 'pending':
-      return <HourglassEmptyIcon />;
+      return <HourglassEmptyIcon color="disabled" />;
     case 'success':
-      return <CheckIcon htmlColor="green" />;
-    case 'error':
-      return <ErrorOutlineIcon />;
+      return <CheckIcon color="primary" />;
+    case 'fail':
+      return <ErrorOutlineIcon color="error" />;
     default:
-      return <WarningIcon />;
+      return <WarningIcon htmlColor={orange[500]} />;
   }
 };
 
@@ -57,9 +59,9 @@ const DropBox: React.FC = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  useNavBackRoute('/admin/content');
   const onDrop = useCallback(
     (files: File[]) => {
-      console.log('acceptedFiles :', files);
       files.forEach(file => dispatch(uploadFile(file)));
     },
     [dispatch],
@@ -140,7 +142,7 @@ const Upload: React.FC = () => {
   const classes = useStyles();
   return (
     <Grid container={true} justify="center">
-      <Grid item={true} xs={12} md={6}>
+      <Grid item={true} xs={12} md={8}>
         <Box className={classes.flexColumnContainer} mt={4}>
           <DropBox />
           <Box mt={2} />

@@ -8,7 +8,9 @@ type ErrorData = { message: string } | { errors: [{ msg: string }] };
 export default (err: AxiosError<ErrorData>, dispatch: ThunkDispatchAny) => {
   if (err.response) {
     const { data } = err.response;
-    if ('errors' in data) {
+    if (typeof data === 'string') {
+      dispatch(setToast('error', data));
+    } else if (typeof data === 'object' && 'errors' in data) {
       data.errors.forEach((error: { msg: string }) => {
         console.error(error.msg);
       });

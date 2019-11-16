@@ -1,4 +1,9 @@
-export const UPLOAD_START = 'UPLOAD_START';
-export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
-export const UPLOAD_FAIL = 'UPLOAD_FAIL';
-export const CLEAR_UPLOADS = 'CLEAR_UPLOADS';
+export const CLEAR_UPLOADS = '@admin/CLEAR_UPLOADS';
+export const DELETE_TOPIC = '@admin/DELETE_TOPIC';
+export const DELETE_TOPIC_SUCCESS = '@admin/DELETE_TOPIC_SUCCESS';
+export const FETCH_ERROR = '@admin/FETCH_ERROR';
+export const FETCH_TOPICS = '@admin/FETCH_TOPICS';
+export const FETCH_TOPICS_SUCCESS = '@admin/FETCH_TOPICS_SUCCESS';
+export const UPLOAD_FAIL = '@admin/UPLOAD_FAIL';
+export const UPLOAD_START = '@admin/UPLOAD_START';
+export const UPLOAD_SUCCESS = '@admin/UPLOAD_SUCCESS';

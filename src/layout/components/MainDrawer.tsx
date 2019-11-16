@@ -60,12 +60,14 @@ const MainDrawer: React.FC<Props> = props => {
               </ListItem>
               <Divider />
               {user.admin && (
-                <ListItem button={true} component={Link} to="/admin/upload">
-                  <ListItemIcon>
-                    <Icon className={'fas fa-fw fa-upload'} />
-                  </ListItemIcon>
-                  <ListItemText primary={t('upload_content')} />
-                </ListItem>
+                <React.Fragment>
+                  <ListItem button={true} component={Link} to="/admin/content">
+                    <ListItemIcon>
+                      <Icon className={'fas fa-fw fa-tasks'} />
+                    </ListItemIcon>
+                    <ListItemText primary={t('manage_content')} />
+                  </ListItem>
+                </React.Fragment>
               )}
             </React.Fragment>
           ) : (

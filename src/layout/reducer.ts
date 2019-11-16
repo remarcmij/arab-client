@@ -26,7 +26,7 @@ export default function(
 ): State {
   switch (action.type) {
     case SET_TOAST:
-      return { ...state, toast: { ...state.toast, open: true } };
+      return { ...state, toast: { ...action.payload, open: true } };
     case CLEAR_TOAST:
       return { ...state, toast: { ...state.toast, open: false } };
     case SET_NAV_BACK_ROUTE:
