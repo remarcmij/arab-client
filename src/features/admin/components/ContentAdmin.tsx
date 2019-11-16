@@ -6,17 +6,18 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
+import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { deleteTopic, fetchTopics } from '../actions';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,6 +37,8 @@ const ContentAdmin: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { topics, loading } = useSelector((state: RootState) => state.admin);
+
+  useNavBackRoute('/content');
 
   useEffect(() => {
     dispatch(fetchTopics());

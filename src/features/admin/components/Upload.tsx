@@ -1,10 +1,12 @@
 import Box from '@material-ui/core/Box';
+import orange from '@material-ui/core/colors/orange';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -17,11 +19,9 @@ import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
+import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { clearUploads, uploadFile } from '../actions';
 import uploadImg from '../assets/File-upload-01.svg';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import orange from '@material-ui/core/colors/orange';
-import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
