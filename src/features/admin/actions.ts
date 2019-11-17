@@ -14,6 +14,7 @@ import {
   UPLOAD_START,
   UPLOAD_SUCCESS,
 } from './constants';
+import { reset } from '../content/actions';
 
 export type UploadDisposition = 'success' | 'unchanged' | 'fail';
 
@@ -50,6 +51,7 @@ export const deleteTopic = (filename: string) => async (
     dispatch(deleteTopicStart());
     const res = await axios.delete(`/api/topic/${filename}`);
     dispatch(fetchTopicsSuccess(res.data));
+    dispatch(reset());
   } catch (err) {
     dispatch(
       fetchError({
@@ -82,6 +84,7 @@ export const uploadFile = (file: File) => async (
       data: { disposition },
     } = await axios.post('/api/upload', body, {});
     dispatch(uploadSuccess(uuid, disposition));
+    dispatch(reset());
   } catch (err) {
     console.error('err', err);
     dispatch(uploadFail(uuid));
