@@ -7,6 +7,7 @@ import {
   FETCH_ERROR,
   FETCH_PUBLICATIONS_SUCCESS,
   FETCH_START,
+  RESET,
 } from './constants';
 
 type AuthAction = ActionType<typeof import('../auth/actions')>;
@@ -44,6 +45,7 @@ export default (
     case FETCH_ERROR:
       return { ...state, error: action.payload, loading: false };
     case LOGOUT:
+    case RESET:
       return { ...initialState };
     default:
       return state;

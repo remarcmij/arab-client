@@ -8,6 +8,7 @@ import {
   FETCH_ERROR,
   FETCH_PUBLICATIONS_SUCCESS,
   FETCH_START,
+  RESET,
 } from './constants';
 
 export const fetchStart = () => action(FETCH_START);
@@ -62,3 +63,5 @@ export const fetchArticle = (filename: string) => async (
     handleAxiosErrors(err, dispatch);
   }
 };
+
+export const reset = () => action(RESET);
