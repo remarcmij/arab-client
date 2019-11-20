@@ -18,12 +18,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(4),
       userSelect: 'none',
     },
-    mdPadding: {
-      // paddingRight: theme.spacing.unit * 3,
-      // paddingLeft: theme.spacing.unit * 3,
-    },
     content: {
-      '& span[lang="ar"]': {
+      '& *[lang="ar"]': {
         fontSize: 28,
         cursor: 'pointer',
         color: theme.palette.primary.dark,
@@ -47,7 +43,6 @@ const ArticleContent: React.FC<Props> = ({ topic }) => {
         <Typography
           variant="h6"
           dangerouslySetInnerHTML={{ __html: subtitle }}
-          className={classes.mdPadding}
         />
       )}
       {sections &&
@@ -59,9 +54,10 @@ const ArticleContent: React.FC<Props> = ({ topic }) => {
             lemmas && lemmas.filter(lemma => lemma.sectionIndex === index);
           return (
             <React.Fragment key={index}>
-              <section
+              <Typography
+                variant="body2"
                 dangerouslySetInnerHTML={{ __html: html }}
-                className={`markdown-body ${classes.mdPadding} ${classes.content}`}
+                className={`markdown-body ${classes.content}`}
               />
               {sectionLemmas && <LemmaList lemmas={sectionLemmas} />}
             </React.Fragment>

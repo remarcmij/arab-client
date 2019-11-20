@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import { ILemma } from 'Types';
+import { RootState } from 'typesafe-actions';
+import Spinner from '../../../layout/components/Spinner';
+import WordClickHandler from '../../content/components/WordClickHandler';
 import { searchLemmas } from '../actions';
 import SearchResultList from './SearchResultList';
-import WordClickHandler from '../../content/components/WordClickHandler';
-import { RootState } from 'typesafe-actions';
 
 const SearchPage: React.FC = () => {
   const dispatch = useDispatch();
-  const { lemmas } = useSelector((state: RootState) => state.search);
+  const { lemmas, loading, error } = useSelector(
+    (state: RootState) => state.search,
+  );
   const [lemma, setLemma] = useState<ILemma | null>(null);
 
   const {
@@ -24,6 +27,14 @@ const SearchPage: React.FC = () => {
       }
     }
   }, [dispatch, search]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return null;
+  }
 
   if (lemma) {
     const [publication, article] = lemma.filename.split('.');
