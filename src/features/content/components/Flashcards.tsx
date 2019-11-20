@@ -2,10 +2,11 @@ import Grid from '@material-ui/core/Grid';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { RootState } from 'typesafe-actions';
+import Spinner from '../../../layout/components/Spinner';
+import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { fetchArticle } from '../actions';
 import LemmaFlashcards from './LemmaFlashcards';
-import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { RootState } from 'typesafe-actions';
 
 const Flashcards: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,11 +26,15 @@ const Flashcards: React.FC = () => {
     }
   }, [dispatch, filename, topicLoaded]);
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  if (loading || !topic) {
+  if (!topic) {
     return null;
   }
 
