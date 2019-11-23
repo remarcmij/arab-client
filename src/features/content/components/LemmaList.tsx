@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
-import { ILemma } from 'Types';
+import { ILemma, ITopic } from 'Types';
 import { RootState } from 'typesafe-actions';
 import Transcoder from '../../../services/Transcoder';
 
@@ -68,9 +68,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = Readonly<{ lemmas: ILemma[] }>;
+type Props = {
+  topic: ITopic;
+  sectionIndex: number;
+};
 
-const LemmaList: React.FC<Props> = ({ lemmas }) => {
+const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
   const classes = useStyles();
   const {
     showVocalization,
@@ -81,15 +84,19 @@ const LemmaList: React.FC<Props> = ({ lemmas }) => {
   const { t } = useTranslation();
   const { publication, article } = useParams();
   const [hashId, setHashId] = useState('');
-  const [goFlashcards, setGoFlashcards] = useState<boolean>(false);
+  const [toFlashcards, setToFlashcards] = useState(false);
+
+  const { lemmas: allLemmas } = topic;
+  const lemmas =
+    (allLemmas &&
+      allLemmas.filter(lemma => lemma.sectionIndex === sectionIndex)) ||
+    [];
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const { hash } = history.location;
     setHashId(hash ? hash.slice(1) : '');
   }, []);
-
-  const onGoFlashcards = () => setGoFlashcards(true);
 
   const renderLemma = (lemma: ILemma, index: number) => {
     const arabicText = showVocalization
@@ -124,14 +131,22 @@ const LemmaList: React.FC<Props> = ({ lemmas }) => {
     );
   };
 
-  if (goFlashcards) {
-    return <Redirect to={`/content/${publication}/${article}/flashcards`} />;
+  if (toFlashcards) {
+    return (
+      <Redirect
+        to={`/content/${publication}/${article}/flashcards/${sectionIndex + 1}`}
+      />
+    );
   }
 
   return (
     <>
       <div className={classes.buttonContainer}>
-        <Button variant="outlined" color="primary" onClick={onGoFlashcards}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => setToFlashcards(true)}
+        >
           {t('flashcards')}
         </Button>
       </div>

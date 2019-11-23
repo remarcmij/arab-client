@@ -14,7 +14,9 @@ const Flashcards: React.FC = () => {
     content: { article: topic, loading, error },
     settings: { showVocalization, voiceName },
   } = useSelector((state: RootState) => state);
-  const { publication, article } = useParams();
+  const { publication, article, index } = useParams();
+
+  const sectionIndex = (index && parseInt(index, 10)) || 0;
 
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;
@@ -44,7 +46,8 @@ const Flashcards: React.FC = () => {
         <Grid container={true} justify="center">
           <Grid item={true} xs={12} md={10} lg={8}>
             <LemmaFlashcards
-              document={topic}
+              topic={topic}
+              sectionIndex={sectionIndex}
               showVocalization={showVocalization}
               voiceName={voiceName}
             />
