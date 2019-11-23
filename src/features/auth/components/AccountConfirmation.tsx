@@ -7,18 +7,18 @@ const AccountConfirmation: React.FC = () => {
   const { token } = useParams();
   const [loading, setLoading] = useState(true);
   const [expired, setExpired] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const body = JSON.stringify({ token });
     void axios
       .post(`/auth/confirmation`, body)
-      .then(({ data }) => setMsg(data.msg))
+      .then(({ data }) => setMessage(data.message))
       .catch(({ response: { data } }) => {
         if (data.error === 'token-expired') {
           setExpired(true);
         }
-        setMsg(data.msg);
+        setMessage(data.message);
       })
       .finally(() => setLoading(false));
   }, [token]);
@@ -32,6 +32,6 @@ const AccountConfirmation: React.FC = () => {
     return <div>Token expired</div>;
   }
 
-  return <div>Account Verification: {msg}</div>;
+  return <div>Account Verification: {message}</div>;
 };
 export default AccountConfirmation;
