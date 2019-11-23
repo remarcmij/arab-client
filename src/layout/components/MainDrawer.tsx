@@ -1,4 +1,3 @@
-import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Icon from '@material-ui/core/Icon';
@@ -13,14 +12,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import { logout } from '../../features/auth/actions';
+import UserInfo from './UserInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     list: {
       width: 250,
-    },
-    avatar: {
-      margin: theme.spacing(2),
     },
   }),
 );
@@ -36,19 +33,13 @@ const MainDrawer: React.FC<Props> = props => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   const { t } = useTranslation();
-  const [redirectToLogin, setRedirectToLogin] = useState(false);
+  const [toLogin, setToLogin] = useState(false);
   const { open, toggleDrawer } = props;
 
   const menuList = useMemo(
     () => (
       <div className={classes.list}>
-        {user && user.photo && (
-          <Avatar
-            alt="User avatar"
-            src={user.photo}
-            className={classes.avatar}
-          />
-        )}
+        {user && <UserInfo />}
         <List>
           {user ? (
             <React.Fragment>
@@ -67,12 +58,18 @@ const MainDrawer: React.FC<Props> = props => {
                     </ListItemIcon>
                     <ListItemText primary={t('manage_content')} />
                   </ListItem>
+                  <ListItem button={true} component={Link} to="/admin/upload">
+                    <ListItemIcon>
+                      <Icon className={'fas fa-fw fa-file-upload'} />
+                    </ListItemIcon>
+                    <ListItemText primary={t('upload_content')} />
+                  </ListItem>
                 </React.Fragment>
               )}
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <ListItem button={true} onClick={() => setRedirectToLogin(true)}>
+              <ListItem button={true} onClick={() => setToLogin(true)}>
                 <ListItemIcon>
                   <Icon className={'fa fa-fw fa-sign-in-alt'} />
                 </ListItemIcon>
@@ -92,7 +89,7 @@ const MainDrawer: React.FC<Props> = props => {
     [user, classes, dispatch, t],
   );
 
-  if (redirectToLogin) {
+  if (toLogin) {
     return <Redirect to="/login" />;
   }
 

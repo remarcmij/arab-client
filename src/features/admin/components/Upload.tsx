@@ -18,6 +18,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { clearUploads, uploadFile } from '../actions';
@@ -59,7 +60,17 @@ const DropBox: React.FC = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  useNavBackRoute('/admin/content');
+  const { pathname } = useLocation();
+
+  // This components is associated with two route:
+  // 1. /admin/upload : via navigation drawer menu option
+  // 2. /admin/content/upload: via content management page
+  // The back button should return to the place where this
+  // component was called from
+  useNavBackRoute(
+    pathname === '/admin/content/upload' ? '/admin/content' : '/content',
+  );
+
   const onDrop = useCallback(
     (files: File[]) => {
       files.forEach(file => dispatch(uploadFile(file)));
