@@ -3,9 +3,10 @@ import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'typesafe-actions';
+import Spinner from '../../../layout/components/Spinner';
 import { fetchPublications } from '../actions';
 import PublicationListItem from './PublicationListItem';
-import { RootState } from 'typesafe-actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +32,7 @@ const PublicationList: React.FC = () => {
   }, [dispatch, publicationsLoaded]);
 
   if (loading) {
-    return null;
+    return <Spinner />;
   }
 
   if (error) {

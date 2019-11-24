@@ -2,10 +2,11 @@ import Grid from '@material-ui/core/Grid';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { RootState } from 'typesafe-actions';
+import Spinner from '../../../layout/components/Spinner';
+import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { fetchArticle } from '../actions';
 import LemmaFlashcards from './LemmaFlashcards';
-import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { RootState } from 'typesafe-actions';
 
 const Flashcards: React.FC = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,9 @@ const Flashcards: React.FC = () => {
     content: { article: topic, loading, error },
     settings: { showVocalization, voiceName },
   } = useSelector((state: RootState) => state);
-  const { publication, article } = useParams();
+  const { publication, article, index } = useParams();
+
+  const sectionIndex = (index && parseInt(index, 10)) || 0;
 
   const filename = `${publication}.${article}`;
   const topicLoaded = topic && topic.filename === filename;
@@ -25,11 +28,15 @@ const Flashcards: React.FC = () => {
     }
   }, [dispatch, filename, topicLoaded]);
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  if (loading || !topic) {
+  if (!topic) {
     return null;
   }
 
@@ -39,7 +46,8 @@ const Flashcards: React.FC = () => {
         <Grid container={true} justify="center">
           <Grid item={true} xs={12} md={10} lg={8}>
             <LemmaFlashcards
-              document={topic}
+              topic={topic}
+              sectionIndex={sectionIndex}
               showVocalization={showVocalization}
               voiceName={voiceName}
             />

@@ -16,22 +16,25 @@ const useStyles = makeStyles((_theme: Theme) =>
 );
 
 type Props = Readonly<{
-  document: Types.ITopic;
+  topic: Types.ITopic;
+  sectionIndex: number;
   showVocalization: boolean;
   voiceName: string;
 }>;
 
 const LemmaFlashcards: React.FC<Props> = props => {
   const classes = useStyles();
-  const { document, showVocalization, voiceName } = props;
-  const { lemmas } = document;
+  const { topic, sectionIndex, showVocalization, voiceName } = props;
+  const { lemmas: allLemmas = [] } = topic;
+
+  let lemmas = allLemmas;
+  if (sectionIndex !== 0) {
+    const indexNum = sectionIndex - 1;
+    lemmas = lemmas.filter(lemma => lemma.sectionIndex === indexNum);
+  }
 
   const [index, setIndex] = useState<number>(0);
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
-
-  if (!lemmas) {
-    return null;
-  }
 
   const handleNext = () => {
     if (!showTranslation) {
@@ -51,11 +54,7 @@ const LemmaFlashcards: React.FC<Props> = props => {
 
   return (
     <div className={classes.root}>
-      <FlashcardHeader
-        document={document}
-        index={index}
-        length={lemmas.length}
-      />
+      <FlashcardHeader topic={topic} index={index} length={lemmas.length} />
       {lemmas.length !== 0 && (
         <Flashcard
           lemma={lemmas[index]}

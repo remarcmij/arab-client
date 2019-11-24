@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchArticle } from '../actions';
 import { RootState } from 'typesafe-actions';
+import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import WordClickHandler from './WordClickHandler';
+import { fetchArticle } from '../actions';
 import ArticleContent from './ArticleContent';
+import WordClickHandler from './WordClickHandler';
 
 const Article: React.FC = () => {
   const { publication, article } = useParams();
@@ -23,11 +24,15 @@ const Article: React.FC = () => {
     }
   }, [dispatch, filename, topicLoaded]);
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  if (loading || !topic) {
+  if (!topic) {
     return null;
   }
 

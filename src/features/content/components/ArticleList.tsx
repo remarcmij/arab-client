@@ -5,10 +5,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-import ArticleListItem from './ArticleListItem';
-import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import LanguageContext from '../../../contexts/LanguageContext';
+import Spinner from '../../../layout/components/Spinner';
+import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { fetchArticles } from '../actions';
+import ArticleListItem from './ArticleListItem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,9 +37,13 @@ const ArticleList: React.FC = () => {
     }
   }, [dispatch, publication, topicsLoaded]);
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <React.Fragment>
-      {!loading && topics.length !== 0 && (
+      {topics.length !== 0 && (
         <Paper classes={{ root: classes.root }}>
           {error ? (
             <div>Error: {error.message}</div>

@@ -24,7 +24,7 @@ const Routes: React.FC = () => (
       />
       <Route
         exact={true}
-        path="/content/:publication/:article/flashcards"
+        path="/content/:publication/:article/flashcards/:index"
         component={Flashcards}
       />
       <Route
@@ -48,6 +48,7 @@ const Routes: React.FC = () => (
         path="/admin/content/upload"
         component={Upload}
       />
+      <AdminRoute exact={true} path="/admin/upload" component={Upload} />
       <Route render={() => <div>404</div>} />
     </Switch>
   </section>

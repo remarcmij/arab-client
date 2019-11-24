@@ -5,9 +5,18 @@ import markdownIt from 'markdown-it';
 import * as React from 'react';
 import { ITopic } from 'Types';
 import LemmaList from './LemmaList';
+import { useSelector } from 'react-redux';
+import { RootState } from 'typesafe-actions';
+import Transcoder from '../../../services/Transcoder';
 
 const md = markdownIt({ html: true });
-const arabicRegExp = /[\u0600-\u06ff]+/g;
+
+// Matches a string of Arabic characters followed by an optional
+// western full stop. There exists a Unicode Arabic full stop but
+// the western full stop looks better visually, so that is what we
+// have used in the markdown content.
+// See: https://www.compart.com/en/unicode/U+06D4
+const arabicRegexp = /[\u0600-\u06ff]+\.?/g;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,12 +27,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(4),
       userSelect: 'none',
     },
-    mdPadding: {
-      // paddingRight: theme.spacing.unit * 3,
-      // paddingLeft: theme.spacing.unit * 3,
-    },
     content: {
-      '& span[lang="ar"]': {
+      '& *[lang="ar"]': {
         fontSize: 28,
         cursor: 'pointer',
         color: theme.palette.primary.dark,
@@ -38,7 +43,10 @@ type Props = {
 
 const ArticleContent: React.FC<Props> = ({ topic }) => {
   const classes = useStyles();
-  const { title, subtitle, sections, lemmas } = topic;
+  const { showVocalization } = useSelector(
+    (state: RootState) => state.settings,
+  );
+  const { title, subtitle, sections } = topic;
 
   return (
     <Paper className={classes.root}>
@@ -47,23 +55,25 @@ const ArticleContent: React.FC<Props> = ({ topic }) => {
         <Typography
           variant="h6"
           dangerouslySetInnerHTML={{ __html: subtitle }}
-          className={classes.mdPadding}
         />
       )}
       {sections &&
         sections.map((section, index) => {
+          const text =
+            showVocalization || !arabicRegexp.test(section)
+              ? section
+              : Transcoder.stripTashkeel(section);
           const html = md
-            .render(section)
-            .replace(arabicRegExp, '<span lang="ar">$&</span>');
-          const sectionLemmas =
-            lemmas && lemmas.filter(lemma => lemma.sectionIndex === index);
+            .render(text)
+            .replace(arabicRegexp, '<span lang="ar">$&</span>');
           return (
             <React.Fragment key={index}>
-              <section
+              <Typography
+                variant="body2"
                 dangerouslySetInnerHTML={{ __html: html }}
-                className={`markdown-body ${classes.mdPadding} ${classes.content}`}
+                className={`markdown-body ${classes.content}`}
               />
-              {sectionLemmas && <LemmaList lemmas={sectionLemmas} />}
+              <LemmaList topic={topic} sectionIndex={index} />
             </React.Fragment>
           );
         })}

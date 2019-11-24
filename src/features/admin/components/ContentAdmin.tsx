@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
+import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { deleteTopic, fetchTopics } from '../actions';
 
@@ -45,7 +46,7 @@ const ContentAdmin: React.FC = () => {
   }, [dispatch]);
 
   if (loading) {
-    return null;
+    return <Spinner />;
   }
 
   return (

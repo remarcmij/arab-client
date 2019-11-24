@@ -21,27 +21,27 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = Readonly<{
-  document: Types.ITopic;
+  topic: Types.ITopic;
   index: number;
   length: number;
 }>;
 
 const FlashcardHeader: React.FC<Props> = props => {
-  const { document, index, length } = props;
+  const { topic, index, length } = props;
   const classes = useStyles();
   return (
     <Paper className={classes.root} square={true}>
       <div className={classes.flexContainer}>
         <Typography variant="h5" gutterBottom={true}>
-          {document.title}
+          {topic.title}
         </Typography>
         <Typography variant="body1">
           {index + 1}/{length}
         </Typography>
       </div>
       <div>
-        {document.subtitle && (
-          <Typography variant="body1">{document.subtitle}</Typography>
+        {topic.subtitle && (
+          <Typography variant="body1">{topic.subtitle}</Typography>
         )}
       </div>
     </Paper>
