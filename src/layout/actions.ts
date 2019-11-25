@@ -1,12 +1,15 @@
-import { action } from 'typesafe-actions';
-import { CLEAR_TOAST, SET_NAV_BACK_ROUTE, SET_TOAST } from './constants';
+import { createAction } from 'typesafe-actions';
 
 export type ToastType = 'error' | 'warning' | 'info' | 'success';
 
-export const setToast = (type: ToastType, msg: string) =>
-  action(SET_TOAST, { type, msg });
+export const setToast = createAction(
+  '@layout/SET_TOAST',
+  (type: ToastType, msg: string) => ({ type, msg }),
+)<{ type: ToastType; msg: string }>();
 
-export const clearToast = () => action(CLEAR_TOAST);
+export const clearToast = createAction('@layout/CLEAR_TOAST')();
 
-export const setNavBackRoute = (navBackRoute: string) =>
-  action(SET_NAV_BACK_ROUTE, navBackRoute);
+export const setNavBackRoute = createAction(
+  '@layout/SET_NAV_BACK_ROUTE',
+  (navBackRoute: string) => navBackRoute,
+)<string>();

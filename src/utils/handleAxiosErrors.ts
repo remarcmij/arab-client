@@ -5,9 +5,9 @@ import { setToast } from '../layout/actions';
 
 type ErrorData = { message: string } | { errors: [{ msg: string }] };
 
-export default (err: AxiosError<ErrorData>, dispatch: ThunkDispatchAny) => {
-  if (err.response) {
-    const { data } = err.response;
+export default (error: AxiosError<ErrorData>, dispatch: ThunkDispatchAny) => {
+  if (error.response) {
+    const { data } = error.response;
     if (typeof data === 'string') {
       dispatch(setToast('error', data));
     } else if (typeof data === 'object' && 'errors' in data) {

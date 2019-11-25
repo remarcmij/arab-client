@@ -1,6 +1,5 @@
-import { ActionType } from 'typesafe-actions';
-import { ToastType } from './actions';
-import { CLEAR_TOAST, SET_NAV_BACK_ROUTE, SET_TOAST } from './constants';
+import { ActionType, getType } from 'typesafe-actions';
+import { clearToast, setNavBackRoute, setToast, ToastType } from './actions';
 
 type Toast = Readonly<{
   type: ToastType;
@@ -9,29 +8,33 @@ type Toast = Readonly<{
 }>;
 
 export type State = Readonly<{
-  navBackRoute: string | null;
+  navBackRoute?: string;
   toast: Toast;
 }>;
 
 const initialState: State = {
-  navBackRoute: null,
   toast: { type: 'info', msg: '', open: false },
 };
 
 type LayoutAction = ActionType<typeof import('./actions')>;
 
-export default function(
-  state: State = initialState,
-  action: LayoutAction,
-): State {
+const reducer = (state = initialState, action: LayoutAction) => {
   switch (action.type) {
-    case SET_TOAST:
-      return { ...state, toast: { ...action.payload, open: true } };
-    case CLEAR_TOAST:
-      return { ...state, toast: { ...state.toast, open: false } };
-    case SET_NAV_BACK_ROUTE:
+    case getType(setToast):
+      return {
+        ...state,
+        toast: { ...action.payload, open: true },
+      };
+    case getType(clearToast):
+      return {
+        ...state,
+        toast: { ...state.toast, open: false },
+      };
+    case getType(setNavBackRoute):
       return { ...state, navBackRoute: action.payload };
     default:
       return state;
   }
-}
+};
+
+export default reducer;

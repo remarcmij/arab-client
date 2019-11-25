@@ -1,12 +1,5 @@
-import { ActionType } from 'typesafe-actions';
-import { User } from './actions';
-import {
-  AUTH_ERROR,
-  LOGIN_FAIL,
-  LOGOUT,
-  REGISTER_FAIL,
-  USER_LOADED,
-} from './constants';
+import { ActionType, getType } from 'typesafe-actions';
+import { loadUser, localLogin, logout, registerUser, User } from './actions';
 
 export type State = Readonly<{
   isAuthenticated: boolean;
@@ -24,17 +17,17 @@ const initialState: State = {
 
 export default (state = initialState, action: AuthAction): State => {
   switch (action.type) {
-    case USER_LOADED:
+    case getType(loadUser.success):
       return {
         ...state,
         isAuthenticated: true,
         loading: false,
         user: action.payload,
       };
-    case REGISTER_FAIL:
-    case LOGIN_FAIL:
-    case AUTH_ERROR:
-    case LOGOUT:
+    case getType(registerUser.failure):
+    case getType(localLogin.failure):
+    case getType(loadUser.failure):
+    case getType(logout):
       return {
         ...state,
         user: null,

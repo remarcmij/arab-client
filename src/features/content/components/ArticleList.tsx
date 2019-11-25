@@ -8,7 +8,7 @@ import { RootState } from 'typesafe-actions';
 import LanguageContext from '../../../contexts/LanguageContext';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { fetchArticles } from '../actions';
+import { fetchArticlesThunk } from '../actions';
 import ArticleListItem from './ArticleListItem';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,7 +33,7 @@ const ArticleList: React.FC = () => {
   useNavBackRoute('/content');
   useEffect(() => {
     if (!topicsLoaded && publication) {
-      dispatch(fetchArticles(publication));
+      dispatch(fetchArticlesThunk(publication));
     }
   }, [dispatch, publication, topicsLoaded]);
 

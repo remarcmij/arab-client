@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { register } from '../actions';
+import { registerUserThunk } from '../actions';
 import { setToast } from '../../../layout/actions';
 import { RootState } from 'typesafe-actions';
 
@@ -47,7 +47,7 @@ const Signup: React.FC = () => {
     if (password !== password2) {
       dispatch(setToast('error', i18next.t('passwords_mismatch')));
     } else {
-      dispatch(register({ name, email, password }));
+      dispatch(registerUserThunk({ name, email, password }));
     }
   };
 

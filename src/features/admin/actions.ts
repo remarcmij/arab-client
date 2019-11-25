@@ -1,76 +1,66 @@
 import axios from 'axios';
 import { ITopic } from 'Types';
-import { action, ThunkDispatchAny } from 'typesafe-actions';
+import {
+  createAction,
+  createAsyncAction,
+  ThunkDispatchAny,
+} from 'typesafe-actions';
 import uuidv4 from 'uuid/v4';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
-import {
-  CLEAR_UPLOADS,
-  DELETE_TOPIC_SUCCESS,
-  DELETE_TOPIC,
-  FETCH_ERROR,
-  FETCH_TOPICS_SUCCESS,
-  FETCH_TOPICS,
-  UPLOAD_FAIL,
-  UPLOAD_START,
-  UPLOAD_SUCCESS,
-} from './constants';
-import { reset } from '../content/actions';
+import { resetContent } from '../content/actions';
 
 export type UploadDisposition = 'success' | 'unchanged' | 'fail';
 
-export const fetchStart = () => action(FETCH_TOPICS);
+export const fetchTopics = createAsyncAction(
+  '@admin/FETCH_TOPICS_REQUEST',
+  '@admin/FETCH_TOPICS_SUCCESS',
+  '@admin/FETCH_TOPICS_FAILURE',
+)<undefined, ITopic[], any>();
 
-export const fetchTopicsSuccess = (topics: ITopic[]) =>
-  action(FETCH_TOPICS_SUCCESS, topics);
-
-export const fetchError = (error: any) => action(FETCH_ERROR, error);
-
-export const fetchTopics = () => async (dispatch: ThunkDispatchAny) => {
+export const fetchTopicsThunk = () => async (dispatch: ThunkDispatchAny) => {
   try {
-    dispatch(fetchStart());
+    dispatch(fetchTopics.request());
     const res = await axios('/api/all');
-    dispatch(fetchTopicsSuccess(res.data));
+    dispatch(fetchTopics.success(res.data));
   } catch (err) {
-    dispatch(
-      fetchError({
-        message: err.response.statusText,
-        status: err.response.status,
-      }),
-    );
+    dispatch(fetchTopics.failure(err));
     handleAxiosErrors(err, dispatch);
   }
 };
 
-export const deleteTopicStart = () => action(DELETE_TOPIC);
-export const deleteTopicSuccess = () => action(DELETE_TOPIC_SUCCESS);
+export const deleteTopic = createAsyncAction(
+  '@admin/DELETE_TOPIC_REQUEST',
+  '@admin/DELETE_TOPIC_SUCCESS',
+  '@admin/DELETE_TOPIC_FAILURE',
+)<undefined, ITopic[], any>();
 
-export const deleteTopic = (filename: string) => async (
+export const deleteTopicThunk = (filename: string) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
-    dispatch(deleteTopicStart());
+    dispatch(deleteTopic.request());
     const res = await axios.delete(`/api/topic/${filename}`);
-    dispatch(fetchTopicsSuccess(res.data));
-    dispatch(reset());
+    dispatch(deleteTopic.success(res.data));
+    dispatch(resetContent());
   } catch (err) {
-    dispatch(
-      fetchError({
-        message: err.response.statusText,
-        status: err.response.status,
-      }),
-    );
+    dispatch(deleteTopic.failure(err));
     handleAxiosErrors(err, dispatch);
   }
 };
 
-export const clearUploads = () => action(CLEAR_UPLOADS);
-export const uploadStart = (file: File, uuid: string) =>
-  action(UPLOAD_START, { file, uuid });
-export const uploadSuccess = (uuid: string, disposition: string) =>
-  action(UPLOAD_SUCCESS, { uuid, disposition });
-export const uploadFail = (uuid: string) => action(UPLOAD_FAIL, uuid);
+export const clearUploads = createAction('@admin/CLEAR_UPLOADS')();
 
-export const uploadFile = (file: File) => async (
+type UploadRequestPayload = { file: File; uuid: string };
+type UploadSuccessPayload = { uuid: string; disposition: string };
+type UploadFailurePayload = { error: any; uuid: string };
+
+export const uploadFile = createAsyncAction(
+  '@admin/UPLOAD_REQUEST',
+  '@admin/UPLOAD_SUCCESS',
+  '@admin/UPLOAD_FAILURE',
+)<UploadRequestPayload, UploadSuccessPayload, UploadFailurePayload>();
+
+export const uploadFileThunk = (file: File) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   const body = new FormData();
@@ -79,14 +69,13 @@ export const uploadFile = (file: File) => async (
   const uuid = uuidv4();
 
   try {
-    dispatch(uploadStart(file, uuid));
+    dispatch(uploadFile.request({ file, uuid }));
     const {
       data: { disposition },
     } = await axios.post('/api/upload', body, {});
-    dispatch(uploadSuccess(uuid, disposition));
-    dispatch(reset());
-  } catch (err) {
-    console.error('err', err);
-    dispatch(uploadFail(uuid));
+    dispatch(uploadFile.success({ uuid, disposition }));
+    dispatch(resetContent());
+  } catch (error) {
+    dispatch(uploadFile.failure({ error, uuid }));
   }
 };

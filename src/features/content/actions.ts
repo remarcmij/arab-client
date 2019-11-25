@@ -1,67 +1,67 @@
 import axios from 'axios';
 import { ITopic } from 'Types';
-import { action, ThunkDispatchAny } from 'typesafe-actions';
-import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import {
-  FETCH_ARTICLES_SUCCESS,
-  FETCH_ARTICLE_SUCCESS,
-  FETCH_ERROR,
-  FETCH_PUBLICATIONS_SUCCESS,
-  FETCH_START,
-  RESET,
-} from './constants';
+  createAction,
+  createAsyncAction,
+  ThunkDispatchAny,
+} from 'typesafe-actions';
+import handleAxiosErrors from '../../utils/handleAxiosErrors';
 
-export const fetchStart = () => action(FETCH_START);
+export const fetchPublications = createAsyncAction(
+  '@content/FETCH_PUBLICATIONS_REQUEST',
+  '@content/FETCH_PUBLICATIONS_SUCCESS',
+  '@content/FETCH_PUBLICATIONS_FAILURE',
+)<void, ITopic[], any>();
 
-export const fetchPublicationsSuccess = (publications: ITopic[]) =>
-  action(FETCH_PUBLICATIONS_SUCCESS, publications);
-
-export const fetchArticlesSuccess = (articles: ITopic[]) =>
-  action(FETCH_ARTICLES_SUCCESS, articles);
-
-export const fetchArticleSuccess = (article: ITopic) =>
-  action(FETCH_ARTICLE_SUCCESS, article);
-
-export const fetchError = (error: any) => action(FETCH_ERROR, error);
-
-export const fetchPublications = () => async (dispatch: ThunkDispatchAny) => {
+export const fetchPublicationsThunk = () => async (
+  dispatch: ThunkDispatchAny,
+) => {
   try {
-    dispatch(fetchStart());
+    dispatch(fetchPublications.request());
     const res = await axios('/api');
-    dispatch(fetchPublicationsSuccess(res.data));
-  } catch (err) {
-    handleAxiosErrors(err, dispatch);
+    dispatch(fetchPublications.success(res.data));
+  } catch (error) {
+    dispatch(fetchPublications.failure(error));
+    handleAxiosErrors(error, dispatch);
   }
 };
 
-export const fetchArticles = (publication: string) => async (
+export const fetchArticles = createAsyncAction(
+  '@content/FETCH_ARTICLES_REQUEST',
+  '@content/FETCH_ARTICLES_SUCCESS',
+  '@content/FETCH_ARTICLES_FAILURE',
+)<void, ITopic[], any>();
+
+export const fetchArticlesThunk = (publication: string) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
-    dispatch(fetchStart());
+    dispatch(fetchArticles.request());
     const res = await axios(`/api/index/${publication}`);
-    dispatch(fetchArticlesSuccess(res.data));
-  } catch (err) {
-    dispatch(
-      fetchError({
-        message: err.response.statusText,
-        status: err.response.status,
-      }),
-    );
-    handleAxiosErrors(err, dispatch);
+    dispatch(fetchArticles.success(res.data));
+  } catch (error) {
+    dispatch(fetchArticles.failure(error));
+    handleAxiosErrors(error, dispatch);
   }
 };
 
-export const fetchArticle = (filename: string) => async (
+export const fetchArticle = createAsyncAction(
+  '@content/FETCH_ARTICLE_REQUEST',
+  '@content/FETCH_ARTICLE_SUCCESS',
+  '@content/FETCH_ARTICLE_FAILURE',
+)<void, ITopic, any>();
+
+export const fetchArticleThunk = (filename: string) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
-    dispatch(fetchStart());
+    dispatch(fetchArticle.request());
     const res = await axios(`/api/article/${filename}`);
-    dispatch(fetchArticleSuccess(res.data));
-  } catch (err) {
-    handleAxiosErrors(err, dispatch);
+    dispatch(fetchArticle.success(res.data));
+  } catch (error) {
+    dispatch(fetchArticle.failure(error));
+    handleAxiosErrors(error, dispatch);
   }
 };
 
-export const reset = () => action(RESET);
+export const resetContent = createAction('@content/RESET')<void>();

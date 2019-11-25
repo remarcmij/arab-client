@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { localLogin } from '../actions';
+import { localLoginThunk } from '../actions';
 import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
 import { RootState } from 'typesafe-actions';
 import Box from '@material-ui/core/Box';
@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(localLogin({ email, password }));
+    dispatch(localLoginThunk({ email, password }));
   };
 
   if (isAuthenticated) {

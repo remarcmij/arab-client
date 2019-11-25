@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-import { logout } from '../../features/auth/actions';
+import { logoutThunk } from '../../features/auth/actions';
 import UserInfo from './UserInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,7 +43,7 @@ const MainDrawer: React.FC<Props> = props => {
         <List>
           {user ? (
             <React.Fragment>
-              <ListItem button={true} onClick={() => dispatch(logout())}>
+              <ListItem button={true} onClick={() => dispatch(logoutThunk())}>
                 <ListItemIcon>
                   <Icon className={'fa fa-fw fa-sign-out-alt'} />
                 </ListItemIcon>
