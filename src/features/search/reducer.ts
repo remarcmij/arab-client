@@ -1,6 +1,6 @@
 import { ILemma } from 'Types';
-import { ActionType } from 'typesafe-actions';
-import { SEARCH_FAIL, SEARCH_START, SEARCH_SUCCESS } from './constants';
+import { ActionType, getType } from 'typesafe-actions';
+import { searchLemmas } from './actions';
 
 type SearchAction = ActionType<typeof import('./actions')>;
 
@@ -18,11 +18,11 @@ const initialState: State = {
 
 export default (state: State = initialState, action: SearchAction): State => {
   switch (action.type) {
-    case SEARCH_START:
+    case getType(searchLemmas.request):
       return { ...initialState, loading: true };
-    case SEARCH_SUCCESS:
+    case getType(searchLemmas.success):
       return { ...state, ...action.payload, loading: false };
-    case SEARCH_FAIL:
+    case getType(searchLemmas.failure):
       return { ...state, ...action.payload, loading: false };
     default:
       return state;

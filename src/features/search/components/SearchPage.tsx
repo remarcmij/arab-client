@@ -5,7 +5,7 @@ import { ILemma } from 'Types';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import WordClickHandler from '../../content/components/WordClickHandler';
-import { searchLemmas } from '../actions';
+import { searchLemmasThunk } from '../actions';
 import SearchResultList from './SearchResultList';
 
 const SearchPage: React.FC = () => {
@@ -23,7 +23,7 @@ const SearchPage: React.FC = () => {
     if (search) {
       const matches = decodeURI(search).match(/\bq=(.*)$/);
       if (matches) {
-        dispatch(searchLemmas(matches[1]));
+        dispatch(searchLemmasThunk(matches[1]));
       }
     }
   }, [dispatch, search]);

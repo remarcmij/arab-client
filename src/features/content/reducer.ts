@@ -1,16 +1,13 @@
 import { ITopic } from 'Types';
-import { ActionType } from 'typesafe-actions';
-import { LOGOUT } from '../auth/constants';
+import { ActionType, getType } from 'typesafe-actions';
+import { logout } from '../auth/actions';
 import {
-  FETCH_ARTICLES_SUCCESS,
-  FETCH_ARTICLE_SUCCESS,
-  FETCH_ERROR,
-  FETCH_PUBLICATIONS_SUCCESS,
-  FETCH_START,
-  RESET,
-} from './constants';
+  fetchArticle,
+  fetchArticles,
+  fetchPublications,
+  resetContent,
+} from './actions';
 
-type AuthAction = ActionType<typeof import('../auth/actions')>;
 type ContentAction = ActionType<typeof import('./actions')>;
 
 type State = Readonly<{
@@ -18,7 +15,7 @@ type State = Readonly<{
   articles: ITopic[];
   article: ITopic | null;
   loading: boolean;
-  error: any;
+  error?: any;
 }>;
 
 const initialState: State = {
@@ -26,27 +23,36 @@ const initialState: State = {
   articles: [],
   article: null,
   loading: true,
-  error: null,
 };
 
 export default (
   state: State = initialState,
-  action: ContentAction | AuthAction,
+  action: ContentAction | ReturnType<typeof logout>,
 ): State => {
   switch (action.type) {
-    case FETCH_START:
+    case getType(fetchPublications.request):
+    case getType(fetchArticles.request):
+    case getType(fetchArticle.request):
       return { ...state, loading: true, error: null };
-    case FETCH_PUBLICATIONS_SUCCESS:
+
+    case getType(fetchPublications.success):
       return { ...state, publications: action.payload, loading: false };
-    case FETCH_ARTICLES_SUCCESS:
+
+    case getType(fetchArticles.success):
       return { ...state, articles: action.payload, loading: false };
-    case FETCH_ARTICLE_SUCCESS:
+
+    case getType(fetchArticle.success):
       return { ...state, article: action.payload, loading: false };
-    case FETCH_ERROR:
+
+    case getType(fetchPublications.failure):
+    case getType(fetchArticles.failure):
+    case getType(fetchArticle.failure):
       return { ...state, error: action.payload, loading: false };
-    case LOGOUT:
-    case RESET:
+
+    case getType(logout):
+    case getType(resetContent):
       return { ...initialState };
+
     default:
       return state;
   }

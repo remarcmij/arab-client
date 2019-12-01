@@ -1,18 +1,14 @@
 import axios from 'axios';
 import i18next from 'i18next';
-import { action, ThunkDispatchAny } from 'typesafe-actions';
+import {
+  createAction,
+  createAsyncAction,
+  ThunkDispatchAny,
+} from 'typesafe-actions';
 import { setToast } from '../../layout/actions';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { removeToken, storeToken as saveToken } from '../../utils/token';
-import { fetchPublications } from '../content/actions';
-import {
-  AUTH_ERROR,
-  LOGIN_FAIL,
-  LOGIN_SUCCESS,
-  LOGOUT,
-  REGISTER_FAIL,
-  USER_LOADED,
-} from './constants';
+import { fetchPublicationsThunk } from '../content/actions';
 
 type Credentials = {
   name?: string;
@@ -32,46 +28,55 @@ export type User = Readonly<{
   lastAccess: string;
 }>;
 
-export const userLoaded = (user: User) => action(USER_LOADED, user);
-export const authError = () => action(AUTH_ERROR);
+export const loadUser = createAsyncAction(
+  '@auth/LOAD_USER_REQUEST',
+  '@auth/LOAD_USER_SUCCESS',
+  '@auth/LOAD_USER_FAILURE',
+)<void, User, void>();
 
-type LoadUserActions = ReturnType<typeof userLoaded | typeof authError>;
-// Load user
-
-export const loadUser = () => async (dispatch: ThunkDispatchAny) => {
+export const loadUserThunk = () => async (dispatch: ThunkDispatchAny) => {
   try {
+    dispatch(loadUser.request());
     const res = await axios.get('/auth');
-    dispatch(userLoaded(res.data));
-    await dispatch(fetchPublications());
+    dispatch(loadUser.success(res.data));
+    await dispatch(fetchPublicationsThunk());
   } catch (err) {
-    dispatch(authError());
+    dispatch(loadUser.failure());
   }
 };
 
-export const registerFail = () => action(REGISTER_FAIL);
+export const registerUser = createAsyncAction(
+  '@auth/REGISTER_REQUEST',
+  '@auth/REGISTER_SUCCESS',
+  '@auth/REGISTER_FAILURE',
+)<void, void, void>();
 
-/**
- * Register a new user
- */
-export const register = ({ name, email, password }: Credentials) => async (
-  dispatch: ThunkDispatchAny,
-) => {
+export const registerUserThunk = ({
+  name,
+  email,
+  password,
+}: Credentials) => async (dispatch: ThunkDispatchAny) => {
   const body = JSON.stringify({ name, email, password });
   try {
+    dispatch(registerUser.request());
     const res = await axios.post('/auth/signup', body);
     saveToken(res.data.token);
-    await dispatch(loadUser());
+    await dispatch(loadUserThunk());
+    dispatch(registerUser.success());
   } catch (err) {
     removeToken();
-    dispatch(registerFail());
+    dispatch(registerUser.failure());
     handleAxiosErrors(err, dispatch);
   }
 };
 
-export const loginSuccess = (token: string) => action(LOGIN_SUCCESS, token);
-export const loginFailure = () => action(LOGIN_FAIL);
+export const localLogin = createAsyncAction(
+  '@auth/LOGIN_REQUEST',
+  '@auth/LOGIN_SUCCESS',
+  '@auth/LOGIN_FAILURE',
+)<void, void, void>();
 
-export const localLogin = ({ email, password }: Credentials) => async (
+export const localLoginThunk = ({ email, password }: Credentials) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   const config = {
@@ -81,21 +86,23 @@ export const localLogin = ({ email, password }: Credentials) => async (
   };
   const body = JSON.stringify({ email, password });
   try {
+    dispatch(localLogin.request());
     const res = await axios.post('/auth/login', body, config);
     saveToken(res.data.token);
-    await dispatch(loadUser());
+    await dispatch(loadUserThunk());
+    dispatch(localLogin.success());
     dispatch(setToast('success', i18next.t('login_success')));
   } catch (err) {
     handleAxiosErrors(err, dispatch);
     removeToken();
-    dispatch(loginFailure());
+    dispatch(localLogin.failure());
   }
 };
 
-export const logoutAction = () => action(LOGOUT);
+export const logout = createAction('@auth/LOGOUT')<void>();
 
-export const logout = () => async (dispatch: ThunkDispatchAny) => {
+export const logoutThunk = () => async (dispatch: ThunkDispatchAny) => {
   removeToken();
-  dispatch(logoutAction());
-  await dispatch(loadUser());
+  dispatch(logout());
+  await dispatch(loadUserThunk());
 };

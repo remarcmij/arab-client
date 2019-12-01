@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { fetchArticle } from '../actions';
+import { fetchArticleThunk } from '../actions';
 import LemmaFlashcards from './LemmaFlashcards';
 
 const Flashcards: React.FC = () => {
@@ -24,7 +24,7 @@ const Flashcards: React.FC = () => {
   useNavBackRoute(`/content/${publication}/${article}`);
   useEffect(() => {
     if (!topicLoaded) {
-      dispatch(fetchArticle(filename));
+      dispatch(fetchArticleThunk(filename));
     }
   }, [dispatch, filename, topicLoaded]);
 

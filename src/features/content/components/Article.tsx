@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { fetchArticle } from '../actions';
+import { fetchArticleThunk } from '../actions';
 import ArticleContent from './ArticleContent';
 import WordClickHandler from './WordClickHandler';
 
@@ -20,7 +20,7 @@ const Article: React.FC = () => {
   useNavBackRoute(`/content/${publication}`);
   useEffect(() => {
     if (!topicLoaded) {
-      dispatch(fetchArticle(filename));
+      dispatch(fetchArticleThunk(filename));
     }
   }, [dispatch, filename, topicLoaded]);
 

@@ -1,13 +1,13 @@
-import { ActionType } from 'typesafe-actions';
+import { ActionType, getType } from 'typesafe-actions';
 import { loadState } from '../../utils/persistState';
 import {
-  CLOSE_SETTINGS,
-  OPEN_SETTINGS,
-  SET_ROMANIZATION_STANDARD,
-  SET_VOICE_NAME,
-  TOGGLE_TRANSCRIPTION,
-  TOGGLE_VOCALIZATION,
-} from './constants';
+  closeSettings,
+  openSettings,
+  setRomanizationSystem,
+  setVoiceName,
+  toggleTranscription,
+  toggleVocalization,
+} from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
 
@@ -32,17 +32,17 @@ const initialState: State = {
 
 export default (state: State = initialState, action: SettingsAction): State => {
   switch (action.type) {
-    case OPEN_SETTINGS:
+    case getType(openSettings):
       return { ...state, settingsOpen: true };
-    case CLOSE_SETTINGS:
+    case getType(closeSettings):
       return { ...state, settingsOpen: false };
-    case TOGGLE_VOCALIZATION:
+    case getType(toggleVocalization):
       return { ...state, showVocalization: !state.showVocalization };
-    case TOGGLE_TRANSCRIPTION:
+    case getType(toggleTranscription):
       return { ...state, showTranscription: !state.showTranscription };
-    case SET_ROMANIZATION_STANDARD:
+    case getType(setRomanizationSystem):
       return { ...state, romanizationStandard: action.payload };
-    case SET_VOICE_NAME:
+    case getType(setVoiceName):
       return { ...state, voiceName: action.payload };
     default:
       return state;
