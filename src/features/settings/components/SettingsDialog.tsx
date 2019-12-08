@@ -6,6 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -27,16 +28,28 @@ import {
   closeSettings,
   setRomanizationSystem,
   setVoiceName,
+  toggleShuffle,
   toggleTranscription,
   toggleVocalization,
 } from '../actions';
 
-const useStyles = makeStyles((_theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 400,
+      margin: theme.spacing(2),
+    },
+    divider: {
+      marginTop: theme.spacing(2),
     },
   }),
+);
+
+const FieldSet: React.FC<{ label: string }> = props => (
+  <FormControl component="fieldset" fullWidth={true} style={{ marginTop: 16 }}>
+    <FormLabel component="legend">{props.label}</FormLabel>
+    {props.children}
+  </FormControl>
 );
 
 const SettingsDialog: React.FC = () => {
@@ -47,6 +60,7 @@ const SettingsDialog: React.FC = () => {
     showTranscription,
     romanizationStandard,
     voiceName,
+    shuffle,
   } = useSelector((state: RootState) => state.settings);
   const { t } = useTranslation();
   const classes = useStyles();
@@ -56,7 +70,7 @@ const SettingsDialog: React.FC = () => {
   const onClose = () => dispatch(closeSettings());
 
   const renderRomanizationSelect = () => (
-    <FormControl>
+    <FormControl component="fieldset">
       <InputLabel htmlFor="romanizationStandard-select">
         {t('transcription_system')}
       </InputLabel>
@@ -81,7 +95,7 @@ const SettingsDialog: React.FC = () => {
 
   const renderVoiceSelect = () => (
     <FormControl>
-      <InputLabel htmlFor="voice-select">{t('voice_name')}</InputLabel>
+      {/* <InputLabel htmlFor="voice-select">{t('voice_name')}</InputLabel> */}
       <Select
         value={voiceName}
         onChange={event => dispatch(setVoiceName(event.target.value as string))}
@@ -116,28 +130,49 @@ const SettingsDialog: React.FC = () => {
         {t('change_settings')}
       </DialogTitle>
       <DialogContent>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={showVocalization}
-                onChange={() => dispatch(toggleVocalization())}
-              />
-            }
-            label={t('show_vocalization')}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={showTranscription}
-                onChange={() => dispatch(toggleTranscription())}
-              />
-            }
-            label={t('show_transcription')}
-          />
-          {renderRomanizationSelect()}
-          {renderVoiceSelect()}
-        </FormGroup>
+        <FieldSet label="Flashcards">
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={shuffle}
+                  onChange={() => dispatch(toggleShuffle())}
+                />
+              }
+              label={'Shuffle'}
+            />
+          </FormGroup>
+        </FieldSet>
+        <FieldSet label="Vocalization">
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showVocalization}
+                  onChange={() => dispatch(toggleVocalization())}
+                />
+              }
+              label={t('show_vocalization')}
+            />
+          </FormGroup>
+        </FieldSet>
+        <FieldSet label="Transcription">
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showTranscription}
+                  onChange={() => dispatch(toggleTranscription())}
+                />
+              }
+              label={t('show_transcription')}
+            />
+            {renderRomanizationSelect()}
+          </FormGroup>
+        </FieldSet>
+        <FieldSet label="Voice">
+          <FormGroup>{renderVoiceSelect()}</FormGroup>
+        </FieldSet>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" autoFocus={true}>

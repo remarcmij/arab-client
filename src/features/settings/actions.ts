@@ -12,6 +12,8 @@ export const toggleTranscription = createAction(
   '@settings/TOGGLE_TRANSCRIPTION',
 )<void>();
 
+export const toggleShuffle = createAction('@settings/TOGGLE_SHUFFLE')<void>();
+
 export const setRomanizationSystem = createAction(
   '@settings/SET_ROMANIZATION_STANDARD',
   (romanizationStandard: string) => romanizationStandard,

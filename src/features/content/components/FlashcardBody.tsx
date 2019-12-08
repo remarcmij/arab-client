@@ -2,7 +2,7 @@ import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Types from 'Types';
 import LanguageContext from '../../../contexts/LanguageContext';
 import SpeechSynthesizer from '../../../services/SpeechSynthesizer';
@@ -60,18 +60,20 @@ const handleClick = (props: Props) => {
   }
 };
 
-const Flashcard: React.FC<Props> = props => {
+const FlashcardBody: React.FC<Props> = props => {
   const { lemma, showTranslation, showVocalization, voiceName } = props;
   const classes = useStyles();
   const { sourceLang, targetLang } = useContext(LanguageContext);
 
-  if (voiceName) {
-    SpeechSynthesizer.speak(
-      voiceName,
-      lemma.foreign,
-      showTranslation ? 0.6 : 0.8,
-    );
-  }
+  useEffect(() => {
+    if (voiceName) {
+      SpeechSynthesizer.speak(
+        voiceName,
+        lemma.foreign,
+        showTranslation ? 0.6 : 0.8,
+      );
+    }
+  }, [lemma, voiceName, showTranslation]);
 
   return (
     <Paper
@@ -108,4 +110,4 @@ const Flashcard: React.FC<Props> = props => {
   );
 };
 
-export default Flashcard;
+export default FlashcardBody;

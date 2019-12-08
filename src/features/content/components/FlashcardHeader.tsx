@@ -32,10 +32,10 @@ const FlashcardHeader: React.FC<Props> = props => {
   return (
     <Paper className={classes.root} square={true}>
       <div className={classes.flexContainer}>
-        <Typography variant="h5" gutterBottom={true}>
+        <Typography variant="subtitle1" gutterBottom={true}>
           {topic.title}
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="subtitle1">
           {index + 1}/{length}
         </Typography>
       </div>
