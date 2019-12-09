@@ -12,6 +12,7 @@ import PublicationList from '../features/content/components/PublicationList';
 import SearchPage from '../features/search/components/SearchPage';
 import AboutPage from '../layout/components/About';
 import AdminRoute from './AdminRoute';
+import PasswordReset from '../features/auth/components/PasswordReset';
 
 const Routes: React.FC = () => (
   <section>
@@ -42,6 +43,7 @@ const Routes: React.FC = () => (
         path="/confirmation/:token"
         component={AccountConfirmation}
       />
+      <Route exact={true} path="/password/:token" component={PasswordReset} />
       <AdminRoute exact={true} path="/admin/content" component={ContentAdmin} />
       <AdminRoute
         exact={true}
