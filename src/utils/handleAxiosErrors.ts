@@ -3,15 +3,15 @@ import i18next from 'i18next';
 import { ThunkDispatchAny } from 'typesafe-actions';
 import { setToast } from '../layout/actions';
 
-type ErrorData = { message: string } | { errors: [{ msg: string }] };
+type ErrorData = { message: string } | [{ msg: string }];
 
 export default (error: AxiosError<ErrorData>, dispatch: ThunkDispatchAny) => {
   if (error.response) {
     const { data } = error.response;
     if (typeof data === 'string') {
       dispatch(setToast('error', data));
-    } else if (typeof data === 'object' && 'errors' in data) {
-      data.errors.forEach((error: { msg: string }) => {
+    } else if (Array.isArray(data)) {
+      data.forEach((error: { msg: string }) => {
         console.error(error.msg);
       });
       dispatch(setToast('error', i18next.t('validation_errors')));
