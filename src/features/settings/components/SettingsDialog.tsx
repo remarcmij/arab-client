@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
@@ -27,11 +27,13 @@ import { romanizationStandards } from '../../../services/Transcoder';
 import {
   closeSettings,
   setRomanizationSystem,
-  setVoiceName,
+  setForeignVoice,
   toggleShuffle,
   toggleTranscription,
   toggleVocalization,
+  setNativeVoice,
 } from '../actions';
+import LanguageContext from '../../../contexts/LanguageContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 400,
       margin: theme.spacing(2),
     },
-    divider: {
+    mt2: {
       marginTop: theme.spacing(2),
     },
   }),
@@ -59,9 +61,12 @@ const SettingsDialog: React.FC = () => {
     showVocalization,
     showTranscription,
     romanizationStandard,
-    voiceName,
+    foreignVoice,
+    nativeVoice,
     shuffle,
   } = useSelector((state: RootState) => state.settings);
+  const language = useContext(LanguageContext);
+
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
@@ -93,30 +98,37 @@ const SettingsDialog: React.FC = () => {
     </FormControl>
   );
 
-  const renderVoiceSelect = () => (
-    <FormControl>
-      {/* <InputLabel htmlFor="voice-select">{t('voice_name')}</InputLabel> */}
-      <Select
-        value={voiceName}
-        onChange={event => dispatch(setVoiceName(event.target.value as string))}
-        inputProps={{
-          name: 'voice',
-          id: 'voice-select',
-        }}
-      >
-        <MenuItem value="">
-          <em>{t('no_voice')}</em>
-        </MenuItem>
-        {SpeechSynthesizer.getVoices()
-          .filter(voice => voice.lang.startsWith('ar-'))
-          .map(voice => (
-            <MenuItem key={voice.voiceURI} value={voice.name}>
-              {`${voice.name} (${voice.lang})`}
-            </MenuItem>
-          ))}
-      </Select>
-    </FormControl>
-  );
+  const renderVoiceSelect = (lang: string) => {
+    const isForeign = lang === language.foreign;
+    return (
+      <FormControl classes={{ root: classes.mt2 }}>
+        <InputLabel htmlFor="voice-select">{t(lang)}</InputLabel>
+        <Select
+          value={isForeign ? foreignVoice : nativeVoice}
+          onChange={event => {
+            const voiceName = event.target.value as string;
+            const action = isForeign ? setForeignVoice : setNativeVoice;
+            dispatch(action(voiceName));
+          }}
+          inputProps={{
+            name: 'voice',
+            id: 'voice-select',
+          }}
+        >
+          <MenuItem value="">
+            <em>{t('no_voice')}</em>
+          </MenuItem>
+          {SpeechSynthesizer.getVoices()
+            .filter(voice => voice.lang.startsWith(`${lang}-`))
+            .map(voice => (
+              <MenuItem key={voice.voiceURI} value={voice.name}>
+                {`${voice.name} (${voice.lang})`}
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+    );
+  };
 
   return (
     <Dialog
@@ -170,8 +182,9 @@ const SettingsDialog: React.FC = () => {
             {renderRomanizationSelect()}
           </FormGroup>
         </FieldSet>
-        <FieldSet label="Voice">
-          <FormGroup>{renderVoiceSelect()}</FormGroup>
+        <FieldSet label={t('voices')}>
+          <FormGroup>{renderVoiceSelect(language.foreign)}</FormGroup>
+          <FormGroup>{renderVoiceSelect(language.native)}</FormGroup>
         </FieldSet>
       </DialogContent>
       <DialogActions>

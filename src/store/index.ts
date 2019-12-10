@@ -23,7 +23,9 @@ store.subscribe(
         showVocalization,
         showTranscription,
         romanizationStandard,
-        voiceName,
+        foreignVoice,
+        nativeVoice,
+        shuffle,
       },
     } = store.getState();
 
@@ -31,7 +33,9 @@ store.subscribe(
       showVocalization,
       showTranscription,
       romanizationStandard,
-      voiceName,
+      foreignVoice,
+      nativeVoice,
+      shuffle,
     });
   }, 1000),
 );

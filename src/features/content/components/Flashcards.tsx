@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
@@ -9,34 +9,52 @@ import { fetchArticleThunk } from '../actions';
 import FlashcardBody from './FlashcardBody';
 import FlashcardHeader from './FlashcardHeader';
 import FlashcardsController from './FlashcardsController';
+import { ILemma } from 'Types';
 
 const Flashcards: React.FC = () => {
-  const { publication, article, index: sectionIndex } = useParams();
+  const { publication, article, index: indexParam = '0' } = useParams();
 
   const dispatch = useDispatch();
   const {
     content: { article: topic, loading, error },
-    settings: { showVocalization, voiceName },
+    settings: { showVocalization, foreignVoice },
   } = useSelector((state: RootState) => state);
 
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
-  const [index, setIndex] = useState(-1);
-
-  const filename = `${publication}.${article}`;
-  const topicLoaded = topic && topic.filename === filename;
+  const [index, setIndex] = useState(0);
+  const [lemma, setLemma] = useState<ILemma | undefined>();
 
   useNavBackRoute(`/content/${publication}/${article}`);
 
+  const filename = `${publication}.${article}`;
+
   useEffect(() => {
+    const topicLoaded = topic?.filename === filename;
     if (!topicLoaded) {
       dispatch(fetchArticleThunk(filename));
     }
-  }, [dispatch, filename, topicLoaded]);
+  }, [topic, filename, dispatch]);
 
-  const onUpdate = useCallback((index: number, showTranslation: boolean) => {
-    setIndex(index);
-    setShowTranslation(showTranslation);
-  }, []);
+  const lemmas = useMemo(() => {
+    const lemmas = topic?.lemmas ?? [];
+    // Index in url params is one-based; zero means:
+    // all lemmas from all sections
+    let sectionIndex = parseInt(indexParam, 10) || 0;
+    if (sectionIndex === 0) {
+      return lemmas;
+    }
+    sectionIndex -= 1;
+    return lemmas.filter(lemma => lemma.sectionIndex === sectionIndex);
+  }, [topic, indexParam]);
+
+  const onUpdate = useCallback(
+    (lemma: ILemma, index: number, showTranslation: boolean) => {
+      setLemma(lemma);
+      setIndex(index);
+      setShowTranslation(showTranslation);
+    },
+    [],
+  );
 
   if (loading) {
     return <Spinner />;
@@ -46,17 +64,8 @@ const Flashcards: React.FC = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!topic) {
+  if (!topic || topic.lemmas!.length === 0) {
     return null;
-  }
-
-  const { lemmas: allLemmas = [] } = topic;
-
-  const newIndex = (sectionIndex && parseInt(sectionIndex, 10)) || 0;
-  let lemmas = allLemmas;
-  if (newIndex !== 0) {
-    const indexNum = newIndex - 1;
-    lemmas = lemmas.filter(lemma => lemma.sectionIndex === indexNum);
   }
 
   return (
@@ -69,18 +78,15 @@ const Flashcards: React.FC = () => {
               index={index}
               length={lemmas.length}
             />
-            {lemmas.length !== 0 && index !== -1 && (
+            {lemma && (
               <FlashcardBody
-                lemma={lemmas[index]}
+                lemma={lemma!}
                 showTranslation={showTranslation}
                 showVocalization={showVocalization}
-                voiceName={voiceName}
+                foreignVoice={foreignVoice}
               />
             )}
-            <FlashcardsController
-              lemmaCount={lemmas.length}
-              onUpdate={onUpdate}
-            />
+            <FlashcardsController lemmas={lemmas} onUpdate={onUpdate} />
           </Grid>
         </Grid>
       )}

@@ -49,7 +49,7 @@ const NavBar: React.FC = () => {
     history.push('/search');
   };
 
-  const handleBack = () => history.push(navBackRoute || '/content');
+  const handleBack = () => history.push(navBackRoute ?? '/content');
 
   if (pathname === '/welcome') {
     return null;

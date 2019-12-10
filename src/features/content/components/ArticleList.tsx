@@ -48,9 +48,7 @@ const ArticleList: React.FC = () => {
           {error ? (
             <div>Error: {error.message}</div>
           ) : (
-            <LanguageContext.Provider
-              value={{ sourceLang: 'nl', targetLang: 'ar' }}
-            >
+            <LanguageContext.Provider value={{ native: 'nl', foreign: 'ar' }}>
               <List>
                 {topics
                   .filter(topic => !topic.filename.endsWith('.index'))

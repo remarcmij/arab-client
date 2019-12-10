@@ -66,7 +66,7 @@ const SearchResultList: React.FC<Props> = props => {
           <Typography
             variant="subtitle1"
             classes={{ root: classes.ar }}
-            title={lemma.roman || ''}
+            title={lemma.roman ?? ''}
           >
             <span dir="rtl" lang="ar">
               {lemma.foreign}

@@ -41,7 +41,7 @@ const FlashcardHeader: React.FC<Props> = props => {
       </div>
       <div>
         {topic.subtitle && (
-          <Typography variant="body1">{topic.subtitle}</Typography>
+          <Typography variant="subtitle2">{topic.subtitle}</Typography>
         )}
       </div>
     </Paper>

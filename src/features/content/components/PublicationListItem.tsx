@@ -36,7 +36,7 @@ const PublicationListItem: React.FC<Props> = props => {
       <ListItemText
         primary={title}
         secondary={
-          <span dangerouslySetInnerHTML={{ __html: subtitle || '' }} />
+          <span dangerouslySetInnerHTML={{ __html: subtitle ?? '' }} />
         }
       />
     </ListItem>

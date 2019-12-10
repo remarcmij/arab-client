@@ -1,12 +1,18 @@
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import ArrowBackIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForwardIos';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import LastPageIcon from '@material-ui/icons/LastPage';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { ILemma } from 'Types';
 import { RootState } from 'typesafe-actions';
+import speechSynthesizer from '../../../services/SpeechSynthesizer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,13 +38,8 @@ function randomize(indices: number[]) {
   return indices;
 }
 
-const nextUpdateArgs = (
-  indices: number[],
-  index: number,
-): [number, boolean] => [indices[index >> 1], index % 2 === 1];
-
-const createSequence = (lemmaCount: number, random = false) => {
-  let sequence = [...new Array(lemmaCount)].map((_, index) => index);
+const createSequence = (length: number, random = false) => {
+  let sequence = [...new Array(length)].map((_, index) => index);
   if (random) {
     sequence = randomize(sequence);
   }
@@ -46,68 +47,96 @@ const createSequence = (lemmaCount: number, random = false) => {
 };
 
 type Props = Readonly<{
-  lemmaCount: number;
-  onUpdate: (index: number, showTranslation: boolean) => void;
+  lemmas: ILemma[];
+  onUpdate: (lemma: ILemma, index: number, showTranslation: boolean) => void;
 }>;
 
 const FlashcardsController: React.FC<Props> = props => {
-  const { lemmaCount, onUpdate } = props;
+  const { lemmas, onUpdate } = props;
   const classes = useStyles();
-  const { shuffle } = useSelector((state: RootState) => state.settings);
+  const { shuffle, foreignVoice, nativeVoice } = useSelector(
+    (state: RootState) => state.settings,
+  );
   const [index, setIndex] = useState(0);
-  const [sequence, setSequence] = useState(createSequence(lemmaCount, shuffle));
+  const [sequence, setSequence] = useState<number[] | undefined>();
+  const [autoPlay, setAutoPlay] = useState(false);
 
   useEffect(() => {
-    onUpdate(...nextUpdateArgs(sequence, 0));
-  }, [onUpdate, sequence]);
+    setSequence(createSequence(lemmas.length, shuffle));
+    setIndex(0);
+  }, [lemmas, shuffle, onUpdate]);
 
   useEffect(() => {
-    setSequence(() => {
-      const newSequence = createSequence(lemmaCount, shuffle);
-      setIndex(0);
-      onUpdate(...nextUpdateArgs(newSequence, 0));
-      return newSequence;
-    });
-  }, [shuffle, lemmaCount, onUpdate]);
+    if (!sequence) {
+      return;
+    }
+    const lemmaIndex = index >> 1;
+    const lemma = lemmas[sequence[lemmaIndex]];
+    const showTranslation = index % 2 === 1;
+    if (showTranslation) {
+      if (nativeVoice) {
+        speechSynthesizer.speak(nativeVoice, lemma.native);
+      }
+    } else {
+      if (foreignVoice) {
+        speechSynthesizer.speak(foreignVoice, lemma.foreign);
+      }
+    }
+    onUpdate(lemma, lemmaIndex, showTranslation);
+  }, [lemmas, index, sequence, onUpdate, nativeVoice, foreignVoice]);
 
-  const canGoNext = index < lemmaCount * 2 - 1;
-  const canGoPrev = index > 0;
+  const atLast = () => index === lemmas.length * 2 - 1;
+  const atFirst = () => index === 0;
 
   const onNext = () => {
-    setIndex(prevIndex => {
-      const newIndex = prevIndex + 1;
-      onUpdate(...nextUpdateArgs(sequence, newIndex));
-      return newIndex;
-    });
+    setIndex(index + 1);
   };
 
   const onPrev = () => {
-    setIndex(prevIndex => {
-      const newIndex = prevIndex - 1;
-      onUpdate(...nextUpdateArgs(sequence, newIndex));
-      return newIndex;
-    });
+    setIndex(index - 1);
   };
+
+  const onFirst = () => {
+    setIndex(0);
+  };
+
+  const toLast = () => {
+    setIndex((lemmas.length - 1) * 2);
+  };
+
+  useEffect(() => {
+    const incrementIndex = (val: number) =>
+      val < lemmas.length * 2 - 1 ? val + 1 : val;
+    if (autoPlay) {
+      setIndex(incrementIndex);
+      return speechSynthesizer.subscribe(() => {
+        setIndex(incrementIndex);
+      });
+    }
+  }, [autoPlay, lemmas]);
 
   return (
     <Paper className={classes.root} square={true} elevation={1}>
-      <Button
-        variant="outlined"
-        className={classes.button}
-        onClick={onPrev}
-        disabled={!canGoPrev}
-      >
-        <ArrowBackIcon />
-      </Button>
-      <Button
-        variant="outlined"
-        className={classes.button}
+      <IconButton color="primary" onClick={onFirst} disabled={atFirst()}>
+        <FirstPageIcon />
+      </IconButton>
+      <IconButton color="primary" onClick={onPrev} disabled={atFirst()}>
+        <NavigateBeforeIcon />
+      </IconButton>
+      <IconButton color="primary" onClick={() => setAutoPlay(value => !value)}>
+        {autoPlay ? <PauseIcon /> : <PlayArrowIcon />}
+      </IconButton>
+      <IconButton
+        color="primary"
         onClick={onNext}
         autoFocus={true}
-        disabled={!canGoNext}
+        disabled={atLast()}
       >
-        <ArrowForwardIcon />
-      </Button>
+        <NavigateNextIcon />
+      </IconButton>
+      <IconButton color="primary" onClick={toLast} disabled={atLast()}>
+        <LastPageIcon />
+      </IconButton>
     </Paper>
   );
 };

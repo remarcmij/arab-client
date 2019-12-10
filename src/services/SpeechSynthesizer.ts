@@ -1,8 +1,8 @@
-// tslint:disable:no-console
-
 class SpeechSynthesizer {
-  utterance: SpeechSynthesisUtterance | undefined;
-  voices: SpeechSynthesisVoice[] = [];
+  private utterance: SpeechSynthesisUtterance | undefined;
+  private voices: SpeechSynthesisVoice[] = [];
+  private subscribers = new Set<() => void>();
+  private timerId: number | null = null;
 
   constructor() {
     if ('SpeechSynthesisUtterance' in window) {
@@ -16,7 +16,6 @@ class SpeechSynthesizer {
         // get unique voices
         this.voices = Array.from(
           voices
-            .filter(v => v.lang.startsWith('ar-'))
             .reduce((map, v) => {
               map.set(v.name, v);
               return map;
@@ -28,6 +27,17 @@ class SpeechSynthesizer {
         }
       })
       .catch(error => console.error(error));
+  }
+
+  subscribe(callback: () => void) {
+    this.subscribers.add(callback);
+    return () => {
+      this.subscribers.delete(callback);
+    };
+  }
+
+  private notify() {
+    this.subscribers.forEach(callback => callback());
   }
 
   loadVoices() {
@@ -47,18 +57,34 @@ class SpeechSynthesizer {
     return this.voices;
   }
 
+  get speaking(): boolean {
+    return speechSynthesis.speaking;
+  }
+
   speak(voiceName: string, message: string, rate = 0.8) {
-    return new Promise(resolve => {
-      this.utterance = new SpeechSynthesisUtterance();
-      this.utterance.text = message;
-      this.utterance.rate = rate;
-      const voice = this.voices.find(v => v.name === voiceName);
-      if (voice) {
-        this.utterance.voice = voice;
+    // Cancel any outstanding time-out and utterance
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+      this.timerId = null;
+    }
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+    }
+
+    this.utterance = new SpeechSynthesisUtterance();
+    this.utterance.text = message;
+    this.utterance.rate = rate;
+    this.utterance.voice = this.voices.find(v => v.name === voiceName)!;
+    this.utterance.addEventListener('end', e => {
+      if (e.utterance === this.utterance) {
+        this.timerId = setTimeout(() => {
+          this.timerId = null;
+          this.notify();
+        }, 2000);
       }
-      this.utterance.addEventListener('end', resolve);
-      speechSynthesis.speak(this.utterance);
     });
+
+    speechSynthesis.speak(this.utterance);
   }
 }
 

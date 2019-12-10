@@ -1,5 +1,3 @@
-// tslint:disable no-import-side-effect
-
 import 'github-markdown-css';
 import 'normalize.css';
 import React from 'react';

@@ -39,8 +39,10 @@ const Signup: React.FC = () => {
 
   const { name, email, password, password2 } = formData;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target);
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,7 +67,6 @@ const Signup: React.FC = () => {
         <form
           className={classes.container}
           onSubmit={handleSubmit}
-          noValidate={true}
           autoComplete="off"
         >
           <div>
