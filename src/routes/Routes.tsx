@@ -11,8 +11,12 @@ import Flashcards from '../features/content/components/Flashcards';
 import PublicationList from '../features/content/components/PublicationList';
 import SearchPage from '../features/search/components/SearchPage';
 import AboutPage from '../layout/components/About';
-import AdminRoute from './AdminRoute';
+import ProtectedRoute from './ProtectedRoute';
 import PasswordChange from '../features/auth/components/PasswordChange';
+import { User } from '../features/auth/actions';
+
+const isAdmin = (user: User) => user.admin;
+const isVerified = (user: User) => user.verified;
 
 const Routes: React.FC = () => (
   <section>
@@ -43,14 +47,30 @@ const Routes: React.FC = () => (
         path="/confirmation/:token"
         component={AccountConfirmation}
       />
-      <Route exact={true} path="/password" component={PasswordChange} />
-      <AdminRoute exact={true} path="/admin/content" component={ContentAdmin} />
-      <AdminRoute
+      <ProtectedRoute
+        exact={true}
+        path="/password"
+        predicate={isVerified}
+        component={PasswordChange}
+      />
+      <ProtectedRoute
+        exact={true}
+        path="/admin/content"
+        predicate={isAdmin}
+        component={ContentAdmin}
+      />
+      <ProtectedRoute
         exact={true}
         path="/admin/content/upload"
+        predicate={isAdmin}
         component={Upload}
       />
-      <AdminRoute exact={true} path="/admin/upload" component={Upload} />
+      <ProtectedRoute
+        exact={true}
+        path="/admin/upload"
+        predicate={isAdmin}
+        component={Upload}
+      />
       <Route render={() => <div>404</div>} />
     </Switch>
   </section>
