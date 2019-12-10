@@ -49,12 +49,14 @@ const MainDrawer: React.FC<Props> = props => {
                 </ListItemIcon>
                 <ListItemText primary={t('logout')} />
               </ListItem>
-              <ListItem button={true} component={Link} to="/password">
-                <ListItemIcon>
-                  <Icon className={'fas fa-fw fa-key'} />
-                </ListItemIcon>
-                <ListItemText primary={t('change_password')} />
-              </ListItem>
+              {user.verified && (
+                <ListItem button={true} component={Link} to="/password">
+                  <ListItemIcon>
+                    <Icon className={'fas fa-fw fa-key'} />
+                  </ListItemIcon>
+                  <ListItemText primary={t('change_password')} />
+                </ListItem>
+              )}
               <Divider />
               {user.admin && (
                 <React.Fragment>
