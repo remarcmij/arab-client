@@ -2,8 +2,10 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ContentAdmin from '../features/admin/components/ContentAdmin';
 import Upload from '../features/admin/components/Upload';
+import { User } from '../features/auth/actions';
 import AccountConfirmation from '../features/auth/components/AccountConfirmation';
 import LoginPage from '../features/auth/components/LoginPage';
+import PasswordChange from '../features/auth/components/PasswordChange';
 import Signup from '../features/auth/components/Signup';
 import Article from '../features/content/components/Article';
 import ArticleList from '../features/content/components/ArticleList';
@@ -12,8 +14,6 @@ import PublicationList from '../features/content/components/PublicationList';
 import SearchPage from '../features/search/components/SearchPage';
 import AboutPage from '../layout/components/About';
 import ProtectedRoute from './ProtectedRoute';
-import PasswordChange from '../features/auth/components/PasswordChange';
-import { User } from '../features/auth/actions';
 
 const isAdmin = (user: User) => user.admin;
 const isVerified = (user: User) => user.verified;
@@ -48,27 +48,27 @@ const Routes: React.FC = () => (
         component={AccountConfirmation}
       />
       <ProtectedRoute
+        predicate={isVerified}
         exact={true}
         path="/password"
-        predicate={isVerified}
         component={PasswordChange}
       />
       <ProtectedRoute
+        predicate={isAdmin}
         exact={true}
         path="/admin/content"
-        predicate={isAdmin}
         component={ContentAdmin}
       />
       <ProtectedRoute
+        predicate={isAdmin}
         exact={true}
         path="/admin/content/upload"
-        predicate={isAdmin}
         component={Upload}
       />
       <ProtectedRoute
+        predicate={isAdmin}
         exact={true}
         path="/admin/upload"
-        predicate={isAdmin}
         component={Upload}
       />
       <Route render={() => <div>404</div>} />
