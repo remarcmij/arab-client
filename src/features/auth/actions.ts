@@ -16,6 +16,10 @@ type Credentials = {
   password: string;
 };
 
+type UpdateUser = {
+  password: string;
+};
+
 export type User = Readonly<{
   name: string;
   email: string;
@@ -75,6 +79,19 @@ export const localLogin = createAsyncAction(
   '@auth/LOGIN_SUCCESS',
   '@auth/LOGIN_FAILURE',
 )<void, void, void>();
+
+export const resetPasswordRequest = ({ password }: UpdateUser) => async (
+  dispatch: ThunkDispatchAny,
+) => {
+  const body = JSON.stringify({ password });
+  const [token] = window.location.pathname.split('/').slice(-1);
+  try {
+    const res = await axios.post('/auth/password/' + token, body);
+    saveToken(res.data.token);
+  } catch (err) {
+    handleAxiosErrors(err, dispatch);
+  }
+};
 
 export const localLoginThunk = ({ email, password }: Credentials) => async (
   dispatch: ThunkDispatchAny,
