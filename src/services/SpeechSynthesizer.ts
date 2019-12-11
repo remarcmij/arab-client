@@ -1,10 +1,12 @@
-class SpeechSynthesizer {
+import Observable from './Observable';
+
+class SpeechSynthesizer extends Observable {
   private utterance: SpeechSynthesisUtterance | undefined;
   private voices: SpeechSynthesisVoice[] = [];
-  private subscribers = new Set<() => void>();
   private timerId: number | null = null;
 
   constructor() {
+    super();
     if ('SpeechSynthesisUtterance' in window) {
       this.utterance = new SpeechSynthesisUtterance();
     } else {
@@ -27,17 +29,6 @@ class SpeechSynthesizer {
         }
       })
       .catch(error => console.error(error));
-  }
-
-  subscribe(callback: () => void) {
-    this.subscribers.add(callback);
-    return () => {
-      this.subscribers.delete(callback);
-    };
-  }
-
-  private notify() {
-    this.subscribers.forEach(callback => callback());
   }
 
   loadVoices() {
