@@ -131,7 +131,7 @@ const SignIn: React.FC = () => {
         </form>
         <Typography variant="body1">
           {t('no_account_yet')}{' '}
-          <Link to="/signup" className={classes.link}>
+          <Link to="/register" className={classes.link}>
             {t('register')}
           </Link>
         </Typography>
