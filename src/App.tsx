@@ -6,7 +6,7 @@ import React, { Suspense, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { loadUserThunk } from './features/auth/actions';
+import { loadUserAsync } from './features/auth/actions';
 import SettingsDialog from './features/settings/components/SettingsDialog';
 import NavBar from './layout/components/NavBar';
 import SnackbarContainer from './layout/components/SnackbarContainer';
@@ -34,7 +34,7 @@ const App: React.FC<{}> = () => {
   }
 
   useEffect(() => {
-    store.dispatch(loadUserThunk());
+    store.dispatch(loadUserAsync());
   }, []);
 
   return (

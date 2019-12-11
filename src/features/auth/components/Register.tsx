@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import { setToast } from '../../../layout/actions';
-import { registerUserThunk } from '../actions';
+import { registerUserAsync } from '../actions';
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -49,7 +49,7 @@ const Register: React.FC = () => {
     if (password !== password2) {
       dispatch(setToast('error', i18next.t('passwords_mismatch')));
     } else {
-      dispatch(registerUserThunk({ name, email, password }));
+      dispatch(registerUserAsync({ name, email, password }));
     }
   };
 

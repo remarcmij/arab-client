@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-import { localLoginThunk } from '../actions';
+import { localLoginAsync } from '../actions';
 import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -73,7 +73,7 @@ const SignIn: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(localLoginThunk({ email, password }));
+    dispatch(localLoginAsync({ email, password }));
   };
 
   if (isAuthenticated) {

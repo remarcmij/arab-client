@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
-import { fetchPublicationsThunk } from '../actions';
+import { fetchPublicationsAsync } from '../actions';
 import PublicationListItem from './PublicationListItem';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,7 +27,7 @@ const PublicationList: React.FC = () => {
 
   useEffect(() => {
     if (!publicationsLoaded) {
-      dispatch(fetchPublicationsThunk());
+      dispatch(fetchPublicationsAsync());
     }
   }, [dispatch, publicationsLoaded]);
 

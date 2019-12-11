@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-import { logoutThunk } from '../../features/auth/actions';
+import { logoutAsync } from '../../features/auth/actions';
 import UserInfo from './UserInfo';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
@@ -50,7 +50,7 @@ const MainDrawer: React.FC<Props> = props => {
         >
           {user ? (
             <React.Fragment>
-              <ListItem button={true} onClick={() => dispatch(logoutThunk())}>
+              <ListItem button={true} onClick={() => dispatch(logoutAsync())}>
                 <ListItemIcon>
                   <Icon className={'fa fa-fw fa-sign-out-alt'} />
                 </ListItemIcon>

@@ -13,7 +13,7 @@ export const fetchPublications = createAsyncAction(
   '@content/FETCH_PUBLICATIONS_FAILURE',
 )<void, ITopic[], any>();
 
-export const fetchPublicationsThunk = () => async (
+export const fetchPublicationsAsync = () => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
@@ -32,7 +32,7 @@ export const fetchArticles = createAsyncAction(
   '@content/FETCH_ARTICLES_FAILURE',
 )<void, ITopic[], any>();
 
-export const fetchArticlesThunk = (publication: string) => async (
+export const fetchArticlesAsync = (publication: string) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
@@ -51,7 +51,7 @@ export const fetchArticle = createAsyncAction(
   '@content/FETCH_ARTICLE_FAILURE',
 )<void, ITopic, any>();
 
-export const fetchArticleThunk = (filename: string) => async (
+export const fetchArticleAsync = (filename: string) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {

@@ -9,7 +9,7 @@ export const searchLemmas = createAsyncAction(
   '@auth/SEARCH_LEMMAS_FAILURE',
 )<void, ILemma[], any>();
 
-export const searchLemmasThunk = (term: string) => async (
+export const searchLemmasAsync = (term: string) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {

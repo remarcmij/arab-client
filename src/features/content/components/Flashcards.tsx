@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { fetchArticleThunk } from '../actions';
+import { fetchArticleAsync } from '../actions';
 import FlashcardBody from './FlashcardBody';
 import FlashcardHeader from './FlashcardHeader';
 import FlashcardsController from './FlashcardsController';
@@ -31,7 +31,7 @@ const Flashcards: React.FC = () => {
   useEffect(() => {
     const topicLoaded = topic?.filename === filename;
     if (!topicLoaded) {
-      dispatch(fetchArticleThunk(filename));
+      dispatch(fetchArticleAsync(filename));
     }
   }, [topic, filename, dispatch]);
 
