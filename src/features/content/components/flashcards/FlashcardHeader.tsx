@@ -30,7 +30,7 @@ const FlashcardHeader: React.FC<Props> = props => {
   const { topic, index, length } = props;
   const classes = useStyles();
   return (
-    <Paper className={classes.root} square={true}>
+    <Paper className={classes.root}>
       <div className={classes.flexContainer}>
         <Typography variant="subtitle1" gutterBottom={true}>
           {topic.title}
