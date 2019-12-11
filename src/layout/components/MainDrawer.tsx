@@ -44,7 +44,7 @@ const MainDrawer: React.FC<Props> = props => {
           component="nav"
           subheader={
             <ListSubheader component="div">
-              {t('user_side_menu_header')}
+              {t('account_side_menu_header')}
             </ListSubheader>
           }
         >
@@ -54,7 +54,7 @@ const MainDrawer: React.FC<Props> = props => {
                 <ListItemIcon>
                   <Icon className={'fa fa-fw fa-sign-out-alt'} />
                 </ListItemIcon>
-                <ListItemText primary={t('sign_in')} />
+                <ListItemText primary={t('sign_out')} />
               </ListItem>
               {user.verified && (
                 <ListItem button={true} component={Link} to="/password">

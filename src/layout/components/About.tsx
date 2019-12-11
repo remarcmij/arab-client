@@ -17,7 +17,7 @@ const About: React.FC = () => {
       <Typography variant="caption">
         Copyright 2019, Jim Cramer, Amstelveen
         <br />
-        Contributions: Jawhar Birakdar
+        With contributions from Jawhar Birakdar.
       </Typography>
     </TrimmedContainer>
   );
