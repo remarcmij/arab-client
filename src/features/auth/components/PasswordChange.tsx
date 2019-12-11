@@ -1,4 +1,8 @@
+import { Typography } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -43,51 +47,56 @@ const PasswordChange: React.FC = () => {
   };
 
   return (
-    <>
-      <h1 className="blue-text">{t('password_reset')}</h1>
-      <form onSubmit={handleSubmit} autoComplete="off">
-        <div>
-          <TextField
-            type="password"
-            label={t('password_label')}
-            name="currentPassword"
-            required={true}
-            margin="normal"
-            value={currentPassword}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <TextField
-            type="password"
-            label={t('password_label')}
-            name="password"
-            inputProps={{ minLength: 8 }}
-            required={true}
-            margin="normal"
-            value={password}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <TextField
-            type="password"
-            label={t('repeat_password_label')}
-            name="password2"
-            inputProps={{ minLength: 8 }}
-            required={true}
-            margin="normal"
-            value={password2}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Button type="submit" variant="contained">
-            {t('submit_request_button')}
-          </Button>
-        </div>
-      </form>
-    </>
+    <Grid container={true} justify="center">
+      <Grid item={true} xs={12} md={8} lg={6}>
+        <Paper>
+          <Box flexDirection="column" mt={2} p={4}>
+            <Typography variant="h4" gutterBottom={true}>
+              {t('change_password')}
+            </Typography>
+            <form onSubmit={handleSubmit} autoComplete="off">
+              <TextField
+                type="password"
+                label={t('current_password_label')}
+                name="currentPassword"
+                required={true}
+                margin="normal"
+                fullWidth={true}
+                autoFocus={true}
+                value={currentPassword}
+                onChange={handleChange}
+              />
+              <TextField
+                type="password"
+                label={t('new_password_label')}
+                name="password"
+                inputProps={{ minLength: 8 }}
+                required={true}
+                margin="normal"
+                fullWidth={true}
+                value={password}
+                onChange={handleChange}
+              />
+              <TextField
+                type="password"
+                label={t('repeat_password_label')}
+                name="password2"
+                required={true}
+                margin="normal"
+                fullWidth={true}
+                value={password2}
+                onChange={handleChange}
+              />
+              <Box textAlign="right" mt={4}>
+                <Button type="submit" variant="contained" color="primary">
+                  {t('submit_button_label')}
+                </Button>
+              </Box>
+            </form>
+          </Box>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 
