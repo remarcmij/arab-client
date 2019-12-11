@@ -74,19 +74,6 @@ export const registerUserAsync = ({
   }
 };
 
-export const resetPasswordAsync = ({ password }: UpdateUser) => async (
-  dispatch: ThunkDispatchAny,
-) => {
-  const body = JSON.stringify({ password });
-  const [token] = window.location.pathname.split('/').slice(-1);
-  try {
-    const res = await axios.post('/auth/password/' + token, body);
-    saveToken(res.data.token);
-  } catch (err) {
-    handleAxiosErrors(err, dispatch);
-  }
-};
-
 export const localLogin = createAsyncAction(
   '@auth/LOGIN_REQUEST',
   '@auth/LOGIN_SUCCESS',

@@ -68,7 +68,11 @@ const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
   if (loading || !user) {
     // todo: make it flexible with none login users.
     if (!user) {
-      return <Button onClick={handleClick}>Go To Content</Button>;
+      return (
+        <TrimmedContainer>
+          <Button onClick={handleClick}>Go To Content</Button>
+        </TrimmedContainer>
+      );
     }
     return <Spinner />;
   }
@@ -82,7 +86,7 @@ const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
         <Counter
           onFinishCounting={() => setTimerRunning(false)}
           restartTimer={timerRunning}
-          timer="00:59:00"
+          timer="00:02:00"
           userRelated={true}
         >
           {'Resend Token'}
@@ -102,9 +106,9 @@ const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
       'It seem like this is an old request, please check your e-mail inbox.',
     );
     return (
-      <>
+      <TrimmedContainer>
         <ResendTokenButton />
-      </>
+      </TrimmedContainer>
     );
   }
 
