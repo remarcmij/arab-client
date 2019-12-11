@@ -1,3 +1,4 @@
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -7,10 +8,9 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { localLoginThunk } from '../actions';
-import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
 import { RootState } from 'typesafe-actions';
-import Box from '@material-ui/core/Box';
+import { localLoginAsync } from '../actions';
+import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,7 +55,7 @@ const googleUrl =
     ? '/auth/google'
     : 'http://localhost:8080/auth/google';
 
-const LoginPage: React.FC = () => {
+const SignIn: React.FC = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(localLoginThunk({ email, password }));
+    dispatch(localLoginAsync({ email, password }));
   };
 
   if (isAuthenticated) {
@@ -81,7 +81,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <Box mt={2} className={classes.container}>
+    <Box mt={4} className={classes.container}>
       <Paper classes={{ root: `${classes.pane} ${classes.socialMediaPane}` }}>
         <Button href={googleUrl} classes={{ root: classes.googleButton }}>
           <img src={googleImage} alt="Google" />
@@ -90,7 +90,7 @@ const LoginPage: React.FC = () => {
       <Box m={1} />
       <Paper classes={{ root: classes.pane }}>
         <Typography variant="h4" gutterBottom={true}>
-          {t('login')}
+          {t('sign_in')}
         </Typography>
         <Typography variant="body2">{t('login_prompt')}</Typography>
         <form onSubmit={handleSubmit}>
@@ -125,13 +125,13 @@ const LoginPage: React.FC = () => {
               color="primary"
               classes={{ root: classes.signInButton }}
             >
-              {t('login')}
+              {t('sign_in')}
             </Button>
           </Box>
         </form>
         <Typography variant="body1">
           {t('no_account_yet')}{' '}
-          <Link to="/signup" className={classes.link}>
+          <Link to="/register" className={classes.link}>
             {t('register')}
           </Link>
         </Typography>
@@ -140,4 +140,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default SignIn;

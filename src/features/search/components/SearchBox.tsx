@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { ActionMeta, OptionTypeBase, ValueType } from 'react-select';
 import AsyncSelect from 'react-select/async';
-import { searchLemmasThunk } from '../actions';
+import { searchLemmasAsync } from '../actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,7 +68,7 @@ const SearchBox: React.FC = () => {
     (option: ValueType<OptionTypeBase>, action: ActionMeta) => {
       if (action.action === 'select-option') {
         const { value } = option as OptionTypeBase;
-        dispatch(searchLemmasThunk(value));
+        dispatch(searchLemmasAsync(value));
       }
     },
     [dispatch],

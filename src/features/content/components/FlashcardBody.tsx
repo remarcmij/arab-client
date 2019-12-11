@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import React, { useContext } from 'react';
 import Types from 'Types';
 import LanguageContext from '../../../contexts/LanguageContext';
-import SpeechSynthesizer from '../../../services/SpeechSynthesizer';
 import Transcoder from '../../../services/Transcoder';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,41 +43,16 @@ type Props = Readonly<{
   lemma: Types.ILemma;
   showTranslation: boolean;
   showVocalization: boolean;
-  voiceName: string;
+  foreignVoice: string;
 }>;
 
-// tslint:disable:no-floating-promises
-
-const handleClick = (props: Props) => {
-  const { lemma, showTranslation, voiceName } = props;
-  if (voiceName) {
-    SpeechSynthesizer.speak(
-      voiceName,
-      lemma.foreign,
-      showTranslation ? 0.6 : 0.8,
-    );
-  }
-};
-
-const Flashcard: React.FC<Props> = props => {
-  const { lemma, showTranslation, showVocalization, voiceName } = props;
+const FlashcardBody: React.FC<Props> = props => {
+  const { lemma, showTranslation, showVocalization } = props;
   const classes = useStyles();
-  const { sourceLang, targetLang } = useContext(LanguageContext);
-
-  if (voiceName) {
-    SpeechSynthesizer.speak(
-      voiceName,
-      lemma.foreign,
-      showTranslation ? 0.6 : 0.8,
-    );
-  }
+  const { native, foreign } = useContext(LanguageContext);
 
   return (
-    <Paper
-      className={classes.root}
-      elevation={2}
-      onClick={() => handleClick(props)}
-    >
+    <Paper className={classes.root}>
       <Tooltip
         classes={{ tooltip: classes.htmlTooltip }}
         title={<Typography color="inherit">{lemma.roman}</Typography>}
@@ -86,7 +60,7 @@ const Flashcard: React.FC<Props> = props => {
         <Typography
           variant="h4"
           align="center"
-          lang={targetLang}
+          lang={foreign}
           dir="rtl"
           className={classes.ar}
         >
@@ -98,7 +72,7 @@ const Flashcard: React.FC<Props> = props => {
       <Typography
         variant="h5"
         align="center"
-        lang={sourceLang}
+        lang={native}
         color="textSecondary"
         className={classes.native}
       >
@@ -108,4 +82,4 @@ const Flashcard: React.FC<Props> = props => {
   );
 };
 
-export default Flashcard;
+export default FlashcardBody;

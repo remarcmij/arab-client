@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { clearUploads, uploadFileThunk } from '../actions';
+import { clearUploads, uploadFileAsync } from '../actions';
 import uploadImg from '../assets/File-upload-01.svg';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -73,7 +73,7 @@ const DropBox: React.FC = () => {
 
   const onDrop = useCallback(
     (files: File[]) => {
-      files.forEach(file => dispatch(uploadFileThunk(file)));
+      files.forEach(file => dispatch(uploadFileAsync(file)));
     },
     [dispatch],
   );

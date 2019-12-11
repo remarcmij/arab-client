@@ -4,9 +4,11 @@ import {
   closeSettings,
   openSettings,
   setRomanizationSystem,
-  setVoiceName,
+  setForeignVoice,
+  setNativeVoice,
   toggleTranscription,
   toggleVocalization,
+  toggleShuffle,
 } from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
@@ -16,8 +18,10 @@ type State = Readonly<{
   showTranscription: boolean;
   showFlashcards: boolean;
   romanizationStandard: string;
-  voiceName: string;
+  foreignVoice: string;
+  nativeVoice: string;
   settingsOpen: boolean;
+  shuffle: boolean;
 }>;
 
 const initialState: State = {
@@ -25,8 +29,10 @@ const initialState: State = {
   showTranscription: true,
   showFlashcards: false,
   romanizationStandard: 'din',
-  voiceName: '',
+  foreignVoice: '',
+  nativeVoice: '',
   settingsOpen: false,
+  shuffle: false,
   ...loadState(),
 };
 
@@ -36,14 +42,18 @@ export default (state: State = initialState, action: SettingsAction): State => {
       return { ...state, settingsOpen: true };
     case getType(closeSettings):
       return { ...state, settingsOpen: false };
+    case getType(toggleShuffle):
+      return { ...state, shuffle: !state.shuffle };
     case getType(toggleVocalization):
       return { ...state, showVocalization: !state.showVocalization };
     case getType(toggleTranscription):
       return { ...state, showTranscription: !state.showTranscription };
     case getType(setRomanizationSystem):
       return { ...state, romanizationStandard: action.payload };
-    case getType(setVoiceName):
-      return { ...state, voiceName: action.payload };
+    case getType(setForeignVoice):
+      return { ...state, foreignVoice: action.payload };
+    case getType(setNativeVoice):
+      return { ...state, nativeVoice: action.payload };
     default:
       return state;
   }

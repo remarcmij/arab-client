@@ -17,7 +17,7 @@ export const fetchTopics = createAsyncAction(
   '@admin/FETCH_TOPICS_FAILURE',
 )<undefined, ITopic[], any>();
 
-export const fetchTopicsThunk = () => async (dispatch: ThunkDispatchAny) => {
+export const fetchTopicsAsync = () => async (dispatch: ThunkDispatchAny) => {
   try {
     dispatch(fetchTopics.request());
     const res = await axios('/api/all');
@@ -34,7 +34,7 @@ export const deleteTopic = createAsyncAction(
   '@admin/DELETE_TOPIC_FAILURE',
 )<undefined, ITopic[], any>();
 
-export const deleteTopicThunk = (filename: string) => async (
+export const deleteTopicAsync = (filename: string) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
@@ -60,7 +60,7 @@ export const uploadFile = createAsyncAction(
   '@admin/UPLOAD_FAILURE',
 )<UploadRequestPayload, UploadSuccessPayload, UploadFailurePayload>();
 
-export const uploadFileThunk = (file: File) => async (
+export const uploadFileAsync = (file: File) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   const body = new FormData();

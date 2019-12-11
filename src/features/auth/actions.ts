@@ -8,7 +8,7 @@ import {
 import { setToast } from '../../layout/actions';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { removeToken, storeToken as saveToken } from '../../utils/token';
-import { fetchPublicationsThunk } from '../content/actions';
+import { fetchPublicationsAsync } from '../content/actions';
 
 type Credentials = {
   name?: string;
@@ -38,12 +38,12 @@ export const loadUser = createAsyncAction(
   '@auth/LOAD_USER_FAILURE',
 )<void, User, void>();
 
-export const loadUserThunk = () => async (dispatch: ThunkDispatchAny) => {
+export const loadUserAsync = () => async (dispatch: ThunkDispatchAny) => {
   try {
     dispatch(loadUser.request());
     const res = await axios.get('/auth');
     dispatch(loadUser.success(res.data));
-    await dispatch(fetchPublicationsThunk());
+    await dispatch(fetchPublicationsAsync());
   } catch (err) {
     dispatch(loadUser.failure());
   }
@@ -55,7 +55,7 @@ export const registerUser = createAsyncAction(
   '@auth/REGISTER_FAILURE',
 )<void, void, void>();
 
-export const registerUserThunk = ({
+export const registerUserAsync = ({
   name,
   email,
   password,
@@ -65,7 +65,7 @@ export const registerUserThunk = ({
     dispatch(registerUser.request());
     const res = await axios.post('/auth/signup', body);
     saveToken(res.data.token);
-    await dispatch(loadUserThunk());
+    await dispatch(loadUserAsync());
     dispatch(registerUser.success());
   } catch (err) {
     removeToken();
@@ -74,13 +74,7 @@ export const registerUserThunk = ({
   }
 };
 
-export const localLogin = createAsyncAction(
-  '@auth/LOGIN_REQUEST',
-  '@auth/LOGIN_SUCCESS',
-  '@auth/LOGIN_FAILURE',
-)<void, void, void>();
-
-export const resetPasswordRequest = ({ password }: UpdateUser) => async (
+export const resetPasswordAsync = ({ password }: UpdateUser) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   const body = JSON.stringify({ password });
@@ -93,7 +87,13 @@ export const resetPasswordRequest = ({ password }: UpdateUser) => async (
   }
 };
 
-export const localLoginThunk = ({ email, password }: Credentials) => async (
+export const localLogin = createAsyncAction(
+  '@auth/LOGIN_REQUEST',
+  '@auth/LOGIN_SUCCESS',
+  '@auth/LOGIN_FAILURE',
+)<void, void, void>();
+
+export const localLoginAsync = ({ email, password }: Credentials) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   const config = {
@@ -106,7 +106,7 @@ export const localLoginThunk = ({ email, password }: Credentials) => async (
     dispatch(localLogin.request());
     const res = await axios.post('/auth/login', body, config);
     saveToken(res.data.token);
-    await dispatch(loadUserThunk());
+    await dispatch(loadUserAsync());
     dispatch(localLogin.success());
     dispatch(setToast('success', i18next.t('login_success')));
   } catch (err) {
@@ -118,8 +118,8 @@ export const localLoginThunk = ({ email, password }: Credentials) => async (
 
 export const logout = createAction('@auth/LOGOUT')<void>();
 
-export const logoutThunk = () => async (dispatch: ThunkDispatchAny) => {
+export const logoutAsync = () => async (dispatch: ThunkDispatchAny) => {
   removeToken();
   dispatch(logout());
-  await dispatch(loadUserThunk());
+  await dispatch(loadUserAsync());
 };

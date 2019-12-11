@@ -8,7 +8,7 @@ import { RootState } from 'typesafe-actions';
 import LanguageContext from '../../../contexts/LanguageContext';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { fetchArticlesThunk } from '../actions';
+import { fetchArticlesAsync } from '../actions';
 import ArticleListItem from './ArticleListItem';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,7 +33,7 @@ const ArticleList: React.FC = () => {
   useNavBackRoute('/content');
   useEffect(() => {
     if (!topicsLoaded && publication) {
-      dispatch(fetchArticlesThunk(publication));
+      dispatch(fetchArticlesAsync(publication));
     }
   }, [dispatch, publication, topicsLoaded]);
 
@@ -48,9 +48,7 @@ const ArticleList: React.FC = () => {
           {error ? (
             <div>Error: {error.message}</div>
           ) : (
-            <LanguageContext.Provider
-              value={{ sourceLang: 'nl', targetLang: 'ar' }}
-            >
+            <LanguageContext.Provider value={{ native: 'nl', foreign: 'ar' }}>
               <List>
                 {topics
                   .filter(topic => !topic.filename.endsWith('.index'))

@@ -21,10 +21,11 @@ const arabicRegexp = /[\u0600-\u06ff]+\.?/g;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      marginTop: theme.spacing(1),
+      padding: theme.spacing(2),
       [theme.breakpoints.up('md')]: {
-        margin: theme.spacing(1),
+        padding: theme.spacing(4),
       },
-      padding: theme.spacing(4),
       userSelect: 'none',
     },
     content: {

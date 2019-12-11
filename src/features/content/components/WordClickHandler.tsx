@@ -9,7 +9,7 @@ import SpeechSynthesizer from '../../../services/SpeechSynthesizer';
 
 const WordClickHandler: React.FC<{}> = props => {
   const history = useHistory();
-  const { voiceName } = useSelector((state: RootState) => state.settings);
+  const { foreignVoice } = useSelector((state: RootState) => state.settings);
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -32,7 +32,7 @@ const WordClickHandler: React.FC<{}> = props => {
     if (anchorEl instanceof HTMLElement) {
       const text = anchorEl.textContent!;
       closeMenu();
-      await SpeechSynthesizer.speak(voiceName, text);
+      await SpeechSynthesizer.speak(foreignVoice, text);
     }
   };
 
@@ -53,7 +53,7 @@ const WordClickHandler: React.FC<{}> = props => {
         open={Boolean(anchorEl)}
         onClose={closeMenu}
       >
-        <MenuItem disabled={!voiceName} onClick={speak}>
+        <MenuItem disabled={!foreignVoice} onClick={speak}>
           {t('read_aloud')}
         </MenuItem>
         <MenuItem onClick={searchWord}>{t('look_up')}</MenuItem>

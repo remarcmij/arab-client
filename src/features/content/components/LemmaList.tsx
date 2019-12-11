@@ -89,7 +89,7 @@ const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
   const { lemmas: allLemmas } = topic;
   const lemmas =
     (allLemmas &&
-      allLemmas.filter(lemma => lemma.sectionIndex === sectionIndex)) ||
+      allLemmas.filter(lemma => lemma.sectionIndex === sectionIndex)) ??
     [];
 
   /* eslint-disable react-hooks/exhaustive-deps */

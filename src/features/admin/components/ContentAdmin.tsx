@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { deleteTopicThunk, fetchTopicsThunk } from '../actions';
+import { deleteTopicAsync, fetchTopicsAsync } from '../actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +42,7 @@ const ContentAdmin: React.FC = () => {
   useNavBackRoute('/content');
 
   useEffect(() => {
-    dispatch(fetchTopicsThunk());
+    dispatch(fetchTopicsAsync());
   }, [dispatch]);
 
   if (loading) {
@@ -65,7 +65,7 @@ const ContentAdmin: React.FC = () => {
                   />
                   <ListItemSecondaryAction>
                     <IconButton
-                      onClick={() => dispatch(deleteTopicThunk(topic.filename))}
+                      onClick={() => dispatch(deleteTopicAsync(topic.filename))}
                     >
                       <DeleteForeverIcon color="error" />
                     </IconButton>

@@ -12,12 +12,19 @@ export const toggleTranscription = createAction(
   '@settings/TOGGLE_TRANSCRIPTION',
 )<void>();
 
+export const toggleShuffle = createAction('@settings/TOGGLE_SHUFFLE')<void>();
+
 export const setRomanizationSystem = createAction(
   '@settings/SET_ROMANIZATION_STANDARD',
   (romanizationStandard: string) => romanizationStandard,
 )<string>();
 
-export const setVoiceName = createAction(
-  '@settings/SET_VOICE_NAME',
+export const setForeignVoice = createAction(
+  '@settings/SET_FOREIGN_VOICE',
+  (voiceName: string) => voiceName,
+)<string>();
+
+export const setNativeVoice = createAction(
+  '@settings/SET_NATIVE_VOICE',
   (voiceName: string) => voiceName,
 )<string>();
