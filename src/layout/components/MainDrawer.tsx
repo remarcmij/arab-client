@@ -1,11 +1,10 @@
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,8 +12,9 @@ import { Link, Redirect } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import { logoutThunk } from '../../features/auth/actions';
 import UserInfo from './UserInfo';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     list: {
       width: 250,
@@ -40,7 +40,14 @@ const MainDrawer: React.FC<Props> = props => {
     () => (
       <div className={classes.list}>
         {user && <UserInfo />}
-        <List>
+        <List
+          component="nav"
+          subheader={
+            <ListSubheader component="div">
+              {t('user_side_menu_header')}
+            </ListSubheader>
+          }
+        >
           {user ? (
             <React.Fragment>
               <ListItem button={true} onClick={() => dispatch(logoutThunk())}>
@@ -57,23 +64,6 @@ const MainDrawer: React.FC<Props> = props => {
                   <ListItemText primary={t('change_password')} />
                 </ListItem>
               )}
-              <Divider />
-              {user.admin && (
-                <React.Fragment>
-                  <ListItem button={true} component={Link} to="/admin/content">
-                    <ListItemIcon>
-                      <Icon className={'fas fa-fw fa-tasks'} />
-                    </ListItemIcon>
-                    <ListItemText primary={t('manage_content')} />
-                  </ListItem>
-                  <ListItem button={true} component={Link} to="/admin/upload">
-                    <ListItemIcon>
-                      <Icon className={'fas fa-fw fa-file-upload'} />
-                    </ListItemIcon>
-                    <ListItemText primary={t('upload_content')} />
-                  </ListItem>
-                </React.Fragment>
-              )}
             </React.Fragment>
           ) : (
             <React.Fragment>
@@ -85,6 +75,39 @@ const MainDrawer: React.FC<Props> = props => {
               </ListItem>
             </React.Fragment>
           )}
+        </List>
+
+        {user?.admin && (
+          <List
+            component="nav"
+            subheader={
+              <ListSubheader component="div">
+                {t('admin_side_menu_header')}
+              </ListSubheader>
+            }
+          >
+            <ListItem button={true} component={Link} to="/admin/content">
+              <ListItemIcon>
+                <Icon className={'fas fa-fw fa-tasks'} />
+              </ListItemIcon>
+              <ListItemText primary={t('manage_content')} />
+            </ListItem>
+            <ListItem button={true} component={Link} to="/admin/upload">
+              <ListItemIcon>
+                <Icon className={'fas fa-fw fa-file-upload'} />
+              </ListItemIcon>
+              <ListItemText primary={t('upload_content')} />
+            </ListItem>
+          </List>
+        )}
+        <List
+          component="nav"
+          subheader={
+            <ListSubheader component="div">
+              {t('info_side_menu_header')}
+            </ListSubheader>
+          }
+        >
           <ListItem button={true} component={Link} to="/about">
             <ListItemIcon>
               <Icon className={'fas fa-fw fa-info'} />
