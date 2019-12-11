@@ -1,3 +1,4 @@
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -7,10 +8,9 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { RootState } from 'typesafe-actions';
 import { localLoginThunk } from '../actions';
 import googleImage from '../assets/btn_google_signin_dark_normal_web.png';
-import { RootState } from 'typesafe-actions';
-import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,7 +55,7 @@ const googleUrl =
     ? '/auth/google'
     : 'http://localhost:8080/auth/google';
 
-const LoginPage: React.FC = () => {
+const SignIn: React.FC = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
@@ -140,4 +140,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default SignIn;
