@@ -54,7 +54,7 @@ const MainDrawer: React.FC<Props> = props => {
                 <ListItemIcon>
                   <Icon className={'fa fa-fw fa-sign-out-alt'} />
                 </ListItemIcon>
-                <ListItemText primary={t('logout')} />
+                <ListItemText primary={t('sign_in')} />
               </ListItem>
               {user.verified && (
                 <ListItem button={true} component={Link} to="/password">
@@ -66,14 +66,12 @@ const MainDrawer: React.FC<Props> = props => {
               )}
             </React.Fragment>
           ) : (
-            <React.Fragment>
-              <ListItem button={true} onClick={() => setToLogin(true)}>
-                <ListItemIcon>
-                  <Icon className={'fa fa-fw fa-sign-in-alt'} />
-                </ListItemIcon>
-                <ListItemText primary={t('login')} />
-              </ListItem>
-            </React.Fragment>
+            <ListItem button={true} onClick={() => setToLogin(true)}>
+              <ListItemIcon>
+                <Icon className={'fa fa-fw fa-sign-in-alt'} />
+              </ListItemIcon>
+              <ListItemText primary={t('sign_in_or_register')} />
+            </ListItem>
           )}
         </List>
 

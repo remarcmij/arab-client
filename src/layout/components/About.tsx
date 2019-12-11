@@ -1,34 +1,25 @@
-import Paper from '@material-ui/core/Paper';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import useNavBackRoute from '../hooks/useNavBackRoute';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      marginTop: theme.spacing(1),
-      overflowX: 'auto',
-      padding: theme.spacing(4),
-    },
-  }),
-);
+import TrimmedContainer from './TrimmedContainer';
+import { useTranslation } from 'react-i18next';
 
 const About: React.FC = () => {
-  const classes = useStyles();
   useNavBackRoute('/content');
+  const { t } = useTranslation();
 
   return (
-    <Paper className={classes.root}>
+    <TrimmedContainer>
       <Typography variant="h4" component="h1" gutterBottom={true}>
-        Overzicht
+        {t('about')}
       </Typography>
       <Typography variant="body1">Bla bla</Typography>
       <Typography variant="caption">
         Copyright 2019, Jim Cramer, Amstelveen
+        <br />
+        Contributions: Jawhar Birakdar
       </Typography>
-    </Paper>
+    </TrimmedContainer>
   );
 };
 

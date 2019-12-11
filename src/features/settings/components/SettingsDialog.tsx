@@ -22,18 +22,17 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
+import LanguageContext from '../../../contexts/LanguageContext';
 import SpeechSynthesizer from '../../../services/SpeechSynthesizer';
 import { romanizationStandards } from '../../../services/Transcoder';
 import {
   closeSettings,
-  setRomanizationSystem,
   setForeignVoice,
-  toggleShuffle,
+  setNativeVoice,
+  setRomanizationSystem,
   toggleTranscription,
   toggleVocalization,
-  setNativeVoice,
 } from '../actions';
-import LanguageContext from '../../../contexts/LanguageContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,7 +62,6 @@ const SettingsDialog: React.FC = () => {
     romanizationStandard,
     foreignVoice,
     nativeVoice,
-    shuffle,
   } = useSelector((state: RootState) => state.settings);
   const language = useContext(LanguageContext);
 
@@ -142,19 +140,6 @@ const SettingsDialog: React.FC = () => {
         {t('change_settings')}
       </DialogTitle>
       <DialogContent>
-        <FieldSet label="Flashcards">
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={shuffle}
-                  onChange={() => dispatch(toggleShuffle())}
-                />
-              }
-              label={'Shuffle'}
-            />
-          </FormGroup>
-        </FieldSet>
         <FieldSet label="Vocalization">
           <FormGroup>
             <FormControlLabel

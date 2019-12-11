@@ -81,7 +81,7 @@ const SignIn: React.FC = () => {
   }
 
   return (
-    <Box mt={2} className={classes.container}>
+    <Box mt={4} className={classes.container}>
       <Paper classes={{ root: `${classes.pane} ${classes.socialMediaPane}` }}>
         <Button href={googleUrl} classes={{ root: classes.googleButton }}>
           <img src={googleImage} alt="Google" />
@@ -90,7 +90,7 @@ const SignIn: React.FC = () => {
       <Box m={1} />
       <Paper classes={{ root: classes.pane }}>
         <Typography variant="h4" gutterBottom={true}>
-          {t('login')}
+          {t('sign_in')}
         </Typography>
         <Typography variant="body2">{t('login_prompt')}</Typography>
         <form onSubmit={handleSubmit}>
@@ -125,7 +125,7 @@ const SignIn: React.FC = () => {
               color="primary"
               classes={{ root: classes.signInButton }}
             >
-              {t('login')}
+              {t('sign_in')}
             </Button>
           </Box>
         </form>

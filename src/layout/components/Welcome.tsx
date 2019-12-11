@@ -1,22 +1,10 @@
+import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      marginTop: -60,
-      overflowX: 'auto',
-      padding: theme.spacing(4),
-    },
-  }),
-);
+import TrimmedContainer from './TrimmedContainer';
 
 const Welcome: React.FC = () => {
-  const classes = useStyles();
   const [done, setDone] = useState(false);
 
   const handleClick = () => setDone(true);
@@ -26,10 +14,12 @@ const Welcome: React.FC = () => {
   }
 
   return (
-    <Paper className={classes.root}>
-      <article>Welcome</article>
-      <Button onClick={handleClick}>Go to content</Button>
-    </Paper>
+    <TrimmedContainer>
+      <Typography variant="h5">Welcome</Typography>
+      <Button onClick={handleClick} variant="contained" color="primary">
+        Go to content
+      </Button>
+    </TrimmedContainer>
   );
 };
 

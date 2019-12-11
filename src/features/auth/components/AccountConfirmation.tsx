@@ -1,14 +1,13 @@
-import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import ResendButtonIcon from '@material-ui/icons/Refresh';
-import React, { useEffect, useState, useMemo } from 'react';
-import { Redirect } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import Spinner from '../../../layout/components/Spinner';
+import axios from 'axios';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setToast, ToastType } from '../../../layout/actions';
+import { Redirect, useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-
+import { setToast, ToastType } from '../../../layout/actions';
+import Spinner from '../../../layout/components/Spinner';
+import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 import Counter from './Counter';
 
 const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
@@ -116,10 +115,10 @@ const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
   }
 
   return (
-    <>
+    <TrimmedContainer>
       {props.children}
       <Button onClick={handleClick}>Go To Content</Button>
-    </>
+    </TrimmedContainer>
   );
 };
 export default AccountConfirmation;
