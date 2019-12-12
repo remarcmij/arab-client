@@ -8,11 +8,12 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { setToast } from '../../../layout/actions';
-import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 import handleAxiosErrors from '../../../utils/handleAxiosErrors';
 import { storeToken } from '../../../utils/token';
 
-const PasswordChange: React.FC = () => {
+const PasswordChange: React.FC<{ isResetProcess: boolean }> = ({
+  isResetProcess,
+}) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -32,10 +33,14 @@ const PasswordChange: React.FC = () => {
     if (password !== password2) {
       dispatch(setToast('error', t('passwords_mismatch')));
     } else {
-      const body = JSON.stringify({ password, currentPassword });
+      const body = JSON.stringify({
+        password,
+        currentPassword,
+        resetProcess: isResetProcess,
+      });
 
       try {
-        const res = await axios.post('/auth/password', body);
+        const res = await axios.patch('/auth/password', body);
         storeToken(res.data.token);
         dispatch(setToast('success', 'password changed.'));
         history.push('/content');
@@ -46,22 +51,24 @@ const PasswordChange: React.FC = () => {
   };
 
   return (
-    <TrimmedContainer>
+    <>
       <Typography variant="h4" gutterBottom={true}>
         {t('change_password')}
       </Typography>
       <form onSubmit={handleSubmit} autoComplete="off">
-        <TextField
-          type="password"
-          label={t('current_password_label')}
-          name="currentPassword"
-          required={true}
-          margin="normal"
-          fullWidth={true}
-          autoFocus={true}
-          value={currentPassword}
-          onChange={handleChange}
-        />
+        {!isResetProcess && (
+          <TextField
+            type="password"
+            label={t('current_password_label')}
+            name="currentPassword"
+            required={true}
+            margin="normal"
+            fullWidth={true}
+            autoFocus={true}
+            value={currentPassword}
+            onChange={handleChange}
+          />
+        )}
         <TextField
           type="password"
           label={t('new_password_label')}
@@ -89,7 +96,7 @@ const PasswordChange: React.FC = () => {
           </Button>
         </Box>
       </form>
-    </TrimmedContainer>
+    </>
   );
 };
 

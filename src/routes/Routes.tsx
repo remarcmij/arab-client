@@ -4,7 +4,7 @@ import ContentAdmin from '../features/admin/components/ContentAdmin';
 import Upload from '../features/admin/components/Upload';
 import { User } from '../features/auth/actions';
 import AccountConfirmation from '../features/auth/components/AccountConfirmation';
-import PasswordChange from '../features/auth/components/PasswordChange';
+import Password from '../features/auth/components/Password';
 import Register from '../features/auth/components/Register';
 import SignIn from '../features/auth/components/SignIn';
 import Article from '../features/content/components/Article';
@@ -42,6 +42,13 @@ const Routes: React.FC = () => (
       <Route exact={true} path="/about" component={AboutPage} />
       <Route exact={true} path="/login" component={SignIn} />
       <Route exact={true} path="/register" component={Register} />
+      {/* // ? what to do here? // */}
+      {/* <Route exact={true} path="/password" component={Password} /> */}
+      <Route
+        exact={true}
+        path="/password/:tempResetToken"
+        component={Password}
+      />
       <Route
         exact={true}
         path="/confirmation/:token"
@@ -51,7 +58,7 @@ const Routes: React.FC = () => (
         predicate={isVerified}
         exact={true}
         path="/password"
-        component={PasswordChange}
+        component={Password}
       />
       <ProtectedRoute
         predicate={isAdmin}

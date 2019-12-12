@@ -47,6 +47,10 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.primary.dark,
       fontWeight: 'bold',
     },
+    resetPasswordButton: {
+      textDecoration: 'none',
+      color: theme.palette.primary.light,
+    },
   }),
 );
 
@@ -129,6 +133,12 @@ const SignIn: React.FC = () => {
             </Button>
           </Box>
         </form>
+        <Typography variant="subtitle2">
+          {t('forgotten_password')}{' '}
+          <Link to="/password" className={classes.resetPasswordButton}>
+            {t('click_here')}
+          </Link>
+        </Typography>
         <Typography variant="body1">
           {t('no_account_yet')}{' '}
           <Link to="/register" className={classes.link}>
