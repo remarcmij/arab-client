@@ -12,7 +12,17 @@ export const toggleTranscription = createAction(
   '@settings/TOGGLE_TRANSCRIPTION',
 )<void>();
 
-export const toggleShuffle = createAction('@settings/TOGGLE_SHUFFLE')<void>();
+export const toggleFlashcardsShuffle = createAction(
+  '@settings/TOGGLE_FLASHCARDS_SHUFFLE',
+)<void>();
+
+export const toggleFlashcardsSpeech = createAction(
+  '@settings/TOGGLE_FLASHCARDS_SPEECH',
+)<void>();
+
+export const toggleFlashcardsRepeat = createAction(
+  '@settings/TOGGLE_FLASHCARDS_REPEAT',
+)<void>();
 
 export const setRomanizationSystem = createAction(
   '@settings/SET_ROMANIZATION_STANDARD',
