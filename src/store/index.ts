@@ -25,7 +25,6 @@ store.subscribe(
         romanizationStandard,
         foreignVoice,
         nativeVoice,
-        shuffle,
       },
     } = store.getState();
 
@@ -35,7 +34,6 @@ store.subscribe(
       romanizationStandard,
       foreignVoice,
       nativeVoice,
-      shuffle,
     });
   }, 1000),
 );
