@@ -9,12 +9,12 @@ import PasswordReset from './PasswordReset';
 const Password: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const { tempResetToken } = useParams();
+  const { resetToken } = useParams();
 
   return (
     <TrimmedContainer>
-      {user ?? tempResetToken ? (
-        <PasswordChange resetToken={tempResetToken} />
+      {user || resetToken ? (
+        <PasswordChange resetToken={resetToken} />
       ) : (
         <PasswordReset />
       )}

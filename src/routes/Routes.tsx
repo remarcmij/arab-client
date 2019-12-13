@@ -44,11 +44,7 @@ const Routes: React.FC = () => (
       <Route exact={true} path="/about" component={AboutPage} />
       <Route exact={true} path="/login" component={SignIn} />
       <Route exact={true} path="/register" component={Register} />
-      <Route
-        exact={true}
-        path="/password/:tempResetToken"
-        component={Password}
-      />
+      <Route exact={true} path="/password/:resetToken" component={Password} />
       <Route
         exact={true}
         path="/confirmation/:token"
