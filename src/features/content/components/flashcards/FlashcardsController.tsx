@@ -10,7 +10,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { ILemma } from 'Types';
 import { RootState } from 'typesafe-actions';
@@ -58,18 +58,21 @@ const FlashcardsController: React.FC<Props> = props => {
     }
   }, [index, sequence, onUpdate, speech, nativeVoice, foreignVoice]);
 
-  const incrementIndex = (val: number) => {
-    // Check if end of sequence reached
-    if (val >= lemmas.length * 2 - 1) {
-      // If repeat is enabled, start at index zero again
-      if (repeat) {
-        return 0;
+  const incrementIndex = useCallback(
+    (val: number) => {
+      // Check if end of sequence reached
+      if (val >= lemmas.length * 2 - 1) {
+        // If repeat is enabled, start at index zero again
+        if (repeat) {
+          return 0;
+        }
+        // Otherwise force auto play to stop
+        setAutoPlay(false);
       }
-      // Otherwise force auto play to stop
-      setAutoPlay(false);
-    }
-    return val + 1;
-  };
+      return val + 1;
+    },
+    [lemmas, repeat],
+  );
 
   useEffect(() => {
     if (!autoPlay) return;
@@ -79,7 +82,15 @@ const FlashcardsController: React.FC<Props> = props => {
         ? speechSynthesizer
         : flashcardTimer;
     return player.subscribe(() => setIndex(incrementIndex));
-  }, [autoPlay, lemmas, nativeVoice, foreignVoice, speech, setIndex]);
+  }, [
+    autoPlay,
+    lemmas,
+    nativeVoice,
+    foreignVoice,
+    speech,
+    setIndex,
+    incrementIndex,
+  ]);
 
   const atFirst = () => index === 0;
   const atLast = () => index === lemmas.length * 2 - 1;
