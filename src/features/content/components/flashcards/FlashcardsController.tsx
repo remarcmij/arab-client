@@ -21,9 +21,6 @@ import useSequence from './hooks/useSequence';
 
 const flashcardTimer = new FlashcardTimer();
 
-const incrementIndex = (lemmas: ILemma[]) => (val: number) =>
-  Math.min(lemmas.length * 2 - 1, val + 1);
-
 type Props = Readonly<{
   lemmas: ILemma[];
   onUpdate: (lemma: ILemma, index: number, showTranslation: boolean) => void;
@@ -31,9 +28,10 @@ type Props = Readonly<{
 
 const FlashcardsController: React.FC<Props> = props => {
   const { lemmas, onUpdate } = props;
-  const { shuffle, foreignVoice, nativeVoice, speech } = useSelector(
-    (state: RootState) => state.settings,
-  );
+  const {
+    settings: { foreignVoice, nativeVoice },
+    flashcards: { shuffle, speech, repeat },
+  } = useSelector((state: RootState) => state);
   const [index, setIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
   const [optionDialogOpen, setOptionsDialogOpen] = useState(false);
@@ -60,14 +58,27 @@ const FlashcardsController: React.FC<Props> = props => {
     }
   }, [index, sequence, onUpdate, speech, nativeVoice, foreignVoice]);
 
+  const incrementIndex = (val: number) => {
+    // Check if end of sequence reached
+    if (val >= lemmas.length * 2 - 1) {
+      // If repeat is enabled, start at index zero again
+      if (repeat) {
+        return 0;
+      }
+      // Otherwise force auto play to stop
+      setAutoPlay(false);
+    }
+    return val + 1;
+  };
+
   useEffect(() => {
     if (!autoPlay) return;
-    setIndex(incrementIndex(lemmas));
+    setIndex(incrementIndex);
     const player =
       nativeVoice && foreignVoice && speech
         ? speechSynthesizer
         : flashcardTimer;
-    return player.subscribe(() => setIndex(incrementIndex(lemmas)));
+    return player.subscribe(() => setIndex(incrementIndex));
   }, [autoPlay, lemmas, nativeVoice, foreignVoice, speech, setIndex]);
 
   const atFirst = () => index === 0;

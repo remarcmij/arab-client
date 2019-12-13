@@ -8,9 +8,6 @@ import {
   setNativeVoice,
   toggleTranscription,
   toggleVocalization,
-  toggleFlashcardsShuffle,
-  toggleFlashcardsRepeat,
-  toggleFlashcardsSpeech,
 } from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
@@ -23,9 +20,6 @@ type State = Readonly<{
   foreignVoice: string;
   nativeVoice: string;
   settingsOpen: boolean;
-  shuffle: boolean;
-  speech: boolean;
-  repeat: boolean;
 }>;
 
 const initialState: State = {
@@ -36,9 +30,6 @@ const initialState: State = {
   foreignVoice: '',
   nativeVoice: '',
   settingsOpen: false,
-  shuffle: false,
-  speech: false,
-  repeat: false,
   ...loadState(),
 };
 
@@ -58,12 +49,6 @@ export default (state: State = initialState, action: SettingsAction): State => {
       return { ...state, foreignVoice: action.payload };
     case getType(setNativeVoice):
       return { ...state, nativeVoice: action.payload };
-    case getType(toggleFlashcardsShuffle):
-      return { ...state, shuffle: !state.shuffle };
-    case getType(toggleFlashcardsRepeat):
-      return { ...state, repeat: !state.repeat };
-    case getType(toggleFlashcardsSpeech):
-      return { ...state, speech: !state.speech };
     default:
       return state;
   }
