@@ -14,9 +14,11 @@ import PublicationList from '../features/content/components/PublicationList';
 import SearchPage from '../features/search/components/SearchPage';
 import AboutPage from '../layout/components/About';
 import ProtectedRoute from './ProtectedRoute';
+import PasswordReset from '../features/auth/components/PasswordReset';
 
-const isAdmin = (user: User) => user.admin;
-const isVerified = (user: User) => user.verified;
+const isAdmin = (user: User | null) => !!user?.admin;
+const isVerified = (user: User | null) => !!user?.verified;
+const isNotSignedIn = (user: User | null) => user == null;
 
 const Routes: React.FC = () => (
   <section>
@@ -42,8 +44,6 @@ const Routes: React.FC = () => (
       <Route exact={true} path="/about" component={AboutPage} />
       <Route exact={true} path="/login" component={SignIn} />
       <Route exact={true} path="/register" component={Register} />
-      {/* // ? what to do here? // */}
-      {/* <Route exact={true} path="/password" component={Password} /> */}
       <Route
         exact={true}
         path="/password/:tempResetToken"
@@ -53,6 +53,12 @@ const Routes: React.FC = () => (
         exact={true}
         path="/confirmation/:token"
         component={AccountConfirmation}
+      />
+      <ProtectedRoute
+        predicate={isNotSignedIn}
+        exact={true}
+        path="/reset"
+        component={PasswordReset}
       />
       <ProtectedRoute
         predicate={isVerified}

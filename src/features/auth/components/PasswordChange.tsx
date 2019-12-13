@@ -2,7 +2,7 @@ import { Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -11,9 +11,7 @@ import { setToast } from '../../../layout/actions';
 import handleAxiosErrors from '../../../utils/handleAxiosErrors';
 import { storeToken } from '../../../utils/token';
 
-const PasswordChange: React.FC<{ isResetProcess: boolean }> = ({
-  isResetProcess,
-}) => {
+const PasswordChange: React.FC<{ resetToken?: string }> = ({ resetToken }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -33,14 +31,22 @@ const PasswordChange: React.FC<{ isResetProcess: boolean }> = ({
     if (password !== password2) {
       dispatch(setToast('error', t('passwords_mismatch')));
     } else {
-      const body = JSON.stringify({
-        password,
-        currentPassword,
-        resetProcess: isResetProcess,
-      });
-
       try {
-        const res = await axios.patch('/auth/password', body);
+        const res = resetToken
+          ? await axios.patch(
+              '/auth/password/reset',
+              JSON.stringify({
+                password,
+                resetToken,
+              }),
+            )
+          : await axios.patch(
+              '/auth/password/change',
+              JSON.stringify({
+                password,
+                currentPassword,
+              }),
+            );
         storeToken(res.data.token);
         dispatch(setToast('success', 'password changed.'));
         history.push('/content');
@@ -56,7 +62,7 @@ const PasswordChange: React.FC<{ isResetProcess: boolean }> = ({
         {t('change_password')}
       </Typography>
       <form onSubmit={handleSubmit} autoComplete="off">
-        {!isResetProcess && (
+        {!resetToken && (
           <TextField
             type="password"
             label={t('current_password_label')}

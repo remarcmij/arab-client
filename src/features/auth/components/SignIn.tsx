@@ -135,7 +135,7 @@ const SignIn: React.FC = () => {
         </form>
         <Typography variant="subtitle2">
           {t('forgotten_password')}{' '}
-          <Link to="/password" className={classes.resetPasswordButton}>
+          <Link to="/reset" className={classes.resetPasswordButton}>
             {t('click_here')}
           </Link>
         </Typography>
