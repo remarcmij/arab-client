@@ -9,7 +9,7 @@ import Register from '../features/auth/components/Register';
 import SignIn from '../features/auth/components/SignIn';
 import Article from '../features/content/components/Article';
 import ArticleList from '../features/content/components/ArticleList';
-import Flashcards from '../features/content/components/Flashcards';
+import Flashcards from '../features/content/components/flashcards/Flashcards';
 import PublicationList from '../features/content/components/PublicationList';
 import SearchPage from '../features/search/components/SearchPage';
 import AboutPage from '../layout/components/About';

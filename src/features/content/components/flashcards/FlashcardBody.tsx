@@ -4,8 +4,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import React, { useContext } from 'react';
 import Types from 'Types';
-import LanguageContext from '../../../contexts/LanguageContext';
-import Transcoder from '../../../services/Transcoder';
+import LanguageContext from '../../../../contexts/LanguageContext';
+import Transcoder from '../../../../services/Transcoder';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
