@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import auth from '../features/auth/reducer';
 import content from '../features/content/reducer';
+import flashcards from '../features/content/components/flashcards/reducer';
 import search from '../features/search/reducer';
 import settings from '../features/settings/reducer';
 import layout from '../layout/reducer';
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   admin,
   auth,
   content,
+  flashcards,
   layout,
   search,
   settings,

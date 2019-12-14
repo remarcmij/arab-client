@@ -6,13 +6,15 @@ import { User } from '../features/auth/actions';
 
 type Props = {
   component: React.ElementType;
-  predicate: (user: User) => boolean;
+  predicate: (user: User | null) => boolean;
+  fallbackTo?: string;
   [key: string]: unknown;
 };
 
 const ProtectedRoute: React.FC<Props> = ({
   component: Component,
   predicate,
+  fallbackTo = '/content',
   ...rest
 }) => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -20,10 +22,10 @@ const ProtectedRoute: React.FC<Props> = ({
     <Route
       {...rest}
       render={props =>
-        user && predicate(user) ? (
+        predicate(user) ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect to={fallbackTo} />
         )
       }
     />

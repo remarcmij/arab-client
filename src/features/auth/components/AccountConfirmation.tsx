@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import ResendButtonIcon from '@material-ui/icons/Refresh';
 import axios from 'axios';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
@@ -10,12 +10,11 @@ import Spinner from '../../../layout/components/Spinner';
 import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 import Counter from './Counter';
 
-const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
+const AccountConfirmation: React.FC = () => {
   const { token } = useParams();
   const [loading, setLoading] = useState(true);
   const [expired, setExpired] = useState(false);
   const [isValid, setIsValid] = useState(false);
-  const [isAlreadyVerified, setIsAlreadyVerified] = useState(true);
   const [message, setMessage] = useState('');
   const [done, setDone] = useState(false);
   const dispatch = useDispatch();
@@ -48,10 +47,6 @@ const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
       .finally(() => setLoading(false));
   }, [token]);
 
-  useMemo(() => {
-    setIsAlreadyVerified(props.verified || false);
-  }, [isAlreadyVerified]);
-
   const requestNewToken = async () => {
     try {
       await axios.get('/auth/token/' + token);
@@ -65,35 +60,12 @@ const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
     }
   };
 
-  if (loading || !user) {
-    // todo: make it flexible with none login users.
-    if (!user) {
-      return <Button onClick={handleClick}>Go To Content</Button>;
-    }
-    return <Spinner />;
-  }
-
-  const ResendTokenButton = () => {
-    if (isValid && user.verified) {
-      return <Button onClick={handleClick}>Go To Content</Button>;
-    }
-    return (
-      <Button disabled={timerRunning} onClick={requestNewToken}>
-        <Counter
-          onFinishCounting={() => setTimerRunning(false)}
-          restartTimer={timerRunning}
-          timer="00:59:00"
-          userRelated={true}
-        >
-          {'Resend Token'}
-          <ResendButtonIcon />
-        </Counter>
-      </Button>
-    );
-  };
-
   if (done) {
     return <Redirect to="/content" />;
+  }
+
+  if (loading) {
+    return <Spinner />;
   }
 
   if (expired) {
@@ -101,23 +73,32 @@ const AccountConfirmation: React.FC<{ verified?: boolean }> = props => {
       'info',
       'It seem like this is an old request, please check your e-mail inbox.',
     );
-    return (
-      <>
-        <ResendTokenButton />
-      </>
-    );
   }
 
-  if (isAlreadyVerified) {
+  if (user?.verified) {
     handleNotifications('success', message);
   } else {
-    handleNotifications('info', message);
+    handleNotifications('error', message);
   }
+
+  const shouldUserGoToContent = !user || !expired;
 
   return (
     <TrimmedContainer>
-      {props.children}
-      <Button onClick={handleClick}>Go To Content</Button>
+      {shouldUserGoToContent ?? (isValid && user?.verified) ? (
+        <Button onClick={handleClick}>Go To Content</Button>
+      ) : (
+        <Button disabled={timerRunning} onClick={requestNewToken}>
+          <Counter
+            onFinishCounting={() => setTimerRunning(false)}
+            restartTimer={timerRunning}
+            timer="00:02:00"
+          >
+            Resend Token
+            <ResendButtonIcon />
+          </Counter>
+        </Button>
+      )}
     </TrimmedContainer>
   );
 };

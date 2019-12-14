@@ -167,7 +167,7 @@ const SettingsDialog: React.FC = () => {
             {renderRomanizationSelect()}
           </FormGroup>
         </FieldSet>
-        <FieldSet label={t('voices')}>
+        <FieldSet label={t('select_voices')}>
           <FormGroup>{renderVoiceSelect(language.foreign)}</FormGroup>
           <FormGroup>{renderVoiceSelect(language.native)}</FormGroup>
         </FieldSet>

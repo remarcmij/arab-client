@@ -8,7 +8,6 @@ import {
   setNativeVoice,
   toggleTranscription,
   toggleVocalization,
-  toggleShuffle,
 } from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
@@ -21,7 +20,6 @@ type State = Readonly<{
   foreignVoice: string;
   nativeVoice: string;
   settingsOpen: boolean;
-  shuffle: boolean;
 }>;
 
 const initialState: State = {
@@ -32,7 +30,6 @@ const initialState: State = {
   foreignVoice: '',
   nativeVoice: '',
   settingsOpen: false,
-  shuffle: false,
   ...loadState(),
 };
 
@@ -42,8 +39,6 @@ export default (state: State = initialState, action: SettingsAction): State => {
       return { ...state, settingsOpen: true };
     case getType(closeSettings):
       return { ...state, settingsOpen: false };
-    case getType(toggleShuffle):
-      return { ...state, shuffle: !state.shuffle };
     case getType(toggleVocalization):
       return { ...state, showVocalization: !state.showVocalization };
     case getType(toggleTranscription):

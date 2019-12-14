@@ -6,11 +6,12 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { setToast } from '../../../layout/actions';
 import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 import handleAxiosErrors from '../../../utils/handleAxiosErrors';
 import { storeToken } from '../../../utils/token';
+import { loadUserAsync } from '../../auth/actions';
 
 const PasswordChange: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const PasswordChange: React.FC = () => {
     password2: '',
     currentPassword: '',
   });
+  const { resetToken } = useParams();
   const history = useHistory();
 
   const { password, password2, currentPassword } = formData;
@@ -32,13 +34,28 @@ const PasswordChange: React.FC = () => {
     if (password !== password2) {
       dispatch(setToast('error', t('passwords_mismatch')));
     } else {
-      const body = JSON.stringify({ password, currentPassword });
-
       try {
-        const res = await axios.post('/auth/password', body);
+        const res = resetToken
+          ? await axios.patch(
+              '/auth/password/reset',
+              JSON.stringify({
+                password,
+                resetToken,
+              }),
+            )
+          : await axios.patch(
+              '/auth/password/change',
+              JSON.stringify({
+                password,
+                currentPassword,
+              }),
+            );
         storeToken(res.data.token);
-        dispatch(setToast('success', 'password changed.'));
-        history.push('/content');
+        dispatch(setToast('success', 'Password changed.'));
+        if (resetToken) {
+          dispatch(loadUserAsync());
+        }
+        history.replace('/content');
       } catch (err) {
         handleAxiosErrors(err, dispatch);
       }
@@ -51,17 +68,19 @@ const PasswordChange: React.FC = () => {
         {t('change_password')}
       </Typography>
       <form onSubmit={handleSubmit} autoComplete="off">
-        <TextField
-          type="password"
-          label={t('current_password_label')}
-          name="currentPassword"
-          required={true}
-          margin="normal"
-          fullWidth={true}
-          autoFocus={true}
-          value={currentPassword}
-          onChange={handleChange}
-        />
+        {!resetToken && (
+          <TextField
+            type="password"
+            label={t('current_password_label')}
+            name="currentPassword"
+            required={true}
+            margin="normal"
+            fullWidth={true}
+            autoFocus={true}
+            value={currentPassword}
+            onChange={handleChange}
+          />
+        )}
         <TextField
           type="password"
           label={t('new_password_label')}

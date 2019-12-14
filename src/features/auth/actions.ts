@@ -8,7 +8,6 @@ import {
 import { setToast } from '../../layout/actions';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { removeToken, storeToken as saveToken } from '../../utils/token';
-import { fetchPublicationsAsync } from '../content/actions';
 
 type Credentials = {
   name?: string;
@@ -43,7 +42,6 @@ export const loadUserAsync = () => async (dispatch: ThunkDispatchAny) => {
     dispatch(loadUser.request());
     const res = await axios.get('/auth');
     dispatch(loadUser.success(res.data));
-    await dispatch(fetchPublicationsAsync());
   } catch (err) {
     dispatch(loadUser.failure());
   }
@@ -70,19 +68,6 @@ export const registerUserAsync = ({
   } catch (err) {
     removeToken();
     dispatch(registerUser.failure());
-    handleAxiosErrors(err, dispatch);
-  }
-};
-
-export const resetPasswordAsync = ({ password }: UpdateUser) => async (
-  dispatch: ThunkDispatchAny,
-) => {
-  const body = JSON.stringify({ password });
-  const [token] = window.location.pathname.split('/').slice(-1);
-  try {
-    const res = await axios.post('/auth/password/' + token, body);
-    saveToken(res.data.token);
-  } catch (err) {
     handleAxiosErrors(err, dispatch);
   }
 };

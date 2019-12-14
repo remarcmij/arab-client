@@ -9,14 +9,16 @@ import Register from '../features/auth/components/Register';
 import SignIn from '../features/auth/components/SignIn';
 import Article from '../features/content/components/Article';
 import ArticleList from '../features/content/components/ArticleList';
-import Flashcards from '../features/content/components/Flashcards';
+import Flashcards from '../features/content/components/flashcards/Flashcards';
 import PublicationList from '../features/content/components/PublicationList';
 import SearchPage from '../features/search/components/SearchPage';
 import AboutPage from '../layout/components/About';
 import ProtectedRoute from './ProtectedRoute';
+import PasswordReset from '../features/auth/components/PasswordReset';
 
-const isAdmin = (user: User) => user.admin;
-const isVerified = (user: User) => user.verified;
+const isAdmin = (user: User | null) => !!user?.admin;
+const isVerified = (user: User | null) => !!user?.verified;
+const isNotSignedIn = (user: User | null) => user == null;
 
 const Routes: React.FC = () => (
   <section>
@@ -42,16 +44,28 @@ const Routes: React.FC = () => (
       <Route exact={true} path="/about" component={AboutPage} />
       <Route exact={true} path="/login" component={SignIn} />
       <Route exact={true} path="/register" component={Register} />
-      <Route
+      <ProtectedRoute
+        predicate={isNotSignedIn}
         exact={true}
-        path="/confirmation/:token"
-        component={AccountConfirmation}
+        path="/password/:resetToken"
+        component={PasswordChange}
       />
       <ProtectedRoute
         predicate={isVerified}
         exact={true}
         path="/password"
         component={PasswordChange}
+      />
+      <ProtectedRoute
+        predicate={isNotSignedIn}
+        exact={true}
+        path="/reset"
+        component={PasswordReset}
+      />
+      <Route
+        exact={true}
+        path="/confirmation/:token"
+        component={AccountConfirmation}
       />
       <ProtectedRoute
         predicate={isAdmin}
