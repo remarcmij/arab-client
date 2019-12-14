@@ -8,11 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { setToast } from '../../../layout/actions';
-import { resetContent } from '../../content/actions';
-
+import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 import handleAxiosErrors from '../../../utils/handleAxiosErrors';
 import { storeToken } from '../../../utils/token';
-import TrimmedContainer from '../../../layout/components/TrimmedContainer';
+import { loadUserAsync } from '../../auth/actions';
 
 const PasswordChange: React.FC = () => {
   const dispatch = useDispatch();
@@ -52,12 +51,9 @@ const PasswordChange: React.FC = () => {
               }),
             );
         storeToken(res.data.token);
-        dispatch(setToast('success', 'password changed.'));
+        dispatch(setToast('success', 'Password changed.'));
         if (resetToken) {
-          // the user may now have access to more content
-          // so make sure it is reloaded, by clearing out
-          // any previously cached content.
-          dispatch(resetContent());
+          dispatch(loadUserAsync());
         }
         history.replace('/content');
       } catch (err) {
