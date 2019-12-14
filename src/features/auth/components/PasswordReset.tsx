@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { setToast } from '../../../layout/actions';
 import handleAxiosErrors from '../../../utils/handleAxiosErrors';
+import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 
 const PasswordReset: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const PasswordReset: React.FC = () => {
   };
 
   return (
-    <>
+    <TrimmedContainer>
       <Typography variant="h4" gutterBottom={true}>
         {t('reset_password')}
       </Typography>
@@ -61,7 +62,7 @@ const PasswordReset: React.FC = () => {
           </Button>
         </Box>
       </form>
-    </>
+    </TrimmedContainer>
   );
 };
 

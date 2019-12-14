@@ -2,16 +2,19 @@ import { Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { setToast } from '../../../layout/actions';
+import { resetContent } from '../../content/actions';
+
 import handleAxiosErrors from '../../../utils/handleAxiosErrors';
 import { storeToken } from '../../../utils/token';
+import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 
-const PasswordChange: React.FC<{ resetToken?: string }> = ({ resetToken }) => {
+const PasswordChange: React.FC = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -19,6 +22,7 @@ const PasswordChange: React.FC<{ resetToken?: string }> = ({ resetToken }) => {
     password2: '',
     currentPassword: '',
   });
+  const { resetToken } = useParams();
   const history = useHistory();
 
   const { password, password2, currentPassword } = formData;
@@ -49,7 +53,13 @@ const PasswordChange: React.FC<{ resetToken?: string }> = ({ resetToken }) => {
             );
         storeToken(res.data.token);
         dispatch(setToast('success', 'password changed.'));
-        history.push('/content');
+        if (resetToken) {
+          // the user may now have access to more content
+          // so make sure it is reloaded, by clearing out
+          // any previously cached content.
+          dispatch(resetContent());
+        }
+        history.replace('/content');
       } catch (err) {
         handleAxiosErrors(err, dispatch);
       }
@@ -57,7 +67,7 @@ const PasswordChange: React.FC<{ resetToken?: string }> = ({ resetToken }) => {
   };
 
   return (
-    <>
+    <TrimmedContainer>
       <Typography variant="h4" gutterBottom={true}>
         {t('change_password')}
       </Typography>
@@ -102,7 +112,7 @@ const PasswordChange: React.FC<{ resetToken?: string }> = ({ resetToken }) => {
           </Button>
         </Box>
       </form>
-    </>
+    </TrimmedContainer>
   );
 };
 
