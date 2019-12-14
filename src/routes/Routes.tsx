@@ -44,15 +44,17 @@ const Routes: React.FC = () => (
       <Route exact={true} path="/about" component={AboutPage} />
       <Route exact={true} path="/login" component={SignIn} />
       <Route exact={true} path="/register" component={Register} />
-      <Route
+      <ProtectedRoute
+        predicate={isNotSignedIn}
         exact={true}
         path="/password/:resetToken"
         component={PasswordChange}
       />
-      <Route
+      <ProtectedRoute
+        predicate={isVerified}
         exact={true}
-        path="/confirmation/:token"
-        component={AccountConfirmation}
+        path="/password"
+        component={PasswordChange}
       />
       <ProtectedRoute
         predicate={isNotSignedIn}
@@ -60,11 +62,10 @@ const Routes: React.FC = () => (
         path="/reset"
         component={PasswordReset}
       />
-      <ProtectedRoute
-        predicate={isVerified}
+      <Route
         exact={true}
-        path="/password"
-        component={PasswordChange}
+        path="/confirmation/:token"
+        component={AccountConfirmation}
       />
       <ProtectedRoute
         predicate={isAdmin}
