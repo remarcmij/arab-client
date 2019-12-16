@@ -1,6 +1,6 @@
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem('@arab/settings');
+    const serializedState = localStorage.getItem('@arab/state');
     if (serializedState === null) {
       return {};
     }
@@ -12,5 +12,5 @@ export const loadState = () => {
 
 export const saveState = state => {
   const serializedState = JSON.stringify(state);
-  localStorage.setItem('@arab/settings', serializedState);
+  localStorage.setItem('@arab/state', serializedState);
 };

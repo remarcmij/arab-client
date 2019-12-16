@@ -26,14 +26,21 @@ store.subscribe(
         foreignVoice,
         nativeVoice,
       },
+      flashcards: { shuffle, repeat },
     } = store.getState();
 
     saveState({
-      showVocalization,
-      showTranscription,
-      romanizationStandard,
-      foreignVoice,
-      nativeVoice,
+      settings: {
+        showVocalization,
+        showTranscription,
+        romanizationStandard,
+        foreignVoice,
+        nativeVoice,
+      },
+      flashcards: {
+        shuffle,
+        repeat,
+      },
     });
   }, 1000),
 );

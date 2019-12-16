@@ -1,5 +1,6 @@
 import { ActionType, getType } from 'typesafe-actions';
 import { toggleShuffle, toggleRepeat, toggleSpeech } from './actions';
+import { loadState } from '../../../../utils/persistState';
 
 type FlashcardsAction = ActionType<typeof import('./actions')>;
 
@@ -13,6 +14,7 @@ const initialState: State = {
   shuffle: false,
   speech: false,
   repeat: false,
+  ...loadState().flashcards,
 };
 
 export default (

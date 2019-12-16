@@ -30,7 +30,7 @@ const initialState: State = {
   foreignVoice: '',
   nativeVoice: '',
   settingsOpen: false,
-  ...loadState(),
+  ...loadState().settings,
 };
 
 export default (state: State = initialState, action: SettingsAction): State => {
