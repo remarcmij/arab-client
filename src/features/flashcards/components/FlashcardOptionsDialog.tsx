@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleShuffle, toggleRepeat, toggleSpeech } from './actions';
+import { toggleShuffle, toggleRepeat, toggleSpeech } from '../actions';
 import { RootState } from 'typesafe-actions';
 
 type Props = Readonly<{ open: boolean; onClose: () => void }>;

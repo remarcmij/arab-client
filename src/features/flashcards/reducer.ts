@@ -1,6 +1,6 @@
 import { ActionType, getType } from 'typesafe-actions';
 import { toggleShuffle, toggleRepeat, toggleSpeech } from './actions';
-import { loadState } from '../../../../utils/persistState';
+import { loadState } from '../../utils/persistState';
 
 type FlashcardsAction = ActionType<typeof import('./actions')>;
 

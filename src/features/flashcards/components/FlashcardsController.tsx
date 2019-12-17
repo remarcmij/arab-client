@@ -14,10 +14,10 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { ILemma } from 'Types';
 import { RootState } from 'typesafe-actions';
-import FlashcardTimer from '../../../../services/FlashcardTimer';
-import speechSynthesizer from '../../../../services/SpeechSynthesizer';
+import FlashcardTimer from '../../../services/FlashcardTimer';
+import speechSynthesizer from '../../../services/SpeechSynthesizer';
 import FlashcardOptionsDialog from './FlashcardOptionsDialog';
-import useSequence from './hooks/useSequence';
+import useSequence from '../hooks/useSequence';
 
 const flashcardTimer = new FlashcardTimer();
 
