@@ -2,12 +2,11 @@ import { ITopic } from 'Types';
 import { ActionType, getType } from 'typesafe-actions';
 import { clearUploads, deleteTopic, fetchTopics, uploadFile } from './actions';
 
-type UploadStatus = 'pending' | 'success' | 'warning' | 'fail';
-
-type Upload = {
+export type Upload = {
   uuid: string;
   file: File;
-  status: UploadStatus;
+  disposition: string;
+  message?: string;
 };
 
 export type State = Readonly<{
@@ -28,8 +27,9 @@ const initialState: State = {
 const handleStatusUpdate = (
   uuid: string,
   upload: Upload,
-  status: UploadStatus,
-) => (upload.uuid === uuid ? { ...upload, status } : upload);
+  disposition: string,
+  message?: string,
+) => (upload.uuid === uuid ? { ...upload, disposition, message } : upload);
 
 const reducer = (state = initialState, action: AdminAction): State => {
   switch (action.type) {
@@ -48,7 +48,10 @@ const reducer = (state = initialState, action: AdminAction): State => {
     case getType(uploadFile.request):
       return {
         ...state,
-        uploads: [...state.uploads, { ...action.payload, status: 'pending' }],
+        uploads: [
+          ...state.uploads,
+          { ...action.payload, disposition: 'pending' },
+        ],
       };
 
     case getType(uploadFile.success): {
@@ -56,7 +59,7 @@ const reducer = (state = initialState, action: AdminAction): State => {
         handleStatusUpdate(
           action.payload.uuid,
           upload,
-          action.payload.disposition === 'success' ? 'success' : 'warning',
+          action.payload.disposition,
         ),
       );
       return { ...state, uploads };
@@ -65,7 +68,7 @@ const reducer = (state = initialState, action: AdminAction): State => {
     case getType(uploadFile.failure): {
       const { error, uuid } = action.payload;
       const uploads = state.uploads.map(upload =>
-        handleStatusUpdate(uuid, upload, 'fail'),
+        handleStatusUpdate(uuid, upload, 'error', error.response.data.message),
       );
       return { ...state, uploads, error };
     }
