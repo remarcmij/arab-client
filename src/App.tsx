@@ -35,7 +35,7 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => {
     store.dispatch(loadUserAsync());
-  }, []);
+  });
 
   return (
     <Suspense fallback={<Spinner />}>
