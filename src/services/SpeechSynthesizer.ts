@@ -52,20 +52,33 @@ class SpeechSynthesizer extends Observable {
     return speechSynthesis.speaking;
   }
 
-  speak(voiceName: string, message: string, rate = 0.8) {
+  speak(lang: string, message: string, rate = 0.8) {
     // Cancel any outstanding time-out and utterance
     if (this.timerId) {
       clearTimeout(this.timerId);
       this.timerId = null;
     }
+
     if (speechSynthesis.speaking) {
       speechSynthesis.cancel();
+    }
+
+    const voice = this.voices.find(v => v.lang.startsWith(lang));
+
+    // If there is no voice for the specified language,
+    // use a time out instead.
+    if (!voice) {
+      this.timerId = setTimeout(() => {
+        this.timerId = null;
+        this.notify();
+      }, 5000);
+      return;
     }
 
     this.utterance = new SpeechSynthesisUtterance();
     this.utterance.text = message;
     this.utterance.rate = rate;
-    this.utterance.voice = this.voices.find(v => v.name === voiceName)!;
+    this.utterance.voice = voice;
     this.utterance.addEventListener('end', e => {
       if (e.utterance === this.utterance) {
         this.timerId = setTimeout(() => {
