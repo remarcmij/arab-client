@@ -1,28 +1,22 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { fetchArticleAsync } from '../actions';
+import useFetchArticle from '../hooks/useFetchArticle';
 import ArticleContent from './ArticleContent';
 import WordClickHandler from './WordClickHandler';
 
 const Article: React.FC = () => {
   const { publication, article } = useParams();
-  const dispatch = useDispatch();
   const { article: topic, loading, error } = useSelector(
     (state: RootState) => state.content,
   );
-  const filename = `${publication}.${article}`;
-  const topicLoaded = topic && topic.filename === filename;
 
   useNavBackRoute(`/content/${publication}`);
-  useEffect(() => {
-    if (!topicLoaded) {
-      dispatch(fetchArticleAsync(filename));
-    }
-  }, [dispatch, filename, topicLoaded]);
+
+  useFetchArticle(publication!, article!);
 
   if (loading) {
     return <Spinner />;

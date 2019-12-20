@@ -1,24 +1,22 @@
 import Grid from '@material-ui/core/Grid';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { ILemma } from 'Types';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
-import { fetchArticleAsync } from '../../content/actions';
+import useFetchArticle from '../../content/hooks/useFetchArticle';
 import FlashcardBody from './FlashcardBody';
 import FlashcardHeader from './FlashcardHeader';
 import FlashcardsController from './FlashcardsController';
-import { ILemma } from 'Types';
 
 const Flashcards: React.FC = () => {
   const { publication, article, index: indexParam = '0' } = useParams();
 
-  const dispatch = useDispatch();
-  const {
-    content: { article: topic, loading, error },
-    settings: { showVocalization, foreignVoice },
-  } = useSelector((state: RootState) => state);
+  const { article: topic, loading, error } = useSelector(
+    (state: RootState) => state.content,
+  );
 
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
   const [index, setIndex] = useState(0);
@@ -26,14 +24,7 @@ const Flashcards: React.FC = () => {
 
   useNavBackRoute(`/content/${publication}/${article}`);
 
-  const filename = `${publication}.${article}`;
-
-  useEffect(() => {
-    const topicLoaded = topic?.filename === filename;
-    if (!topicLoaded) {
-      dispatch(fetchArticleAsync(filename));
-    }
-  }, [topic, filename, dispatch]);
+  useFetchArticle(publication!, article!);
 
   const lemmas = useMemo(() => {
     const lemmas = topic?.lemmas ?? [];
@@ -79,12 +70,7 @@ const Flashcards: React.FC = () => {
               length={lemmas.length}
             />
             {lemma && (
-              <FlashcardBody
-                lemma={lemma!}
-                showTranslation={showTranslation}
-                showVocalization={showVocalization}
-                foreignVoice={foreignVoice}
-              />
+              <FlashcardBody lemma={lemma!} showTranslation={showTranslation} />
             )}
             <FlashcardsController lemmas={lemmas} onUpdate={onUpdate} />
           </Grid>
