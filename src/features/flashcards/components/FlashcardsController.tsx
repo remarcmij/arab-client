@@ -10,14 +10,15 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import * as React from 'react';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ILemma } from 'Types';
 import { RootState } from 'typesafe-actions';
 import FlashcardTimer from '../../../services/FlashcardTimer';
+import { getLanguageService } from '../../../services/language';
 import speechSynthesizer from '../../../services/SpeechSynthesizer';
-import FlashcardOptionsDialog from './FlashcardOptionsDialog';
 import useSequence from '../hooks/useSequence';
+import FlashcardOptionsDialog from './FlashcardOptionsDialog';
 
 const flashcardTimer = new FlashcardTimer();
 
@@ -31,6 +32,7 @@ const FlashcardsController: React.FC<Props> = props => {
   const {
     settings: { foreignVoice, nativeVoice },
     flashcards: { shuffle, speech, repeat },
+    content: { article },
   } = useSelector((state: RootState) => state);
   const [index, setIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
@@ -49,14 +51,16 @@ const FlashcardsController: React.FC<Props> = props => {
     const lemma = sequence[trueIndex];
     const showTranslation = index % 2 === 1;
     onUpdate(lemma, trueIndex, showTranslation);
-    if (nativeVoice && foreignVoice && speech) {
+    const foreignLS = getLanguageService(lemma.foreignLang);
+    const nativeLS = getLanguageService(lemma.nativeLang);
+    if (speech) {
       if (showTranslation) {
-        if (nativeVoice) speechSynthesizer.speak(nativeVoice, lemma.native);
+        nativeLS.speak(lemma.native);
       } else {
-        if (foreignVoice) speechSynthesizer.speak(foreignVoice, lemma.foreign);
+        foreignLS.speak(lemma.foreign);
       }
     }
-  }, [index, sequence, onUpdate, speech, nativeVoice, foreignVoice]);
+  }, [index, sequence, onUpdate, speech, article]);
 
   const incrementIndex = useCallback(
     (val: number) => {
