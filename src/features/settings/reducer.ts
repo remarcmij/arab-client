@@ -8,6 +8,9 @@ import {
   setNativeVoice,
   toggleTranscription,
   toggleVocalization,
+  loadVoices,
+  VoiceInfo,
+  setPreferredVoices,
 } from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
@@ -20,6 +23,9 @@ type State = Readonly<{
   foreignVoice: string;
   nativeVoice: string;
   settingsOpen: boolean;
+  loading: boolean;
+  error: Error | null;
+  preferredVoices: VoiceInfo[];
 }>;
 
 const initialState: State = {
@@ -30,7 +36,23 @@ const initialState: State = {
   foreignVoice: '',
   nativeVoice: '',
   settingsOpen: false,
+  loading: false,
+  error: null,
+  preferredVoices: [],
   ...loadState().settings,
+};
+
+const updatePreferredVoices = (
+  preferredVoices: VoiceInfo[],
+  availableVoices: VoiceInfo[],
+) => {
+  const currentVoices = preferredVoices.filter(voice =>
+    availableVoices.find(v => v.name === voice.name),
+  );
+  const missingVoices = availableVoices.filter(
+    voice => !preferredVoices.find(v => v.name === voice.name),
+  );
+  return currentVoices.concat(missingVoices);
 };
 
 export default (state: State = initialState, action: SettingsAction): State => {
@@ -49,6 +71,21 @@ export default (state: State = initialState, action: SettingsAction): State => {
       return { ...state, foreignVoice: action.payload };
     case getType(setNativeVoice):
       return { ...state, nativeVoice: action.payload };
+    case getType(loadVoices.request):
+      return { ...state, loading: true, error: null };
+    case getType(loadVoices.success):
+      return {
+        ...state,
+        preferredVoices:
+          action.payload.length === 0
+            ? state.preferredVoices
+            : updatePreferredVoices(state.preferredVoices, action.payload),
+        loading: false,
+      };
+    case getType(loadVoices.failure):
+      return { ...state, loading: false, error: action.payload };
+    case getType(setPreferredVoices):
+      return { ...state, preferredVoices: action.payload };
     default:
       return state;
   }

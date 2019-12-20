@@ -5,13 +5,23 @@ import {
   fetchArticle,
   fetchArticles,
   fetchPublications,
+  loadFilters,
   resetContent,
 } from './actions';
 
 type ContentAction = ActionType<typeof import('./actions')>;
 
+type IRegExpFilters = {
+  [lang: string]: {
+    substitutions: Array<[RegExp, string]>;
+    ignores: RegExp[];
+  };
+};
+
 type State = Readonly<{
   publications: ITopic[];
+  currentPublication?: ITopic;
+  filters: IRegExpFilters | null;
   articles: ITopic[];
   article: ITopic | null;
   loading: boolean;
@@ -22,7 +32,29 @@ const initialState: State = {
   publications: [],
   articles: [],
   article: null,
+  filters: null,
   loading: true,
+};
+
+const createFilters = (topic: ITopic) => {
+  if (typeof topic.filters !== 'object') {
+    return null;
+  }
+  const regExpFilters = Object.entries(topic.filters).reduce(
+    (acc, [lang, data]) => {
+      const { substitutions = [], ignores = [] } = data;
+      acc[lang] = {
+        substitutions: substitutions.map(([from, to]: [string, string]) => [
+          new RegExp(String.raw`\b${from}\b`, 'gi'),
+          to,
+        ]),
+        ignores: ignores.map(ignore => new RegExp(ignore, 'gi')),
+      };
+      return acc;
+    },
+    {} as IRegExpFilters,
+  );
+  return regExpFilters;
 };
 
 export default (
@@ -48,6 +80,16 @@ export default (
     case getType(fetchArticles.failure):
     case getType(fetchArticle.failure):
       return { ...state, error: action.payload, loading: false };
+
+    case getType(loadFilters): {
+      const currentPublication = state.publications.find(
+        p => p.publication === action.payload,
+      );
+      return {
+        ...state,
+        filters: createFilters(currentPublication!),
+      };
+    }
 
     case getType(logout):
     case getType(resetContent):

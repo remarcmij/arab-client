@@ -25,6 +25,7 @@ store.subscribe(
         romanizationStandard,
         foreignVoice,
         nativeVoice,
+        preferredVoices,
       },
       flashcards: { shuffle, repeat },
     } = store.getState();
@@ -36,6 +37,7 @@ store.subscribe(
         romanizationStandard,
         foreignVoice,
         nativeVoice,
+        preferredVoices,
       },
       flashcards: {
         shuffle,

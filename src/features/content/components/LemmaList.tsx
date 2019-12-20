@@ -5,19 +5,16 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import { ILemma, ITopic } from 'Types';
-import { RootState } from 'typesafe-actions';
-import Transcoder from '../../../services/Transcoder';
+import { getLanguageService } from '../../../services/language';
+import clsx from 'clsx';
 
 configureAnchors({
   offset: -73,
   keepLastAnchorHash: true,
 });
-
-const arabicWordRegExp = /[\u0600-\u06FF]+/g;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,21 +39,24 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       marginRight: theme.spacing(2),
     },
-    nl: {
+    native: {
       flex: 1,
-      textAlign: 'right',
     },
-    ar: {
+    foreign: {
       flex: 1,
-      fontSize: 28,
-      textAlign: 'right',
       color: theme.palette.primary.dark,
-      '&>span[lang="ar"]': {
+      '&>span[lang]': {
         cursor: 'pointer',
       },
       marginRight: theme.spacing(2),
     },
-    rom: {
+    enlarged: {
+      fontSize: 28,
+    },
+    alignRight: {
+      textAlign: 'right',
+    },
+    notes: {
       flex: 1,
       fontFamily: 'Georgia',
       fontStyle: 'italic',
@@ -75,11 +75,6 @@ type Props = {
 
 const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
   const classes = useStyles();
-  const {
-    showVocalization,
-    showTranscription,
-    romanizationStandard,
-  } = useSelector((state: RootState) => state.settings);
   const history = useHistory();
   const { t } = useTranslation();
   const { publication, article } = useParams();
@@ -99,31 +94,40 @@ const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
   }, []);
 
   const renderLemma = (lemma: ILemma, index: number) => {
-    const arabicText = showVocalization
-      ? lemma.foreign
-      : Transcoder.stripTashkeel(lemma.foreign);
-    const arabicHtml = arabicText.replace(
-      arabicWordRegExp,
-      '<span lang="ar">$&</span>',
-    );
+    const foreignLS = getLanguageService(topic.foreignLang);
+    const nativeLS = getLanguageService(topic.nativeLang);
+    const foreignText = foreignLS.formatForDisplay(lemma.foreign);
     const listClasses =
       lemma._id === hashId
-        ? `${classes.listItem} ${classes.hashMatch}`
+        ? clsx(classes.listItem, classes.hashMatch)
         : classes.listItem;
     return (
       <ScrollableAnchor key={index} id={lemma._id}>
         <li className={listClasses}>
-          <Typography variant="body1" className={classes.nl}>
-            {lemma.native}
+          <Typography
+            variant="body1"
+            dir={nativeLS.dir}
+            className={clsx(
+              classes.native,
+              foreignLS.dir === 'rtl' && classes.alignRight,
+            )}
+          >
+            {nativeLS.formatForDisplay(lemma.native)}
           </Typography>
           <Typography
-            dir="rtl"
-            className={classes.ar}
-            dangerouslySetInnerHTML={{ __html: arabicHtml }}
+            dir={foreignLS.dir}
+            className={clsx(
+              classes.foreign,
+              foreignLS.useEnlargedFont && classes.enlarged,
+              foreignLS.dir === 'rtl' && classes.alignRight,
+            )}
+            dangerouslySetInnerHTML={{
+              __html: `<span lang=${topic.foreignLang}>${foreignText}</span>`,
+            }}
           />
-          {lemma.roman && showTranscription && (
-            <Typography variant="body1" className={classes.rom}>
-              {Transcoder.applyRomanization(lemma.roman, romanizationStandard)}
+          {lemma.roman && (
+            <Typography variant="body1" className={classes.notes}>
+              {lemma.roman}
             </Typography>
           )}
         </li>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ContentAdmin from '../features/admin/components/ContentAdmin';
-import Upload from '../features/admin/components/Upload';
+import ContentUpload from '../features/admin/components/ContentUpload';
 import { User } from '../features/auth/actions';
 import AccountConfirmation from '../features/auth/components/AccountConfirmation';
 import PasswordChange from '../features/auth/components/PasswordChange';
@@ -15,6 +15,7 @@ import SearchPage from '../features/search/components/SearchPage';
 import AboutPage from '../layout/components/About';
 import ProtectedRoute from './ProtectedRoute';
 import PasswordReset from '../features/auth/components/PasswordReset';
+import VoicePreferences from '../features/settings/components/VoicePreferences';
 
 const isAdmin = (user: User | null) => !!user?.admin;
 const isVerified = (user: User | null) => !!user?.verified;
@@ -77,14 +78,15 @@ const Routes: React.FC = () => (
         predicate={isAdmin}
         exact={true}
         path="/admin/content/upload"
-        component={Upload}
+        component={ContentUpload}
       />
       <ProtectedRoute
         predicate={isAdmin}
         exact={true}
         path="/admin/upload"
-        component={Upload}
+        component={ContentUpload}
       />
+      <Route exact={true} path="/voices" component={VoicePreferences} />
       <Route render={() => <div>404</div>} />
     </Switch>
   </section>

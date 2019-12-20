@@ -64,4 +64,9 @@ export const fetchArticleAsync = (filename: string) => async (
   }
 };
 
+export const loadFilters = createAction(
+  '@content/LOAD_FILTERS',
+  (publication: string) => publication,
+)<string>();
+
 export const resetContent = createAction('@content/RESET')<void>();
