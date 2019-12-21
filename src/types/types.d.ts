@@ -12,11 +12,9 @@ declare module 'Types' {
     topic: string;
   }
 
-  interface IStringFilters {
-    [lang: string]: {
-      substitutions: Array<[string, string]>;
-      ignores: string[];
-    };
+  interface IStringSubstitutions {
+    foreign: Array<[string, string]>;
+    native: Array<[string, string]>;
   }
 
   export interface ITopic {
@@ -28,7 +26,7 @@ declare module 'Types' {
     subtitle?: string;
     foreignLang: string;
     nativeLang: string;
-    filters?: IStringFilters;
+    substitutions?: IStringSubstitutions;
     sections?: string[];
     lemmas?: ILemma[];
   }

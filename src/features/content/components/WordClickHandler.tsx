@@ -14,13 +14,13 @@ const WordClickHandler: React.FC<{}> = props => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const openMenu = (e: React.MouseEvent) => {
-    const { target } = e;
-    if (
-      target instanceof HTMLElement &&
-      target.tagName === 'SPAN' &&
-      target.lang
-    ) {
+  const openMenu = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'SPAN' && target.lang) {
+      setAnchorEl(target);
+    }
+
+    if (['STRONG', 'EM'].includes(target.tagName)) {
       setAnchorEl(target);
     }
   };

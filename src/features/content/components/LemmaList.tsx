@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     notes: {
       flex: 1,
-      fontFamily: 'Georgia',
       fontStyle: 'italic',
       textAlign: 'center',
     },

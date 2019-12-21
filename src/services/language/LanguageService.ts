@@ -30,15 +30,10 @@ export default abstract class LanguageService implements ILanguageService {
 
   speak(text: string) {
     let filteredText = text;
-    const { filters } = store.getState().content;
-    const langFilters = filters?.[this.lang];
-    if (langFilters) {
-      filteredText = langFilters.substitutions.reduce(
+    const { substitutions } = store.getState().content;
+    if (substitutions?.[this.lang]) {
+      filteredText = substitutions[this.lang].reduce(
         (acc, [regexp, subst]) => acc.replace(regexp, subst),
-        filteredText,
-      );
-      filteredText = langFilters.ignores.reduce(
-        (acc, regexp) => acc.replace(regexp, ''),
         filteredText,
       );
     }

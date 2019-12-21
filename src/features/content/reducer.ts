@@ -11,17 +11,14 @@ import {
 
 type ContentAction = ActionType<typeof import('./actions')>;
 
-type IRegExpFilters = {
-  [lang: string]: {
-    substitutions: Array<[RegExp, string]>;
-    ignores: RegExp[];
-  };
+type IRegExpSubstitutions = {
+  [lang: string]: Array<[RegExp, string]>;
 };
 
 type State = Readonly<{
   publications: ITopic[];
   currentPublication?: ITopic;
-  filters: IRegExpFilters | null;
+  substitutions: IRegExpSubstitutions | null;
   articles: ITopic[];
   article: ITopic | null;
   loading: boolean;
@@ -32,29 +29,32 @@ const initialState: State = {
   publications: [],
   articles: [],
   article: null,
-  filters: null,
+  substitutions: null,
   loading: true,
 };
 
-const createFilters = (topic: ITopic) => {
-  if (typeof topic.filters !== 'object') {
+const convertSubstitutions = (topic: ITopic) => {
+  const { substitutions, foreignLang, nativeLang } = topic;
+  if (typeof substitutions !== 'object') {
     return null;
   }
-  const regExpFilters = Object.entries(topic.filters).reduce(
-    (acc, [lang, data]) => {
-      const { substitutions = [], ignores = [] } = data;
-      acc[lang] = {
-        substitutions: substitutions.map(([from, to]: [string, string]) => [
-          new RegExp(from, 'gi'),
-          to,
-        ]),
-        ignores: ignores.map(ignore => new RegExp(ignore, 'gi')),
-      };
-      return acc;
-    },
-    {} as IRegExpFilters,
-  );
-  return regExpFilters;
+
+  const converted: IRegExpSubstitutions = {};
+  converted[
+    foreignLang
+  ] = substitutions.foreign.map(([from, to]: [string, string]) => [
+    new RegExp(String.raw`\b${from}\b`, 'gi'),
+    to,
+  ]);
+
+  converted[
+    nativeLang
+  ] = substitutions.native.map(([from, to]: [string, string]) => [
+    new RegExp(String.raw`\b${from}\b`, 'gi'),
+    to,
+  ]);
+
+  return converted;
 };
 
 export default (
@@ -88,7 +88,7 @@ export default (
       return {
         ...state,
         currentPublication,
-        filters: createFilters(currentPublication!),
+        substitutions: convertSubstitutions(currentPublication!),
       };
     }
 
