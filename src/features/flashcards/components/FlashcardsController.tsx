@@ -30,7 +30,6 @@ type Props = Readonly<{
 const FlashcardsController: React.FC<Props> = props => {
   const { lemmas, onUpdate } = props;
   const {
-    settings: { foreignVoice, nativeVoice },
     flashcards: { shuffle, speech, repeat },
     content: { article },
   } = useSelector((state: RootState) => state);
@@ -81,20 +80,9 @@ const FlashcardsController: React.FC<Props> = props => {
   useEffect(() => {
     if (!autoPlay) return;
     setIndex(incrementIndex);
-    const player =
-      nativeVoice && foreignVoice && speech
-        ? speechSynthesizer
-        : flashcardTimer;
+    const player = speech ? speechSynthesizer : flashcardTimer;
     return player.subscribe(() => setIndex(incrementIndex));
-  }, [
-    autoPlay,
-    lemmas,
-    nativeVoice,
-    foreignVoice,
-    speech,
-    setIndex,
-    incrementIndex,
-  ]);
+  }, [autoPlay, lemmas, speech, setIndex, incrementIndex]);
 
   const atFirst = () => index === 0;
   const atLast = () => index === lemmas.length * 2 - 1;

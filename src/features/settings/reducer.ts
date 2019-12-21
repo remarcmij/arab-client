@@ -2,39 +2,25 @@ import { ActionType, getType } from 'typesafe-actions';
 import { loadState } from '../../utils/persistState';
 import {
   closeSettings,
-  openSettings,
-  setRomanizationSystem,
-  setForeignVoice,
-  setNativeVoice,
-  toggleTranscription,
-  toggleVocalization,
+  IVoiceInfo,
   loadVoices,
-  VoiceInfo,
+  openSettings,
   setPreferredVoices,
+  toggleVocalization,
 } from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
 
 type State = Readonly<{
   showVocalization: boolean;
-  showTranscription: boolean;
-  showFlashcards: boolean;
-  romanizationStandard: string;
-  foreignVoice: string;
-  nativeVoice: string;
   settingsOpen: boolean;
   loading: boolean;
   error: Error | null;
-  preferredVoices: VoiceInfo[];
+  preferredVoices: IVoiceInfo[];
 }>;
 
 const initialState: State = {
   showVocalization: true,
-  showTranscription: true,
-  showFlashcards: false,
-  romanizationStandard: 'din',
-  foreignVoice: '',
-  nativeVoice: '',
   settingsOpen: false,
   loading: false,
   error: null,
@@ -43,8 +29,8 @@ const initialState: State = {
 };
 
 const updatePreferredVoices = (
-  preferredVoices: VoiceInfo[],
-  availableVoices: VoiceInfo[],
+  preferredVoices: IVoiceInfo[],
+  availableVoices: IVoiceInfo[],
 ) => {
   const currentVoices = preferredVoices.filter(voice =>
     availableVoices.find(v => v.name === voice.name),
@@ -63,14 +49,6 @@ export default (state: State = initialState, action: SettingsAction): State => {
       return { ...state, settingsOpen: false };
     case getType(toggleVocalization):
       return { ...state, showVocalization: !state.showVocalization };
-    case getType(toggleTranscription):
-      return { ...state, showTranscription: !state.showTranscription };
-    case getType(setRomanizationSystem):
-      return { ...state, romanizationStandard: action.payload };
-    case getType(setForeignVoice):
-      return { ...state, foreignVoice: action.payload };
-    case getType(setNativeVoice):
-      return { ...state, nativeVoice: action.payload };
     case getType(loadVoices.request):
       return { ...state, loading: true, error: null };
     case getType(loadVoices.success):

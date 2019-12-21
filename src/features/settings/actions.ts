@@ -5,10 +5,10 @@ import {
 } from 'typesafe-actions';
 import { ITopic } from 'Types';
 
-export type VoiceInfo = {
-  name: string;
-  lang: string;
-};
+export interface IVoiceInfo {
+  readonly name: string;
+  readonly lang: string;
+}
 
 export const openSettings = createAction('@settings/OPEN')<void>();
 
@@ -18,35 +18,16 @@ export const toggleVocalization = createAction('@settings/TOGGLE_VOCALIZATION')<
   void
 >();
 
-export const toggleTranscription = createAction(
-  '@settings/TOGGLE_TRANSCRIPTION',
-)<void>();
-
-export const setRomanizationSystem = createAction(
-  '@settings/SET_ROMANIZATION_STANDARD',
-  (romanizationStandard: string) => romanizationStandard,
-)<string>();
-
-export const setForeignVoice = createAction(
-  '@settings/SET_FOREIGN_VOICE',
-  (voiceName: string) => voiceName,
-)<string>();
-
-export const setNativeVoice = createAction(
-  '@settings/SET_NATIVE_VOICE',
-  (voiceName: string) => voiceName,
-)<string>();
-
 export const loadVoices = createAsyncAction(
   '@settings/LOAD_VOICES_REQUEST',
   '@settings/LOAD_VOICES_SUCCESS',
   '@settings/LOAD_VOICES_FAILURE',
-)<void, VoiceInfo[], any>();
+)<void, IVoiceInfo[], any>();
 
 export const setPreferredVoices = createAction(
   '@setting/SET_PREFERRED_VOICES',
-  (voices: VoiceInfo[]) => voices,
-)<VoiceInfo[]>();
+  (voices: IVoiceInfo[]) => voices,
+)<IVoiceInfo[]>();
 
 export const loadVoicesAsync = (topics: ITopic[]) => async (
   dispatch: ThunkDispatchAny,
