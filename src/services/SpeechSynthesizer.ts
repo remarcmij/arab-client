@@ -52,7 +52,7 @@ class SpeechSynthesizer extends Observable {
     return speechSynthesis.speaking;
   }
 
-  speak(lang: string, message: string, rate = 0.8) {
+  speakWithVoice(name: string, message: string, rate = 0.8) {
     // Cancel any outstanding time-out and utterance
     if (this.timerId) {
       clearTimeout(this.timerId);
@@ -63,7 +63,7 @@ class SpeechSynthesizer extends Observable {
       speechSynthesis.cancel();
     }
 
-    const voice = this.voices.find(v => v.lang.startsWith(lang));
+    const voice = name && this.voices.find(v => v.name.startsWith(name));
 
     // If there is no voice for the specified language,
     // use a time out instead.

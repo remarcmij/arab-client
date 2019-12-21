@@ -4,22 +4,22 @@ import { RootState } from 'typesafe-actions';
 import {
   fetchArticleAsync,
   fetchPublicationsAsync,
-  loadFilters,
+  setCurrentPublication,
 } from '../actions';
 
 const useFetchArticle = (publication: string, article: string) => {
   const dispatch = useDispatch();
-  const { article: topic, publications } = useSelector(
+  const { article: topic, publications, currentPublication } = useSelector(
     (state: RootState) => state.content,
   );
 
   useEffect(() => {
     if (publications.length === 0) {
       dispatch(fetchPublicationsAsync());
-    } else {
-      dispatch(loadFilters(publication));
+    } else if (currentPublication?.publication !== publication) {
+      dispatch(setCurrentPublication(publication));
     }
-  }, [dispatch, publication, publications]);
+  }, [dispatch, publication, publications, currentPublication]);
 
   useEffect(() => {
     const filename = `${publication}.${article}`;

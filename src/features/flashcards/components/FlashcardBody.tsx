@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: 'pointer',
       userSelect: 'none',
     },
-    ar: {
+    foreign: {
       fontFamily: 'Arial',
       margin: theme.spacing(1),
     },
@@ -60,7 +60,7 @@ const FlashcardBody: React.FC<Props> = props => {
           variant="h4"
           align="center"
           lang={lemma.foreignLang}
-          className={classes.ar}
+          className={classes.foreign}
         >
           {foreignLS.formatForDisplay(lemma.foreign)}
         </Typography>

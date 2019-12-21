@@ -5,7 +5,7 @@ import {
   fetchArticle,
   fetchArticles,
   fetchPublications,
-  loadFilters,
+  setCurrentPublication,
   resetContent,
 } from './actions';
 
@@ -45,7 +45,7 @@ const createFilters = (topic: ITopic) => {
       const { substitutions = [], ignores = [] } = data;
       acc[lang] = {
         substitutions: substitutions.map(([from, to]: [string, string]) => [
-          new RegExp(String.raw`\b${from}\b`, 'gi'),
+          new RegExp(from, 'gi'),
           to,
         ]),
         ignores: ignores.map(ignore => new RegExp(ignore, 'gi')),
@@ -81,12 +81,13 @@ export default (
     case getType(fetchArticle.failure):
       return { ...state, error: action.payload, loading: false };
 
-    case getType(loadFilters): {
+    case getType(setCurrentPublication): {
       const currentPublication = state.publications.find(
         p => p.publication === action.payload,
       );
       return {
         ...state,
+        currentPublication,
         filters: createFilters(currentPublication!),
       };
     }

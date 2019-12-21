@@ -64,8 +64,8 @@ export const fetchArticleAsync = (filename: string) => async (
   }
 };
 
-export const loadFilters = createAction(
-  '@content/LOAD_FILTERS',
+export const setCurrentPublication = createAction(
+  '@content/SET_CURRENT_PUBLICATION',
   (publication: string) => publication,
 )<string>();
 

@@ -42,7 +42,18 @@ export default abstract class LanguageService implements ILanguageService {
         filteredText,
       );
     }
-    speechSynthesizer.speak(this.lang, filteredText);
+    speechSynthesizer.speakWithVoice(this.voiceInfo!.name, filteredText);
+  }
+
+  private get voiceInfo() {
+    const { preferredVoices } = store.getState().settings;
+    let voice = preferredVoices.find(v => v.lang.startsWith(this.lang));
+    if (voice == null) {
+      voice = speechSynthesizer
+        .getVoices()
+        .find(v => v.lang.startsWith(this.lang));
+    }
+    return voice;
   }
 
   get useEnlargedFont() {

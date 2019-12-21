@@ -13,11 +13,10 @@ type Props = Readonly<{ open: boolean; onClose: () => void }>;
 const FlashcardOptionsDialog: React.FC<Props> = ({ open, onClose }) => {
   const dispatch = useDispatch();
   const {
-    settings: { nativeVoice, foreignVoice },
     flashcards: { shuffle, repeat, speech },
   } = useSelector((state: RootState) => state);
 
-  const speechAvailable = !!(nativeVoice && foreignVoice);
+  const speechAvailable = 'speechSynthesis' in window;
 
   return (
     <Dialog onClose={onClose} open={open}>

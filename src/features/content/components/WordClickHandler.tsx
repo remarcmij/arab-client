@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-import SpeechSynthesizer from '../../../services/SpeechSynthesizer';
 import { getLanguageService } from '../../../services/language';
 import { assertIsDefined } from '../../../utils/assert';
 

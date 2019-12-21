@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import TrimmedContainer from '../../../layout/components/TrimmedContainer';
-import { loadVoicesAsync, setPreferredVoices, VoiceInfo } from '../actions';
+import { loadVoicesAsync, setPreferredVoices, IVoiceInfo } from '../actions';
 
 const VoicePreferences: React.FC = () => {
   const { t } = useTranslation();
@@ -21,8 +21,8 @@ const VoicePreferences: React.FC = () => {
     settings: { preferredVoices, loading, error },
     content: { publications },
   } = useSelector((state: RootState) => state);
-  const [voices, setVoices] = useState<VoiceInfo[]>([]);
-  const [draggedItem, setDraggedItem] = useState<VoiceInfo | null>(null);
+  const [voices, setVoices] = useState<IVoiceInfo[]>([]);
+  const [draggedItem, setDraggedItem] = useState<IVoiceInfo | null>(null);
 
   useEffect(() => {
     dispatch(loadVoicesAsync(publications));
