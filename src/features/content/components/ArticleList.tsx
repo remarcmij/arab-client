@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-import LanguageContext from '../../../contexts/LanguageContext';
 import Spinner from '../../../layout/components/Spinner';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { fetchArticlesAsync } from '../actions';
@@ -48,18 +47,16 @@ const ArticleList: React.FC = () => {
           {error ? (
             <div>Error: {error.message}</div>
           ) : (
-            <LanguageContext.Provider value={{ native: 'nl', foreign: 'ar' }}>
-              <List>
-                {topics
-                  .filter(topic => !topic.filename.endsWith('.index'))
-                  .map(topic => (
-                    <ArticleListItem
-                      key={`${topic.filename}`}
-                      publication={topic}
-                    />
-                  ))}
-              </List>
-            </LanguageContext.Provider>
+            <List>
+              {topics
+                .filter(topic => !topic.filename.endsWith('.index'))
+                .map(topic => (
+                  <ArticleListItem
+                    key={`${topic.filename}`}
+                    publication={topic}
+                  />
+                ))}
+            </List>
           )}
         </Paper>
       )}
