@@ -15,11 +15,11 @@ const useStyles = makeStyles((theme: Theme) =>
       gridTemplateColumns: '1fr 1fr max-content',
       gridTemplateRows: '2fr 1fr',
     },
-    nl: {
+    native: {
       gridColumn: '1 / 2',
       gridRow: '1 / 2',
     },
-    ar: {
+    foreign: {
       gridColumn: '2 / 3',
       gridRow: '1 / 2',
       fontSize: 28,
@@ -60,15 +60,15 @@ const SearchResultList: React.FC<Props> = props => {
     <>
       {Array.from(lemmaMap.values()).map(lemma => (
         <Paper classes={{ root: classes.root }} key={lemma._id}>
-          <Typography variant="subtitle1" classes={{ root: classes.nl }}>
+          <Typography variant="subtitle1" classes={{ root: classes.native }}>
             {lemma.native}
           </Typography>
           <Typography
             variant="subtitle1"
-            classes={{ root: classes.ar }}
+            classes={{ root: classes.foreign }}
             title={lemma.roman ?? ''}
           >
-            <span dir="rtl" lang="ar">
+            <span dir="rtl" lang="foreign">
               {lemma.foreign}
             </span>
           </Typography>

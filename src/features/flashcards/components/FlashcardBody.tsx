@@ -2,10 +2,9 @@ import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import React, { useContext } from 'react';
-import Types from 'Types';
-import LanguageContext from '../../../../contexts/LanguageContext';
-import Transcoder from '../../../../services/Transcoder';
+import React from 'react';
+import { ILemma } from 'Types';
+import { getLanguageService } from '../../../services/language';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: 'pointer',
       userSelect: 'none',
     },
-    ar: {
+    foreign: {
       fontFamily: 'Arial',
       margin: theme.spacing(1),
     },
@@ -40,16 +39,16 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = Readonly<{
-  lemma: Types.ILemma;
+  lemma: ILemma;
   showTranslation: boolean;
-  showVocalization: boolean;
-  foreignVoice: string;
 }>;
 
 const FlashcardBody: React.FC<Props> = props => {
-  const { lemma, showTranslation, showVocalization } = props;
+  const { lemma, showTranslation } = props;
   const classes = useStyles();
-  const { native, foreign } = useContext(LanguageContext);
+
+  const foreignLS = getLanguageService(lemma.foreignLang);
+  const nativeLS = getLanguageService(lemma.nativeLang);
 
   return (
     <Paper className={classes.root}>
@@ -60,23 +59,20 @@ const FlashcardBody: React.FC<Props> = props => {
         <Typography
           variant="h4"
           align="center"
-          lang={foreign}
-          dir="rtl"
-          className={classes.ar}
+          lang={lemma.foreignLang}
+          className={classes.foreign}
         >
-          {showVocalization
-            ? lemma.foreign
-            : Transcoder.stripTashkeel(lemma.foreign)}
+          {foreignLS.formatForDisplay(lemma.foreign)}
         </Typography>
       </Tooltip>
       <Typography
         variant="h5"
         align="center"
-        lang={native}
+        lang={lemma.nativeLang}
         color="textSecondary"
         className={classes.native}
       >
-        {showTranslation ? lemma.native : '•••'}
+        {showTranslation ? nativeLS.formatForDisplay(lemma.native) : '•••'}
       </Typography>
     </Paper>
   );

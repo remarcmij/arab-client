@@ -19,21 +19,19 @@ const store = createStore(
 store.subscribe(
   throttle(() => {
     const {
-      settings: {
-        showVocalization,
-        showTranscription,
-        romanizationStandard,
-        foreignVoice,
-        nativeVoice,
-      },
+      settings: { showVocalization, preferredVoices },
+      flashcards: { shuffle, repeat },
     } = store.getState();
 
     saveState({
-      showVocalization,
-      showTranscription,
-      romanizationStandard,
-      foreignVoice,
-      nativeVoice,
+      settings: {
+        showVocalization,
+        preferredVoices,
+      },
+      flashcards: {
+        shuffle,
+        repeat,
+      },
     });
   }, 1000),
 );

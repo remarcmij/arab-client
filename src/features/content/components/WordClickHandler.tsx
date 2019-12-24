@@ -5,21 +5,22 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
-import SpeechSynthesizer from '../../../services/SpeechSynthesizer';
+import { getLanguageService } from '../../../services/language';
+import { assertIsDefined } from '../../../utils/assert';
 
 const WordClickHandler: React.FC<{}> = props => {
   const history = useHistory();
-  const { foreignVoice } = useSelector((state: RootState) => state.settings);
+  const { article: topic } = useSelector((state: RootState) => state.content);
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const openMenu = (e: React.MouseEvent) => {
-    const { target } = e;
-    if (
-      target instanceof HTMLElement &&
-      target.tagName === 'SPAN' &&
-      target.lang
-    ) {
+  const openMenu = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'SPAN' && target.lang) {
+      setAnchorEl(target);
+    }
+
+    if (['STRONG', 'EM'].includes(target.tagName)) {
       setAnchorEl(target);
     }
   };
@@ -28,19 +29,26 @@ const WordClickHandler: React.FC<{}> = props => {
     setAnchorEl(null);
   };
 
-  const speak = async () => {
-    if (anchorEl instanceof HTMLElement) {
-      const text = anchorEl.textContent!;
-      closeMenu();
-      await SpeechSynthesizer.speak(foreignVoice, text);
+  const speak = () => {
+    closeMenu();
+    if (topic) {
+      assertIsDefined(anchorEl);
+      if (anchorEl.textContent) {
+        getLanguageService(topic.foreignLang).speak(anchorEl.textContent);
+      }
     }
   };
 
   const searchWord = () => {
-    if (anchorEl instanceof HTMLElement) {
-      const text = anchorEl.textContent!.replace(/[^\u0621-\u064a]/g, '');
-      closeMenu();
-      history.push(encodeURI(`/search?q=${text}`));
+    closeMenu();
+    if (topic) {
+      assertIsDefined(anchorEl);
+      if (anchorEl.textContent) {
+        const text = getLanguageService(topic.foreignLang).formatForSearch(
+          anchorEl.textContent,
+        );
+        history.push(encodeURI(`/search?q=${text}`));
+      }
     }
   };
 
@@ -53,7 +61,7 @@ const WordClickHandler: React.FC<{}> = props => {
         open={Boolean(anchorEl)}
         onClose={closeMenu}
       >
-        <MenuItem disabled={!foreignVoice} onClick={speak}>
+        <MenuItem disabled={!topic} onClick={speak}>
           {t('read_aloud')}
         </MenuItem>
         <MenuItem onClick={searchWord}>{t('look_up')}</MenuItem>

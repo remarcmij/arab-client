@@ -19,11 +19,11 @@ const initialState: State = {
 export default (state: State = initialState, action: SearchAction): State => {
   switch (action.type) {
     case getType(searchLemmas.request):
-      return { ...initialState, loading: true };
+      return { ...initialState, error: null, loading: true };
     case getType(searchLemmas.success):
-      return { ...state, ...action.payload, loading: false };
+      return { ...state, lemmas: action.payload, loading: false };
     case getType(searchLemmas.failure):
-      return { ...state, ...action.payload, loading: false };
+      return { ...state, error: action.payload, loading: false };
     default:
       return state;
   }

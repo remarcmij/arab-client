@@ -64,4 +64,9 @@ export const fetchArticleAsync = (filename: string) => async (
   }
 };
 
+export const setCurrentPublication = createAction(
+  '@content/SET_CURRENT_PUBLICATION',
+  (publication: string) => publication,
+)<string>();
+
 export const resetContent = createAction('@content/RESET')<void>();

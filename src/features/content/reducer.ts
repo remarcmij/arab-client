@@ -5,13 +5,20 @@ import {
   fetchArticle,
   fetchArticles,
   fetchPublications,
+  setCurrentPublication,
   resetContent,
 } from './actions';
 
 type ContentAction = ActionType<typeof import('./actions')>;
 
+type IRegExpSubstitutions = {
+  [lang: string]: Array<[RegExp, string]>;
+};
+
 type State = Readonly<{
   publications: ITopic[];
+  currentPublication?: ITopic;
+  substitutions: IRegExpSubstitutions | null;
   articles: ITopic[];
   article: ITopic | null;
   loading: boolean;
@@ -22,7 +29,32 @@ const initialState: State = {
   publications: [],
   articles: [],
   article: null,
+  substitutions: null,
   loading: true,
+};
+
+const convertSubstitutions = (topic: ITopic) => {
+  const { substitutions, foreignLang, nativeLang } = topic;
+  if (typeof substitutions !== 'object') {
+    return null;
+  }
+
+  const converted: IRegExpSubstitutions = {};
+  converted[
+    foreignLang
+  ] = substitutions.foreign.map(([from, to]: [string, string]) => [
+    new RegExp(String.raw`\b${from}\b`, 'gi'),
+    to,
+  ]);
+
+  converted[
+    nativeLang
+  ] = substitutions.native.map(([from, to]: [string, string]) => [
+    new RegExp(String.raw`\b${from}\b`, 'gi'),
+    to,
+  ]);
+
+  return converted;
 };
 
 export default (
@@ -48,6 +80,17 @@ export default (
     case getType(fetchArticles.failure):
     case getType(fetchArticle.failure):
       return { ...state, error: action.payload, loading: false };
+
+    case getType(setCurrentPublication): {
+      const currentPublication = state.publications.find(
+        p => p.publication === action.payload,
+      );
+      return {
+        ...state,
+        currentPublication,
+        substitutions: convertSubstitutions(currentPublication!),
+      };
+    }
 
     case getType(logout):
     case getType(resetContent):

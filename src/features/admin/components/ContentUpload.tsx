@@ -23,6 +23,7 @@ import { RootState } from 'typesafe-actions';
 import useNavBackRoute from '../../../layout/hooks/useNavBackRoute';
 import { clearUploads, uploadFileAsync } from '../actions';
 import uploadImg from '../assets/File-upload-01.svg';
+import { Upload } from '../reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,13 +44,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const getStatusIcon = (status: string) => {
-  switch (status) {
+const getStatusIcon = (disposition: string) => {
+  switch (disposition) {
     case 'pending':
       return <HourglassEmptyIcon color="disabled" />;
     case 'success':
       return <CheckIcon color="primary" />;
-    case 'fail':
+    case 'error':
       return <ErrorOutlineIcon color="error" />;
     default:
       return <WarningIcon htmlColor={orange[500]} />;
@@ -121,6 +122,31 @@ const DropBox: React.FC = () => {
   );
 };
 
+const UploadListItem: React.FC<{ upload: Upload }> = ({ upload }) => {
+  let secondaryText = '';
+  switch (upload.disposition) {
+    case 'success':
+      secondaryText = 'Successfully uploaded.';
+      break;
+    case 'unchanged':
+      secondaryText = 'Content unchanged.';
+      break;
+    case 'error':
+      secondaryText = upload.message!;
+      break;
+    default:
+  }
+
+  return (
+    <ListItem>
+      <ListItemText primary={upload.file.name} secondary={secondaryText} />
+      <ListItemSecondaryAction>
+        {getStatusIcon(upload.disposition)}
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
+};
+
 const ResultList: React.FC = () => {
   const dispatch = useDispatch();
   const { uploads } = useSelector((state: RootState) => state.admin);
@@ -136,12 +162,7 @@ const ResultList: React.FC = () => {
       {uploads.length > 0 && (
         <List subheader={<ListSubheader>{t('upload_results')}</ListSubheader>}>
           {uploads.map(upload => (
-            <ListItem key={upload.uuid}>
-              <ListItemText primary={upload.file.name} />
-              <ListItemSecondaryAction>
-                {getStatusIcon(upload.status)}
-              </ListItemSecondaryAction>
-            </ListItem>
+            <UploadListItem key={upload.uuid} upload={upload} />
           ))}
         </List>
       )}
@@ -149,7 +170,7 @@ const ResultList: React.FC = () => {
   );
 };
 
-const Upload: React.FC = () => {
+const ContentUpload: React.FC = () => {
   const classes = useStyles();
   return (
     <Grid container={true} justify="center">
@@ -164,4 +185,4 @@ const Upload: React.FC = () => {
   );
 };
 
-export default Upload;
+export default ContentUpload;

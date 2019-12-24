@@ -10,14 +10,15 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import * as React from 'react';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ILemma } from 'Types';
 import { RootState } from 'typesafe-actions';
-import FlashcardTimer from '../../../../services/FlashcardTimer';
-import speechSynthesizer from '../../../../services/SpeechSynthesizer';
+import FlashcardTimer from '../../../services/FlashcardTimer';
+import { getLanguageService } from '../../../services/language';
+import speechSynthesizer from '../../../services/SpeechSynthesizer';
+import useSequence from '../hooks/useSequence';
 import FlashcardOptionsDialog from './FlashcardOptionsDialog';
-import useSequence from './hooks/useSequence';
 
 const flashcardTimer = new FlashcardTimer();
 
@@ -29,8 +30,8 @@ type Props = Readonly<{
 const FlashcardsController: React.FC<Props> = props => {
   const { lemmas, onUpdate } = props;
   const {
-    settings: { foreignVoice, nativeVoice },
     flashcards: { shuffle, speech, repeat },
+    content: { article },
   } = useSelector((state: RootState) => state);
   const [index, setIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
@@ -49,14 +50,16 @@ const FlashcardsController: React.FC<Props> = props => {
     const lemma = sequence[trueIndex];
     const showTranslation = index % 2 === 1;
     onUpdate(lemma, trueIndex, showTranslation);
-    if (nativeVoice && foreignVoice && speech) {
+    const foreignLS = getLanguageService(lemma.foreignLang);
+    const nativeLS = getLanguageService(lemma.nativeLang);
+    if (speech) {
       if (showTranslation) {
-        if (nativeVoice) speechSynthesizer.speak(nativeVoice, lemma.native);
+        nativeLS.speak(lemma.native);
       } else {
-        if (foreignVoice) speechSynthesizer.speak(foreignVoice, lemma.foreign);
+        foreignLS.speak(lemma.foreign);
       }
     }
-  }, [index, sequence, onUpdate, speech, nativeVoice, foreignVoice]);
+  }, [index, sequence, onUpdate, speech, article]);
 
   const incrementIndex = useCallback(
     (val: number) => {
@@ -77,20 +80,9 @@ const FlashcardsController: React.FC<Props> = props => {
   useEffect(() => {
     if (!autoPlay) return;
     setIndex(incrementIndex);
-    const player =
-      nativeVoice && foreignVoice && speech
-        ? speechSynthesizer
-        : flashcardTimer;
+    const player = speech ? speechSynthesizer : flashcardTimer;
     return player.subscribe(() => setIndex(incrementIndex));
-  }, [
-    autoPlay,
-    lemmas,
-    nativeVoice,
-    foreignVoice,
-    speech,
-    setIndex,
-    incrementIndex,
-  ]);
+  }, [autoPlay, lemmas, speech, setIndex, incrementIndex]);
 
   const atFirst = () => index === 0;
   const atLast = () => index === lemmas.length * 2 - 1;

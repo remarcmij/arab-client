@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleShuffle, toggleRepeat, toggleSpeech } from './actions';
+import { toggleShuffle, toggleRepeat, toggleSpeech } from '../actions';
 import { RootState } from 'typesafe-actions';
 
 type Props = Readonly<{ open: boolean; onClose: () => void }>;
@@ -13,11 +13,10 @@ type Props = Readonly<{ open: boolean; onClose: () => void }>;
 const FlashcardOptionsDialog: React.FC<Props> = ({ open, onClose }) => {
   const dispatch = useDispatch();
   const {
-    settings: { nativeVoice, foreignVoice },
     flashcards: { shuffle, repeat, speech },
   } = useSelector((state: RootState) => state);
 
-  const speechAvailable = !!(nativeVoice && foreignVoice);
+  const speechAvailable = 'speechSynthesis' in window;
 
   return (
     <Dialog onClose={onClose} open={open}>

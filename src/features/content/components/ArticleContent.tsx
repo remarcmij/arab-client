@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
 import Transcoder from '../../../services/Transcoder';
 
-const md = markdownIt({ html: true });
+const md = markdownIt({ html: true, breaks: true });
 
 // Matches a string of Arabic characters followed by an optional
 // western full stop. There exists a Unicode Arabic full stop but
@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       '& *[lang="ar"]': {
         fontSize: 28,
+        cursor: 'pointer',
+        color: theme.palette.primary.dark,
+      },
+      '& strong, em': {
         cursor: 'pointer',
         color: theme.palette.primary.dark,
       },
