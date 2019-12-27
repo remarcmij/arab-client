@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,6 @@ import { Link, Redirect } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import { logoutAsync } from '../../features/auth/actions';
 import UserInfo from './UserInfo';
-import ListSubheader from '@material-ui/core/ListSubheader';
 
 const useStyles = makeStyles(() =>
   createStyles({

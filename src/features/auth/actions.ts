@@ -105,6 +105,8 @@ export const localLoginAsync = ({ email, password }: Credentials) => async (
 
 export const logout = createAction('@auth/LOGOUT')<void>();
 
+export const redirectUser = createAction('@auth/REDIRECT')<string | null>();
+
 export const logoutAsync = () => async (dispatch: ThunkDispatchAny) => {
   removeToken();
   dispatch(logout());
