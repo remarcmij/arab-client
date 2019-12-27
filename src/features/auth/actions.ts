@@ -8,6 +8,7 @@ import {
 import { setToast } from '../../layout/actions';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { removeToken, storeToken as saveToken } from '../../utils/token';
+import { resetContent } from '../content/actions';
 
 type Credentials = {
   name?: string;
@@ -42,6 +43,7 @@ export const loadUserAsync = () => async (dispatch: ThunkDispatchAny) => {
     dispatch(loadUser.request());
     const res = await axios.get('/auth');
     dispatch(loadUser.success(res.data));
+    dispatch(resetContent());
   } catch (err) {
     dispatch(loadUser.failure());
   }
