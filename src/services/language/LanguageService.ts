@@ -13,7 +13,8 @@ type Idiom = {
   substitutions: Array<[RegExp, string]>;
   ignores: RegExp[];
 };
-export default abstract class LanguageService implements ILanguageService {
+
+export default class LanguageService implements ILanguageService {
   constructor(public readonly lang: string) {}
 
   get dir() {

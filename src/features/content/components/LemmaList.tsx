@@ -10,6 +10,7 @@ import ScrollableAnchor, { configureAnchors } from 'react-scrollable-anchor';
 import { ILemma, ITopic } from 'Types';
 import { getLanguageService } from '../../../services/language';
 import clsx from 'clsx';
+import Box from '@material-ui/core/Box';
 
 configureAnchors({
   offset: -73,
@@ -18,18 +19,11 @@ configureAnchors({
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    buttonContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      margin: theme.spacing(1),
-    },
     list: {
       listStyleType: 'none',
       userSelect: 'none',
       backgroundColor: grey[100],
       padding: theme.spacing(2),
-      margin: 0,
       marginBottom: theme.spacing(4),
     },
     listItem: {
@@ -67,6 +61,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const liProps = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  mr: 2,
+};
+
 type Props = {
   topic: ITopic;
   sectionIndex: number;
@@ -96,13 +98,12 @@ const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
     const foreignLS = getLanguageService(topic.foreignLang);
     const nativeLS = getLanguageService(topic.nativeLang);
     const foreignText = foreignLS.formatForDisplay(lemma.foreign);
-    const listClasses =
-      lemma._id === hashId
-        ? clsx(classes.listItem, classes.hashMatch)
-        : classes.listItem;
+
+    const hashMatch = lemma._id === hashId ? { bgcolor: pink[50] } : {};
+
     return (
       <ScrollableAnchor key={index} id={lemma._id}>
-        <li className={listClasses}>
+        <Box component="li" {...liProps} {...hashMatch}>
           <Typography
             variant="body1"
             dir={nativeLS.dir}
@@ -129,7 +130,7 @@ const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
               {lemma.roman}
             </Typography>
           )}
-        </li>
+        </Box>
       </ScrollableAnchor>
     );
   };
@@ -143,8 +144,8 @@ const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
   }
 
   return (
-    <>
-      <div className={classes.buttonContainer}>
+    <React.Fragment>
+      <Box display="flex" flexDirection="row" justifyContent={'flex-end'} m={1}>
         <Button
           variant="outlined"
           color="primary"
@@ -152,9 +153,11 @@ const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
         >
           {t('flashcards')}
         </Button>
-      </div>
-      <ul className={classes.list}>{lemmas.map(renderLemma)}</ul>
-    </>
+      </Box>
+      <Box component="ul" className={classes.list}>
+        {lemmas.map(renderLemma)}
+      </Box>
+    </React.Fragment>
   );
 };
 
