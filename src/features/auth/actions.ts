@@ -8,6 +8,7 @@ import {
 import { setToast } from '../../layout/actions';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { removeToken, storeToken as saveToken } from '../../utils/token';
+import { resetContent } from '../content/actions';
 
 type Credentials = {
   name?: string;
@@ -69,6 +70,8 @@ export const registerUserAsync = ({
     removeToken();
     dispatch(registerUser.failure());
     handleAxiosErrors(err, dispatch);
+  } finally {
+    dispatch(resetContent());
   }
 };
 
@@ -98,6 +101,8 @@ export const localLoginAsync = ({ email, password }: Credentials) => async (
     handleAxiosErrors(err, dispatch);
     removeToken();
     dispatch(localLogin.failure());
+  } finally {
+    dispatch(resetContent());
   }
 };
 
@@ -106,5 +111,5 @@ export const logout = createAction('@auth/LOGOUT')<void>();
 export const logoutAsync = () => async (dispatch: ThunkDispatchAny) => {
   removeToken();
   dispatch(logout());
-  await dispatch(loadUserAsync());
+  dispatch(resetContent());
 };
