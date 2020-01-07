@@ -50,6 +50,28 @@ export const authorizeUserAsync = (data: userUpdateAuthType) => async (
   }
 };
 
+export const deleteUser = createAsyncAction(
+  '@admin/REMOVE_USER_REQUEST',
+  '@admin/REMOVE_USER_SUCCESS',
+  '@admin/REMOVE_USER_FAILURE',
+)<undefined, { message: string }, any>();
+
+type UserRemoveType = { email: string };
+
+export const deleteUserAsync = (data: UserRemoveType) => async (
+  dispatch: ThunkDispatchAny,
+) => {
+  try {
+    dispatch(deleteUser.request());
+    const res = await axios.delete(`/api/user`, { data });
+    dispatch(fetchUsersAsync());
+    dispatch(deleteUser.success(res.data));
+  } catch (err) {
+    dispatch(deleteUser.failure(err));
+    handleAxiosErrors(err, dispatch);
+  }
+};
+
 export const fetchTopics = createAsyncAction(
   '@admin/FETCH_TOPICS_REQUEST',
   '@admin/FETCH_TOPICS_SUCCESS',

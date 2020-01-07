@@ -7,6 +7,7 @@ import {
   uploadFile,
   fetchUsers,
   authorizeUser,
+  deleteUser,
 } from './actions';
 import { User } from '../auth/actions';
 
@@ -22,6 +23,7 @@ export type State = Readonly<{
   topics: ITopic[];
   users: User[];
   loading: boolean;
+  notification?: { message: string | null };
   error?: any;
 }>;
 
@@ -31,6 +33,7 @@ const initialState: State = {
   uploads: [],
   topics: [],
   users: [],
+  notification: { message: null },
   loading: false,
 };
 
@@ -46,12 +49,16 @@ const reducer = (state = initialState, action: AdminAction): State => {
     case getType(fetchTopics.request):
     case getType(fetchUsers.request):
     case getType(authorizeUser.request):
+    case getType(deleteUser.request):
     case getType(deleteTopic.request):
       return { ...state, loading: true, error: null };
 
     case getType(fetchTopics.success):
     case getType(deleteTopic.success):
       return { ...state, topics: action.payload, loading: false };
+
+    case getType(deleteUser.success):
+      return { ...state, notification: action.payload, loading: false };
 
     case getType(authorizeUser.success):
       return {
@@ -65,6 +72,7 @@ const reducer = (state = initialState, action: AdminAction): State => {
     case getType(fetchUsers.success):
       return { ...state, users: action.payload, loading: false };
 
+    case getType(deleteUser.failure):
     case getType(fetchUsers.failure):
     case getType(fetchTopics.failure):
     case getType(deleteTopic.failure):
