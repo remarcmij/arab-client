@@ -8,6 +8,7 @@ import {
 import Button from '@material-ui/core/Button';
 import ResendButtonIcon from '@material-ui/icons/Refresh';
 import axios from 'axios';
+import i18next from 'i18next';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
@@ -118,7 +119,12 @@ const AccountConfirmation: React.FC = () => {
 
   /** handling error methodology */
   if (state.expired) {
-    handleNotifications('warning', 'expired link! please login and try again.');
+    handleNotifications(
+      'error',
+      user
+        ? i18next.t('expired_token_login')
+        : i18next.t('expired_token_non_login'),
+    );
   }
 
   if ((!state.isValid || !user) && !state.isResent) {
@@ -146,27 +152,26 @@ const AccountConfirmation: React.FC = () => {
       <Grid container>
         <>
           <Typography variant="body2">
-            You will receive an email, the process may take up to 2 minutes
-            utmost,{' '}
-            {!state.isResent
-              ? 'please verify your e-mail address by requesting a new verification link.'
-              : 'please re-check your e-mail inbox, social, promotion or spam if not found.'}
+            {i18next.t('note_verification_process_duration')}.
+            <Typography variant="body2">
+              {state.isResent
+                ? i18next.t('check_email')
+                : i18next.t('request_new_token')}
+            </Typography>
           </Typography>
           <Typography variant="caption">
-            making sure you&#39;re up and running with the confirmation process,
-            you can click this button after two minutes to get a new link
-            request.
+            {state.isResent && i18next.t('note_token_is_resent')}
           </Typography>
           <Grid item className={btnSize}>
             <Button fullWidth onClick={requestToken} disabled={state.isResent}>
-              request new verification link
+              {i18next.t('request_new_link')}
               <ResendButtonIcon />
             </Button>
           </Grid>
         </>
         <Grid item className={btnSize}>
           <Button fullWidth onClick={redirectToContent}>
-            go to unrestricted content
+            {i18next.t('go_to_content')}
           </Button>
         </Grid>
       </Grid>

@@ -57,7 +57,8 @@ const UsersListItem: React.FC<Props> = props => {
         <>
           {user.name}{' '}
           <Typography variant="caption" color="textSecondary">
-            (Last Access: {new Date(user.lastAccess).toLocaleString()})
+            ({i18next.t('last_access')}:{' '}
+            {new Date(user.lastAccess).toLocaleString()})
           </Typography>
         </>
       </ListItemText>
@@ -85,7 +86,7 @@ const UsersListItem: React.FC<Props> = props => {
       ) : (
         <ListItem>
           <Typography variant="caption" color="error">
-            No {i18next.t(props.subheader)} was found.
+            {i18next.t('no_match_for')} {i18next.t(props.subheader)}.
           </Typography>
         </ListItem>
       )}
@@ -105,14 +106,14 @@ const UsersOptionsAdmin: React.FC = () => {
     if (notification?.message) {
       dispatch(setToast('success', notification.message));
     }
-  }, [notification]);
+  }, [notification, dispatch]);
 
   return (
     <Grid container={true} justify="center" style={{ position: 'relative' }}>
       <Grid item={true} xs={12} md={8}>
         <Box mt={4}>
           <Paper>
-            <DialogTitle>User Options</DialogTitle>
+            <DialogTitle>{i18next.t('user_options')}</DialogTitle>
             <UsersListItem
               subheader="authorized_users"
               filter={user => user.authorized && !user.admin}
