@@ -1,14 +1,16 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { RootState } from 'typesafe-actions';
 import ContentAdmin from '../features/admin/components/ContentAdmin';
 import ContentUpload from '../features/admin/components/ContentUpload';
-import { User } from '../features/auth/actions';
+import UsersOptionsAdmin from '../features/admin/components/UsersOptionsAdmin';
+import { redirectUser, User } from '../features/auth/actions';
 import AccountConfirmation from '../features/auth/components/AccountConfirmation';
 import PasswordChange from '../features/auth/components/PasswordChange';
 import PasswordReset from '../features/auth/components/PasswordReset';
 import Register from '../features/auth/components/Register';
 import SignIn from '../features/auth/components/SignIn';
-import useParentRedirectRoute from '../features/auth/hooks/useParentRedirectRoute';
 import Article from '../features/content/components/Article';
 import ArticleList from '../features/content/components/ArticleList';
 import PublicationList from '../features/content/components/PublicationList';
@@ -23,9 +25,16 @@ const isVerified = (user: User | null) => !!user?.verified;
 const isNotSignedIn = (user: User | null) => user == null;
 
 const Routes: React.FC = () => {
-  const { useParentRoutes, parentRedirection } = useParentRedirectRoute();
+  const { parentRedirection } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
 
-  useParentRoutes();
+  const rgx = new RegExp(`/$`, 'g');
+
+  const path = window.location.pathname.replace(rgx, '');
+  const target = parentRedirection?.replace(rgx, '');
+  if (target === path) {
+    dispatch(redirectUser(null));
+  }
 
   return (
     <section>
@@ -79,6 +88,12 @@ const Routes: React.FC = () => {
           exact={true}
           path="/admin/content"
           component={ContentAdmin}
+        />
+        <ProtectedRoute
+          predicate={isAdmin}
+          exact={true}
+          path="/admin/users/options"
+          component={UsersOptionsAdmin}
         />
         <ProtectedRoute
           predicate={isAdmin}

@@ -8,8 +8,47 @@ import {
 import uuidv4 from 'uuid/v4';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { resetContent } from '../content/actions';
+import { User } from '../auth/actions';
 
 export type UploadDisposition = 'success' | 'unchanged' | 'fail';
+
+export const fetchUsers = createAsyncAction(
+  '@admin/FETCH_USERS_REQUEST',
+  '@admin/FETCH_USERS_SUCCESS',
+  '@admin/FETCH_USERS_FAILURE',
+)<undefined, User[], any>();
+
+export const fetchUsersAsync = () => async (dispatch: ThunkDispatchAny) => {
+  try {
+    dispatch(fetchUsers.request());
+    const res = await axios(`/api/users/all`);
+    dispatch(fetchUsers.success(res.data));
+  } catch (err) {
+    dispatch(fetchUsers.failure(err));
+    handleAxiosErrors(err, dispatch);
+  }
+};
+
+export const authorizeUser = createAsyncAction(
+  '@admin/AUTHORIZE_USER_REQUEST',
+  '@admin/AUTHORIZE_USER_SUCCESS',
+  '@admin/AUTHORIZE_USER_FAILURE',
+)<undefined, User, any>();
+
+type userUpdateAuthType = { authorize: boolean; email: string };
+
+export const authorizeUserAsync = (data: userUpdateAuthType) => async (
+  dispatch: ThunkDispatchAny,
+) => {
+  try {
+    dispatch(authorizeUser.request());
+    const res = await axios.patch(`/api/user/authorize`, data);
+    dispatch(authorizeUser.success(res.data));
+  } catch (err) {
+    dispatch(authorizeUser.failure(err));
+    handleAxiosErrors(err, dispatch);
+  }
+};
 
 export const fetchTopics = createAsyncAction(
   '@admin/FETCH_TOPICS_REQUEST',

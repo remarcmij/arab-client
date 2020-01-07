@@ -21,6 +21,7 @@ type UpdateUser = {
 };
 
 export type User = Readonly<{
+  _id: string;
   name: string;
   email: string;
   photo?: string;

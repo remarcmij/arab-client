@@ -96,6 +96,12 @@ const MainDrawer: React.FC<Props> = props => {
               </ListItemIcon>
               <ListItemText primary={t('upload_content')} />
             </ListItem>
+            <ListItem button={true} component={Link} to="/admin/users/options">
+              <ListItemIcon>
+                <Icon className={'fas fa-fw fa-user-cog'} />
+              </ListItemIcon>
+              <ListItemText primary={t('user_options')} />
+            </ListItem>
           </List>
         )}
         <List
