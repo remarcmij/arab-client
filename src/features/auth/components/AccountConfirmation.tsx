@@ -15,7 +15,7 @@ import { RootState } from 'typesafe-actions';
 import { setToast, ToastType } from '../../../layout/actions';
 import Spinner from '../../../layout/components/Spinner';
 import TrimmedContainer from '../../../layout/components/TrimmedContainer';
-import useParentRedirectRoute from '../hooks/useParentRedirectRoute';
+import { redirectUser } from '../actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,43 +30,25 @@ const AccountConfirmation: React.FC = () => {
   const { token } = useParams();
   const { btnSize } = useStyles();
   const [state, setState] = useState({
-    loading: false,
-    expired: false,
-    isValid: false,
     isResent: false,
     message: '',
     toContent: false,
-    toLogin: false,
+    isValid: true,
+    loading: true,
+    expired: false,
   });
   const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { redirectBack } = useParentRedirectRoute();
+  const { user, parentRedirection, loading } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   const redirectToContent = () => setState({ ...state, toContent: true });
-  const redirectToLogin = () => setState({ ...state, toLogin: true });
   const handleNotifications = (type: ToastType, message: string) => {
     const toast = setToast(type, message);
     dispatch(toast);
   };
 
-  useEffect(() => {
-    const body = JSON.stringify({ token });
-    void axios
-      .post(`/auth/confirmation`, body)
-      .then(({ data }) => {
-        setState(s => ({ ...s, isValid: true, message: data.message }));
-      })
-      .catch(({ response: { data, status } }) => {
-        // this is refers to token_expired statusCode.
-        if (status === 401) {
-          setState(s => ({ ...s, expired: true }));
-        }
-        setState(s => ({ ...s, isValid: false, message: data.message }));
-      })
-      .finally(() => setState(s => ({ ...s, loading: false })));
-  }, [token, setState]);
-
-  const requestNewToken = async () => {
+  const requestToken = async () => {
     try {
       setState(s => ({ ...s, isResent: true }));
       await axios.get('/auth/token/' + token);
@@ -81,98 +63,110 @@ const AccountConfirmation: React.FC = () => {
   };
 
   useEffect(() => {
-    if (state.isResent) {
-      const interval = setTimeout(() => {
-        setState(s => ({ ...s, isResent: false }));
-      }, 1000 * 60 * 2);
+    const body = JSON.stringify({ token });
 
-      return () => clearTimeout(interval);
-    }
-  }, [setState, state.isResent]);
+    (async () => {
+      try {
+        const { data } = await axios.post(`/auth/confirmation`, body);
 
-  if (user?.verified || state.toContent) {
-    return <Redirect to="/content" />;
-  }
+        setState(s => ({
+          ...s,
+          isValid: true,
+          toContent: true,
+          message: data.message,
+        }));
+      } catch (error) {
+        setState(s => ({
+          ...s,
+          // this is refers to token_expired statusCode.
+          expired: error.response.status === 401,
+          message: error.response.data.message,
+          isValid: false,
+        }));
+      } finally {
+        setState(s => ({
+          ...s,
+          loading: false,
+        }));
+      }
+    })();
+  }, [token, setState]);
 
-  if (state.toLogin) {
-    redirectBack();
-    return <Redirect to="/login" />;
-  }
+  /**
+   * This Component redirects non-logged-in users to `/login`, and authorized users to `/content`
+   */
+  const RouteNonLoggedInUsers = () =>
+    user ? <Redirect to="/content" /> : <Redirect to="/login" />;
 
-  if (state.loading) {
+  if (loading || state.loading) {
     return <Spinner />;
   }
 
-  if (state.isValid && user?.verified) {
-    handleNotifications('success', state.message);
-    redirectToContent();
-  } else if (state.isResent) {
-    handleNotifications(
-      'info',
-      'An E-mail been sent to your inbox please re-check your email address.',
-    );
-  } else if (user && state.expired && !state.isResent) {
-    handleNotifications(
-      'info',
-      'expired request, please re-request new token.',
-    );
-  } else {
-    handleNotifications('error', state.message || 'Oops! something went wrong');
+  if (user?.verified || state.isValid || state.toContent) {
+    if (user?.verified && !state.isValid) {
+      // already verified users.
+      handleNotifications('success', state.message);
+    }
+
+    if (state.isValid) {
+      // valid token.
+      handleNotifications('success', state.message);
+    }
+
+    return <RouteNonLoggedInUsers />;
+  }
+
+  /** handling error methodology */
+  if (state.expired) {
+    handleNotifications('warning', 'expired link! please login and try again.');
+  }
+
+  if ((!state.isValid || !user) && !state.isResent) {
+    if (!state.expired && !state.isValid) {
+      // not expired but not valid..
+      handleNotifications('error', state.message);
+      return <RouteNonLoggedInUsers />;
+    }
+
+    if (!user && state.expired) {
+      // if not logged-in, we want him back.
+      if (
+        parentRedirection == null &&
+        parentRedirection !== window.location.pathname
+      ) {
+        dispatch(redirectUser(window.location.pathname));
+      }
+
+      return <Redirect to="/login" />;
+    }
   }
 
   return (
     <TrimmedContainer>
       <Grid container>
-        {user && !user.verified ? (
-          <>
-            <Typography variant="body2">
-              This process may take up to 2 minutes utmost,{' '}
-              {!state.isResent
-                ? 'please verify your e-mail address by requesting a new token.'
-                : 'please re-check your e-mail inbox, social, promotion or spam if not found.'}
-            </Typography>
-            <Typography variant="caption">
-              making sure you&#39;re up and running with the confirmation
-              process, you can click this button after two minutes to get a new
-              token request.
-            </Typography>
-            <Grid item className={btnSize}>
-              <Button
-                fullWidth
-                onClick={requestNewToken}
-                disabled={state.isResent}
-              >
-                Resend Token
-                <ResendButtonIcon />
-              </Button>
-            </Grid>
-          </>
-        ) : (
-          <>
-            {/* 
-              if the token is expired and the user isn't logged in case don't send 
-              an e-mail but require him to login, this might be an accident, 
-              either case I assume this as an extra security measure.
-            */}
-            <Typography variant="body2">
-              This process can not be done while you&#39;re signed out please
-              login and try again.
-            </Typography>
-            <Grid item className={btnSize}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={redirectToLogin}
-                fullWidth
-              >
-                Login
-              </Button>
-            </Grid>
-          </>
-        )}
+        <>
+          <Typography variant="body2">
+            You will receive an email, the process may take up to 2 minutes
+            utmost,{' '}
+            {!state.isResent
+              ? 'please verify your e-mail address by requesting a new verification link.'
+              : 'please re-check your e-mail inbox, social, promotion or spam if not found.'}
+          </Typography>
+          <Typography variant="caption">
+            making sure you&#39;re up and running with the confirmation process,
+            you can click this button after two minutes to get a new link
+            request.
+          </Typography>
+          <Grid item className={btnSize}>
+            <Button fullWidth onClick={requestToken} disabled={state.isResent}>
+              request new verification link
+              <ResendButtonIcon />
+            </Button>
+          </Grid>
+        </>
         <Grid item className={btnSize}>
           <Button fullWidth onClick={redirectToContent}>
-            Go To Content
+            go to unrestricted content
           </Button>
         </Grid>
       </Grid>
