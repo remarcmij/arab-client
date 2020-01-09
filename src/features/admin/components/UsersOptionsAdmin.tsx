@@ -11,6 +11,7 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import Divider from '@material-ui/core/Divider';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import VerifiedUserTwoToneIcon from '@material-ui/icons/VerifiedUserTwoTone';
@@ -25,7 +26,6 @@ import {
   deleteUserAsync,
   fetchUsersAsync,
 } from '../actions';
-import Divider from '@material-ui/core/Divider';
 
 type Props = {
   filter: (a: User) => boolean;
@@ -37,8 +37,7 @@ const TEN_DAYS = 1000 * 60 * 60 * 24 * 10;
 const UsersListItem: React.FC<Props> = props => {
   const { users } = useSelector((state: RootState) => state.admin);
   const dispatch = useDispatch();
-
-  const verifyUserOnClick = (user: User) => {
+  const authorizeUser = (user: User) => {
     dispatch(
       authorizeUserAsync({
         email: user.email,
@@ -63,7 +62,7 @@ const UsersListItem: React.FC<Props> = props => {
         </>
       </ListItemText>
       <ListItemSecondaryAction>
-        <IconButton onClick={() => verifyUserOnClick(user)}>
+        <IconButton onClick={() => authorizeUser(user)}>
           {user.authorized ? (
             <VerifiedUserIcon color="primary" />
           ) : (
