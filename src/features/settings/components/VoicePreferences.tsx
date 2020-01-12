@@ -12,13 +12,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import TrimmedContainer from '../../../layout/components/TrimmedContainer';
-import { loadVoicesAsync, setPreferredVoices, IVoiceInfo } from '../actions';
+import { loadVoicesAsync, setEligibleVoices, IVoiceInfo } from '../actions';
 
 const VoicePreferences: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const {
-    settings: { preferredVoices, loading, error },
+    settings: { eligibleVoices, loading, error },
     content: { publications },
   } = useSelector((state: RootState) => state);
   const [voices, setVoices] = useState<IVoiceInfo[]>([]);
@@ -29,8 +29,8 @@ const VoicePreferences: React.FC = () => {
   }, [dispatch, publications]);
 
   useEffect(() => {
-    setVoices([...preferredVoices]);
-  }, [preferredVoices]);
+    setVoices([...eligibleVoices]);
+  }, [eligibleVoices]);
 
   const onDragOver = (e: any, index: number) => {
     e.preventDefault();
@@ -51,13 +51,13 @@ const VoicePreferences: React.FC = () => {
   };
 
   const onDragEnd = () => {
-    dispatch(setPreferredVoices(voices));
+    dispatch(setEligibleVoices(voices));
   };
 
   const onButtonClick = (index: number) => {
     const reorderedVoices = voices.filter((_, i) => i !== index);
     reorderedVoices.unshift(voices[index]);
-    dispatch(setPreferredVoices(reorderedVoices));
+    dispatch(setEligibleVoices(reorderedVoices));
   };
 
   if (loading) {

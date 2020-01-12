@@ -7,6 +7,7 @@ import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import { fetchPublicationsAsync } from '../actions';
 import PublicationListItem from './PublicationListItem';
+import LanguageDialog from '../../settings/components/LanguageDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,9 +19,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const PublicationList: React.FC = () => {
   const dispatch = useDispatch();
-  const { publications: topics, loading, error } = useSelector(
-    (state: RootState) => state.content,
-  );
+  const {
+    settings: { targetLang },
+    content: { publications: topics, loading, error },
+  } = useSelector((state: RootState) => state);
   const classes = useStyles();
 
   const publicationsLoaded = topics.length !== 0;
@@ -31,22 +33,22 @@ const PublicationList: React.FC = () => {
     }
   }, [dispatch, publicationsLoaded]);
 
-  if (loading) {
-    return <Spinner />;
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
-
   return (
-    <Paper classes={{ root: classes.root }}>
-      <List>
-        {topics.map(topic => (
-          <PublicationListItem key={topic.filename} publication={topic} />
-        ))}
-      </List>
-    </Paper>
+    <React.Fragment>
+      {loading && <Spinner />}
+      <LanguageDialog />
+      {publicationsLoaded && targetLang != null && (
+        <Paper classes={{ root: classes.root }}>
+          <List>
+            {topics
+              .filter(topic => topic.foreignLang === targetLang)
+              .map(topic => (
+                <PublicationListItem key={topic.filename} publication={topic} />
+              ))}
+          </List>
+        </Paper>
+      )}
+    </React.Fragment>
   );
 };
 

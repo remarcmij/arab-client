@@ -19,14 +19,15 @@ const store = createStore(
 store.subscribe(
   throttle(() => {
     const {
-      settings: { showVocalization, preferredVoices },
+      settings: { showVocalization, targetLang },
       flashcards: { shuffle, repeat },
     } = store.getState();
 
     saveState({
       settings: {
         showVocalization,
-        preferredVoices,
+        // eligibleVoices,
+        targetLang,
       },
       flashcards: {
         shuffle,

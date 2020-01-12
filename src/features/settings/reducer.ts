@@ -1,11 +1,13 @@
 import { ActionType, getType } from 'typesafe-actions';
 import { loadState } from '../../utils/persistState';
 import {
+  setTargetLang,
   closeSettings,
   IVoiceInfo,
   loadVoices,
   openSettings,
-  setPreferredVoices,
+  setEligibleVoices,
+  setSelectedVoices,
   toggleVocalization,
 } from './actions';
 
@@ -16,7 +18,9 @@ type State = Readonly<{
   settingsOpen: boolean;
   loading: boolean;
   error: Error | null;
-  preferredVoices: IVoiceInfo[];
+  targetLang: string | null;
+  eligibleVoices: IVoiceInfo[];
+  selectedVoices: IVoiceInfo[];
 }>;
 
 const initialState: State = {
@@ -24,19 +28,21 @@ const initialState: State = {
   settingsOpen: false,
   loading: false,
   error: null,
-  preferredVoices: [],
+  targetLang: null,
+  selectedVoices: [],
+  eligibleVoices: [],
   ...loadState().settings,
 };
 
-const updatePreferredVoices = (
-  preferredVoices: IVoiceInfo[],
+const updateEligibleVoices = (
+  eligibleVoices: IVoiceInfo[],
   availableVoices: IVoiceInfo[],
 ) => {
-  const currentVoices = preferredVoices.filter(voice =>
+  const currentVoices = eligibleVoices.filter(voice =>
     availableVoices.find(v => v.name === voice.name),
   );
   const missingVoices = availableVoices.filter(
-    voice => !preferredVoices.find(v => v.name === voice.name),
+    voice => !eligibleVoices.find(v => v.name === voice.name),
   );
   return currentVoices.concat(missingVoices);
 };
@@ -47,6 +53,8 @@ export default (state: State = initialState, action: SettingsAction): State => {
       return { ...state, settingsOpen: true };
     case getType(closeSettings):
       return { ...state, settingsOpen: false };
+    case getType(setTargetLang):
+      return { ...state, targetLang: action.payload };
     case getType(toggleVocalization):
       return { ...state, showVocalization: !state.showVocalization };
     case getType(loadVoices.request):
@@ -54,16 +62,18 @@ export default (state: State = initialState, action: SettingsAction): State => {
     case getType(loadVoices.success):
       return {
         ...state,
-        preferredVoices:
+        eligibleVoices:
           action.payload.length === 0
-            ? state.preferredVoices
-            : updatePreferredVoices(state.preferredVoices, action.payload),
+            ? state.eligibleVoices
+            : updateEligibleVoices(state.eligibleVoices, action.payload),
         loading: false,
       };
     case getType(loadVoices.failure):
       return { ...state, loading: false, error: action.payload };
-    case getType(setPreferredVoices):
-      return { ...state, preferredVoices: action.payload };
+    case getType(setEligibleVoices):
+      return { ...state, eligibleVoices: action.payload };
+    case getType(setSelectedVoices):
+      return { ...state, selectedVoices: action.payload };
     default:
       return state;
   }

@@ -15,11 +15,20 @@ import {
 } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
-import { closeSettings, toggleVocalization } from '../actions';
+import {
+  closeSettings,
+  toggleVocalization,
+  setTargetLang,
+  loadVoicesAsync,
+  IVoiceInfo,
+} from '../actions';
+import LanguageSelect from './LanguageSelect';
+import { fetchPublicationsAsync } from '../../content/actions';
+import VoiceLists from './VoiceLists';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,16 +51,50 @@ const FieldSet: React.FC<{ label: string }> = props => (
 
 const SettingsDialog: React.FC = () => {
   const dispatch = useDispatch();
-  const { settingsOpen, showVocalization } = useSelector(
-    (state: RootState) => state.settings,
-  );
+  const {
+    settings: {
+      settingsOpen,
+      showVocalization,
+      targetLang,
+      eligibleVoices,
+      selectedVoices,
+    },
+    content: { publications: topics, loading, error },
+  } = useSelector((state: RootState) => state);
+  const [lang, setLang] = useState(targetLang);
+  const [nonSelectedVoices, setNonSelectedVoices] = useState<IVoiceInfo[]>([]);
 
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
-  const onClose = () => dispatch(closeSettings());
+  useEffect(() => {
+    dispatch(loadVoicesAsync(topics));
+  }, [dispatch, topics]);
+
+  useEffect(() => {
+    const isNotSelected = (voice: IVoiceInfo) =>
+      !selectedVoices.find(v => v.name !== voice.name);
+    setNonSelectedVoices(eligibleVoices.filter(isNotSelected));
+  }, [eligibleVoices, selectedVoices]);
+
+  const publicationsLoaded = topics.length !== 0;
+
+  useEffect(() => {
+    if (!publicationsLoaded) {
+      dispatch(fetchPublicationsAsync());
+    }
+  }, [dispatch, publicationsLoaded]);
+
+  if (loading) {
+    return null;
+  }
+
+  const onClose = () => {
+    dispatch(setTargetLang(lang!));
+    dispatch(closeSettings());
+  };
 
   return (
     <Dialog
@@ -65,7 +108,10 @@ const SettingsDialog: React.FC = () => {
         {t('change_settings')}
       </DialogTitle>
       <DialogContent>
-        <FieldSet label="Vocalization">
+        <LanguageSelect topics={topics} lang={lang} onChange={setLang} />
+        <VoiceLists selected={selectedVoices} nonSelected={nonSelectedVoices} />
+
+        {lang === 'ar' && (
           <FormGroup>
             <FormControlLabel
               control={
@@ -74,10 +120,10 @@ const SettingsDialog: React.FC = () => {
                   onChange={() => dispatch(toggleVocalization())}
                 />
               }
-              label={t('show_vocalization')}
+              label={t('show_arabic_vocalization')}
             />
           </FormGroup>
-        </FieldSet>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" autoFocus={true}>

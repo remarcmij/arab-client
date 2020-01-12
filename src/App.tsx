@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React, { Suspense, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { Provider } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { loadUserAsync } from './features/auth/actions';
 import SettingsDialog from './features/settings/components/SettingsDialog';
@@ -13,7 +13,6 @@ import SnackbarContainer from './layout/components/SnackbarContainer';
 import Spinner from './layout/components/Spinner';
 import Welcome from './layout/components/Welcome';
 import Routes from './routes/Routes';
-import store from './store';
 import { storeToken } from './utils/token';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
@@ -24,6 +23,7 @@ const useStyles = makeStyles({
 });
 
 const App: React.FC<{}> = () => {
+  const dispatch = useDispatch();
   const [cookies, , removeCookie] = useCookies();
   const hasMinWidth = useMediaQuery('(min-width:600px)');
   const classes = useStyles();
@@ -34,26 +34,24 @@ const App: React.FC<{}> = () => {
   }
 
   useEffect(() => {
-    store.dispatch(loadUserAsync());
+    dispatch(loadUserAsync());
   });
 
   return (
     <Suspense fallback={<Spinner />}>
-      <Provider store={store}>
-        <Router>
-          <Box flexGrow={1} pt={hasMinWidth ? 8 : 7}>
-            <NavBar />
-            <SnackbarContainer />
-            <SettingsDialog />
-            <Container maxWidth="md" classes={{ root: classes.container }}>
-              <Switch>
-                <Route exact={true} path="/welcome" component={Welcome} />
-                <Route component={Routes} />
-              </Switch>
-            </Container>
-          </Box>
-        </Router>
-      </Provider>
+      <Router>
+        <Box flexGrow={1} pt={hasMinWidth ? 8 : 7}>
+          <NavBar />
+          <SnackbarContainer />
+          <SettingsDialog />
+          <Container maxWidth="md" classes={{ root: classes.container }}>
+            <Switch>
+              <Route exact={true} path="/welcome" component={Welcome} />
+              <Route component={Routes} />
+            </Switch>
+          </Container>
+        </Box>
+      </Router>
     </Suspense>
   );
 };
