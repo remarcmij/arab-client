@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import { User } from '../features/auth/actions';
+import Spinner from '../layout/components/Spinner';
 
 type Props = {
   component: React.ElementType;
@@ -17,16 +18,19 @@ const ProtectedRoute: React.FC<Props> = ({
   fallbackTo = '/content',
   ...rest
 }) => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, loading } = useSelector((state: RootState) => state.auth);
+
+  // This allows the user to hit authorized protected routes with no unneeded fallback,
+  //    e.g: http://localhost:3000/admin/users/options is protected,
+  //    in a case of an admin we should be hitting it by no fallback.
+  const UnAuthorizedFallback = () =>
+    loading ? <Spinner /> : <Redirect to={fallbackTo} />;
+
   return (
     <Route
       {...rest}
       render={props =>
-        predicate(user) ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to={fallbackTo} />
-        )
+        predicate(user) ? <Component {...props} /> : <UnAuthorizedFallback />
       }
     />
   );

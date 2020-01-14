@@ -61,7 +61,10 @@ const googleUrl =
 
 const SignIn: React.FC = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, parentRedirection } = useSelector(
+    (state: RootState) => state.auth,
+  );
+
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -81,7 +84,8 @@ const SignIn: React.FC = () => {
   };
 
   if (isAuthenticated) {
-    return <Redirect to="/content" />;
+    const route = parentRedirection as string;
+    return <Redirect to={route || '/content'} />;
   }
 
   return (
