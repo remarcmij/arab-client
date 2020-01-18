@@ -96,11 +96,11 @@ const MainDrawer: React.FC<Props> = props => {
               </ListItemIcon>
               <ListItemText primary={t('upload_content')} />
             </ListItem>
-            <ListItem button={true} component={Link} to="/admin/users/options">
+            <ListItem button={true} component={Link} to="/admin/users">
               <ListItemIcon>
                 <Icon className={'fas fa-fw fa-user-cog'} />
               </ListItemIcon>
-              <ListItemText primary={t('user_options')} />
+              <ListItemText primary={t('manage_users')} />
             </ListItem>
           </List>
         )}

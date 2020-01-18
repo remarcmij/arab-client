@@ -91,7 +91,7 @@ const UsersListItem: React.FC<Props> = props => {
   );
 };
 
-const UsersOptionsAdmin: React.FC = () => {
+const ManageUsersAdmin: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const UsersOptionsAdmin: React.FC = () => {
       <Grid item={true} xs={12} md={8}>
         <Box mt={4}>
           <Paper>
-            <DialogTitle>{i18next.t('user_options')}</DialogTitle>
+            <DialogTitle>{i18next.t('manage_users')}</DialogTitle>
             <UsersListItem
               subheader="authorized_users"
               filter={user => user.authorized && !user.admin}
@@ -125,4 +125,4 @@ const UsersOptionsAdmin: React.FC = () => {
   );
 };
 
-export default UsersOptionsAdmin;
+export default ManageUsersAdmin;
