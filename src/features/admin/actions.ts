@@ -9,6 +9,7 @@ import uuidv4 from 'uuid/v4';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { resetContent } from '../content/actions';
 import { User } from '../auth/actions';
+import { setToast } from '../../layout/actions';
 
 export type UploadDisposition = 'success' | 'unchanged' | 'fail';
 
@@ -65,7 +66,7 @@ export const deleteUserAsync = (data: deleteUserAsyncType) => async (
     dispatch(deleteUser.request());
     const res = await axios.delete(`/api/user`, { data });
     dispatch(fetchUsersAsync());
-    dispatch(deleteUser.success(res.data));
+    dispatch(setToast('success', res.data.message));
   } catch (err) {
     dispatch(deleteUser.failure(err));
     handleAxiosErrors(err, dispatch);

@@ -93,17 +93,10 @@ const UsersListItem: React.FC<Props> = props => {
 
 const UsersOptionsAdmin: React.FC = () => {
   const dispatch = useDispatch();
-  const { notification } = useSelector((state: RootState) => state.admin);
 
   useEffect(() => {
     dispatch(fetchUsersAsync());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (notification?.message) {
-      dispatch(setToast('success', notification.message));
-    }
-  }, [notification, dispatch]);
 
   return (
     <Grid container={true} justify="center" style={{ position: 'relative' }}>
