@@ -32,8 +32,6 @@ type Props = {
   subheader: string;
 };
 
-const TEN_DAYS = 1000 * 60 * 60 * 24 * 10;
-
 const UsersListItem: React.FC<Props> = props => {
   const { users } = useSelector((state: RootState) => state.admin);
   const dispatch = useDispatch();
@@ -46,7 +44,7 @@ const UsersListItem: React.FC<Props> = props => {
     );
   };
 
-  const removeUser = (email: string) => {
+  const deleteUser = (email: string) => {
     dispatch(deleteUserAsync({ email }));
   };
 
@@ -69,7 +67,7 @@ const UsersListItem: React.FC<Props> = props => {
             <VerifiedUserTwoToneIcon color="error" />
           )}
         </IconButton>
-        <IconButton onClick={() => removeUser(user.email)}>
+        <IconButton onClick={() => deleteUser(user.email)}>
           <DeleteIcon color="error" />
         </IconButton>
       </ListItemSecondaryAction>
@@ -126,13 +124,6 @@ const UsersOptionsAdmin: React.FC = () => {
             <UsersListItem
               subheader="non_verified_users"
               filter={user => !user.verified}
-            />
-            <Divider />
-            <UsersListItem
-              subheader="long_time_no_access_users"
-              filter={user =>
-                Date.parse(user.lastAccess) < Date.now() - TEN_DAYS
-              }
             />
           </Paper>
         </Box>

@@ -51,14 +51,14 @@ export const authorizeUserAsync = (data: userUpdateAuthType) => async (
 };
 
 export const deleteUser = createAsyncAction(
-  '@admin/REMOVE_USER_REQUEST',
-  '@admin/REMOVE_USER_SUCCESS',
-  '@admin/REMOVE_USER_FAILURE',
+  '@admin/DELETE_USER_REQUEST',
+  '@admin/DELETE_USER_SUCCESS',
+  '@admin/DELETE_USER_FAILURE',
 )<undefined, { message: string }, any>();
 
-type UserRemoveType = { email: string };
+type deleteUserAsyncType = { email: string };
 
-export const deleteUserAsync = (data: UserRemoveType) => async (
+export const deleteUserAsync = (data: deleteUserAsyncType) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
