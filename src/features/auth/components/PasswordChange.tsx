@@ -75,7 +75,7 @@ const PasswordChange: React.FC = () => {
   return (
     <TrimmedContainer>
       <Typography variant="h4" gutterBottom={true}>
-        {t('change_password')}
+        {user?.isSecured ? t('change_password') : t('secure_account')}
       </Typography>
       <form onSubmit={handleSubmit} autoComplete="off">
         {shouldConfirmPassword && (
