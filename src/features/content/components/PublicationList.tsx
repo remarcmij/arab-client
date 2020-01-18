@@ -7,6 +7,7 @@ import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import { fetchPublicationsAsync } from '../actions';
 import PublicationListItem from './PublicationListItem';
+import { Redirect } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,6 +22,7 @@ const PublicationList: React.FC = () => {
   const { publications: topics, loading, error } = useSelector(
     (state: RootState) => state.content,
   );
+  const { user } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
 
   const publicationsLoaded = topics.length !== 0;
@@ -33,6 +35,11 @@ const PublicationList: React.FC = () => {
 
   if (loading) {
     return <Spinner />;
+  }
+
+  // this isn't an always response, it must be specific.
+  if (user?.isSecured === false) {
+    return <Redirect to="/password" />;
   }
 
   if (error) {

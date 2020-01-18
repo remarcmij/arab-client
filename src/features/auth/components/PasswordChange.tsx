@@ -5,13 +5,14 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { setToast } from '../../../layout/actions';
 import TrimmedContainer from '../../../layout/components/TrimmedContainer';
 import handleAxiosErrors from '../../../utils/handleAxiosErrors';
 import { storeToken } from '../../../utils/token';
-import { loadUserAsync } from '../../auth/actions';
+import { loadUserAsync, secureUser } from '../../auth/actions';
+import { RootState } from 'typesafe-actions';
 
 const PasswordChange: React.FC = () => {
   const dispatch = useDispatch();
@@ -23,11 +24,21 @@ const PasswordChange: React.FC = () => {
   });
   const { resetToken } = useParams();
   const history = useHistory();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const { password, password2, currentPassword } = formData;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const passwordRequestType = async (
+    type: 'reset' | 'set' | 'change',
+    arg?: object,
+  ) => {
+    const uri = `/auth/password/${type}`;
+    const data = { password, ...arg };
+    return await axios.patch(uri, JSON.stringify(data));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,25 +47,22 @@ const PasswordChange: React.FC = () => {
     } else {
       try {
         const res = resetToken
-          ? await axios.patch(
-              '/auth/password/reset',
-              JSON.stringify({
-                password,
-                resetToken,
-              }),
-            )
-          : await axios.patch(
-              '/auth/password/change',
-              JSON.stringify({
-                password,
-                currentPassword,
-              }),
-            );
+          ? await passwordRequestType('reset', { resetToken })
+          : user?.isSecured
+          ? await passwordRequestType('change', { currentPassword })
+          : await passwordRequestType('set');
+
         storeToken(res.data.token);
         dispatch(setToast('success', 'Password changed.'));
+
         if (resetToken) {
           dispatch(loadUserAsync());
         }
+
+        if (!user?.isSecured) {
+          dispatch(secureUser(user!));
+        }
+
         history.replace('/content');
       } catch (err) {
         handleAxiosErrors(err, dispatch);
@@ -62,13 +70,15 @@ const PasswordChange: React.FC = () => {
     }
   };
 
+  const shouldConfirmPassword = user?.isSecured && !resetToken;
+
   return (
     <TrimmedContainer>
       <Typography variant="h4" gutterBottom={true}>
         {t('change_password')}
       </Typography>
       <form onSubmit={handleSubmit} autoComplete="off">
-        {!resetToken && (
+        {shouldConfirmPassword && (
           <TextField
             type="password"
             label={t('current_password_label')}
