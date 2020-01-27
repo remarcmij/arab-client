@@ -6,6 +6,7 @@ import {
   redirectUser,
   registerUser,
   User,
+  secureUser,
 } from './actions';
 
 export type State = Readonly<{
@@ -47,6 +48,11 @@ export default (state = initialState, action: AuthAction): State => {
         user: null,
         isAuthenticated: false,
         loading: false,
+      };
+    case getType(secureUser):
+      return {
+        ...state,
+        user: { ...action.payload, isSecured: true },
       };
     default:
       return state;
