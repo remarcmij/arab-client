@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { RootState } from 'typesafe-actions';
 import ContentAdmin from '../features/admin/components/ContentAdmin';
 import ContentUpload from '../features/admin/components/ContentUpload';
-import UsersOptionsAdmin from '../features/admin/components/UsersOptionsAdmin';
+import ManageUsersAdmin from '../features/admin/components/ManageUsersAdmin';
 import { redirectUser, User } from '../features/auth/actions';
 import AccountConfirmation from '../features/auth/components/AccountConfirmation';
 import PasswordChange from '../features/auth/components/PasswordChange';
@@ -91,8 +91,8 @@ const Routes: React.FC = () => {
         <ProtectedRoute
           predicate={isAdmin}
           exact={true}
-          path="/admin/users/options"
-          component={UsersOptionsAdmin}
+          path="/admin/users"
+          component={ManageUsersAdmin}
         />
         <ProtectedRoute
           predicate={isAdmin}

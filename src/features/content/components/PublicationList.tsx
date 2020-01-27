@@ -9,6 +9,7 @@ import { fetchPublicationsAsync } from '../actions';
 import PublicationListItem from './PublicationListItem';
 import { setTargetLang, openSettings } from '../../settings/actions';
 import { Typography } from '@material-ui/core';
+import { Redirect } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,10 +21,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const PublicationList: React.FC = () => {
   const dispatch = useDispatch();
-  const {
-    settings: { targetLang },
-    content: { publications: topics, loading, error },
-  } = useSelector((state: RootState) => state);
+  const { targetLang } = useSelector((state: RootState) => state.settings);
+  const { publications: topics, loading, error } = useSelector(
+    (state: RootState) => state.content,
+  );
+  const { user } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
 
   const publicationsLoaded = topics.length !== 0;
@@ -40,6 +42,11 @@ const PublicationList: React.FC = () => {
       dispatch(openSettings());
     }
   }, [topics, targetLang, dispatch]);
+
+  // this isn't an always response, it must be specific.
+  if (user?.isSecured === false) {
+    return <Redirect to="/password" />;
+  }
 
   if (error) {
     return <Typography variant="h3">{error.message}</Typography>;

@@ -31,6 +31,7 @@ export type User = Readonly<{
   admin: boolean;
   created: string;
   lastAccess: string;
+  isSecured: boolean;
 }>;
 
 export const loadUser = createAsyncAction(
@@ -108,6 +109,8 @@ export const localLoginAsync = ({ email, password }: Credentials) => async (
 };
 
 export const logout = createAction('@auth/LOGOUT')<void>();
+
+export const secureUser = createAction('@auth/SECURE_USER')<User>();
 
 export const redirectUser = createAction('@auth/REDIRECT')<string | null>();
 
