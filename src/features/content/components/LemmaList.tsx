@@ -69,10 +69,10 @@ const liProps = {
   mr: 2,
 };
 
-type Props = {
+type Props = Readonly<{
   topic: ITopic;
   sectionIndex: number;
-};
+}>;
 
 const LemmaList: React.FC<Props> = ({ topic, sectionIndex }) => {
   const classes = useStyles();

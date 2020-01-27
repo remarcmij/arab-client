@@ -6,9 +6,8 @@ import {
   IVoiceInfo,
   loadVoices,
   openSettings,
-  setEligibleVoices,
-  setSelectedVoices,
   toggleVocalization,
+  setPreferredVoices,
 } from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
@@ -19,8 +18,7 @@ type State = Readonly<{
   loading: boolean;
   error: Error | null;
   targetLang: string | null;
-  eligibleVoices: IVoiceInfo[];
-  selectedVoices: IVoiceInfo[];
+  preferredVoices: IVoiceInfo[];
 }>;
 
 const initialState: State = {
@@ -29,20 +27,19 @@ const initialState: State = {
   loading: false,
   error: null,
   targetLang: null,
-  selectedVoices: [],
-  eligibleVoices: [],
+  preferredVoices: [],
   ...loadState().settings,
 };
 
 const updateEligibleVoices = (
-  eligibleVoices: IVoiceInfo[],
+  preferredVoices: IVoiceInfo[],
   availableVoices: IVoiceInfo[],
 ) => {
-  const currentVoices = eligibleVoices.filter(voice =>
+  const currentVoices = preferredVoices.filter(voice =>
     availableVoices.find(v => v.name === voice.name),
   );
   const missingVoices = availableVoices.filter(
-    voice => !eligibleVoices.find(v => v.name === voice.name),
+    voice => !preferredVoices.find(v => v.name === voice.name),
   );
   return currentVoices.concat(missingVoices);
 };
@@ -62,18 +59,16 @@ export default (state: State = initialState, action: SettingsAction): State => {
     case getType(loadVoices.success):
       return {
         ...state,
-        eligibleVoices:
+        preferredVoices:
           action.payload.length === 0
-            ? state.eligibleVoices
-            : updateEligibleVoices(state.eligibleVoices, action.payload),
+            ? state.preferredVoices
+            : updateEligibleVoices(state.preferredVoices, action.payload),
         loading: false,
       };
     case getType(loadVoices.failure):
       return { ...state, loading: false, error: action.payload };
-    case getType(setEligibleVoices):
-      return { ...state, eligibleVoices: action.payload };
-    case getType(setSelectedVoices):
-      return { ...state, selectedVoices: action.payload };
+    case getType(setPreferredVoices):
+      return { ...state, preferredVoices: action.payload };
     default:
       return state;
   }

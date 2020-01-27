@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React, { Suspense, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { RootState } from 'typesafe-actions';
 import { loadUserAsync } from './features/auth/actions';
 import SettingsDialog from './features/settings/components/SettingsDialog';
 import NavBar from './layout/components/NavBar';
@@ -24,6 +25,7 @@ const useStyles = makeStyles({
 
 const App: React.FC<{}> = () => {
   const dispatch = useDispatch();
+  const { settingsOpen } = useSelector((state: RootState) => state.settings);
   const [cookies, , removeCookie] = useCookies();
   const hasMinWidth = useMediaQuery('(min-width:600px)');
   const classes = useStyles();
@@ -43,7 +45,6 @@ const App: React.FC<{}> = () => {
         <Box flexGrow={1} pt={hasMinWidth ? 8 : 7}>
           <NavBar />
           <SnackbarContainer />
-          <SettingsDialog />
           <Container maxWidth="md" classes={{ root: classes.container }}>
             <Switch>
               <Route exact={true} path="/welcome" component={Welcome} />
@@ -51,6 +52,7 @@ const App: React.FC<{}> = () => {
             </Switch>
           </Container>
         </Box>
+        {settingsOpen && <SettingsDialog />}
       </Router>
     </Suspense>
   );

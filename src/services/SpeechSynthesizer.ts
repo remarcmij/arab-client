@@ -44,8 +44,10 @@ class SpeechSynthesizer extends Observable {
     });
   }
 
-  getVoices() {
-    return this.voices;
+  getVoices(lang?: string) {
+    return lang
+      ? this.voices.filter(voice => voice.lang.startsWith(lang))
+      : this.voices;
   }
 
   get speaking(): boolean {

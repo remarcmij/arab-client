@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { IVoiceInfo } from '../actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,15 +16,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = Readonly<{
-  language: string;
-  languages: string[];
-  onChange: (lang: string) => void;
-  disabled: boolean;
+  label: string;
+  voices: IVoiceInfo[];
+  selectedVoice?: IVoiceInfo;
+  setSelectedVoice: (voice: IVoiceInfo) => void;
 }>;
 
-const LanguageSelect: React.FC<Props> = props => {
-  const { language, languages, onChange, disabled } = props;
-  const { t } = useTranslation();
+const VoiceSelect: React.FC<Props> = props => {
+  const { label, voices, selectedVoice, setSelectedVoice } = props;
   const classes = useStyles();
 
   const inputLabel = React.useRef<HTMLLabelElement>(null);
@@ -35,26 +34,25 @@ const LanguageSelect: React.FC<Props> = props => {
     setLabelWidth(inputLabel.current!.offsetWidth);
   });
 
-  const handleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-    onChange(e.target.value as string);
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedVoice(voices.find(voice => voice.name === event.target.value)!);
   };
 
   return (
     <FormControl variant="outlined" className={classes.formControl}>
-      <InputLabel ref={inputLabel} id="lang-select-label">
-        {t('target_language')}
+      <InputLabel ref={inputLabel} id={`voice-${label}-label`}>
+        {label}
       </InputLabel>
       <Select
         fullWidth={true}
-        labelId="lang-select-label"
-        value={language}
+        labelId={`voice-${label}-label`}
+        value={selectedVoice?.name}
         onChange={handleChange}
-        disabled={disabled}
         labelWidth={labelWidth}
       >
-        {languages.map(lang => (
-          <MenuItem key={lang} value={lang}>
-            {t(lang) || lang}
+        {voices.map(voice => (
+          <MenuItem key={voice.name} value={voice.name}>
+            {voice.name}
           </MenuItem>
         ))}
       </Select>
@@ -62,4 +60,4 @@ const LanguageSelect: React.FC<Props> = props => {
   );
 };
 
-export default LanguageSelect;
+export default VoiceSelect;

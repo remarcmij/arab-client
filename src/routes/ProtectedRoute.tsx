@@ -5,12 +5,12 @@ import { RootState } from 'typesafe-actions';
 import { User } from '../features/auth/actions';
 import Spinner from '../layout/components/Spinner';
 
-type Props = {
+type Props = Readonly<{
   component: React.ElementType;
   predicate: (user: User | null) => boolean;
   fallbackTo?: string;
   [key: string]: unknown;
-};
+}>;
 
 const ProtectedRoute: React.FC<Props> = ({
   component: Component,

@@ -42,8 +42,8 @@ export default class LanguageService implements ILanguageService {
   }
 
   private get voiceInfo() {
-    const { eligibleVoices } = store.getState().settings;
-    let voice = eligibleVoices.find(v => v.lang.startsWith(this.lang));
+    const { preferredVoices } = store.getState().settings;
+    let voice = preferredVoices.find(v => v.lang.startsWith(this.lang));
     if (voice == null) {
       voice = speechSynthesizer
         .getVoices()

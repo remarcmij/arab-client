@@ -18,7 +18,17 @@ export const toggleVocalization = createAction('@settings/TOGGLE_VOCALIZATION')<
   void
 >();
 
-export const setTargetLang = createAction('@setting/SET_TARGET_LANG')<string>();
+export const setTargetLang = createAction('@settings/SET_TARGET_LANG')<
+  string
+>();
+export const setForeignVoice = createAction('@settings/SET_FOREIGN_VOICE')<{
+  lang: string;
+  voice: IVoiceInfo;
+}>();
+export const setNativeVoice = createAction('@settings/SET_NATIVE_VOICE')<{
+  lang: string;
+  voice: IVoiceInfo;
+}>();
 
 export const loadVoices = createAsyncAction(
   '@settings/LOAD_VOICES_REQUEST',
@@ -26,13 +36,13 @@ export const loadVoices = createAsyncAction(
   '@settings/LOAD_VOICES_FAILURE',
 )<void, IVoiceInfo[], any>();
 
-export const setEligibleVoices = createAction(
-  '@setting/SET_ELIGIBLE_VOICES',
+export const setPreferredVoices = createAction(
+  '@settings/SET_ELIGIBLE_VOICES',
   (voices: IVoiceInfo[]) => voices,
 )<IVoiceInfo[]>();
 
 export const setSelectedVoices = createAction(
-  '@setting/SET_SELECTED_VOICES',
+  '@settings/SET_SELECTED_VOICES',
   (voices: IVoiceInfo[]) => voices,
 )<IVoiceInfo[]>();
 

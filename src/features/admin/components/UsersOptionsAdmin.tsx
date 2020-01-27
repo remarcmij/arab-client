@@ -27,10 +27,10 @@ import {
   fetchUsersAsync,
 } from '../actions';
 
-type Props = {
+type Props = Readonly<{
   filter: (a: User) => boolean;
   subheader: string;
-};
+}>;
 
 const TEN_DAYS = 1000 * 60 * 60 * 24 * 10;
 

@@ -7,7 +7,8 @@ import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import { fetchPublicationsAsync } from '../actions';
 import PublicationListItem from './PublicationListItem';
-import LanguageDialog from '../../settings/components/LanguageDialog';
+import { setTargetLang, openSettings } from '../../settings/actions';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,10 +34,20 @@ const PublicationList: React.FC = () => {
     }
   }, [dispatch, publicationsLoaded]);
 
+  useEffect(() => {
+    if (!targetLang && topics.length > 0) {
+      dispatch(setTargetLang(topics[0].foreignLang));
+      dispatch(openSettings());
+    }
+  }, [topics, targetLang, dispatch]);
+
+  if (error) {
+    return <Typography variant="h3">{error.message}</Typography>;
+  }
+
   return (
     <React.Fragment>
       {loading && <Spinner />}
-      <LanguageDialog />
       {publicationsLoaded && targetLang != null && (
         <Paper classes={{ root: classes.root }}>
           <List>
