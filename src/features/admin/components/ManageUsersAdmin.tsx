@@ -32,8 +32,6 @@ type Props = {
   subheader: string;
 };
 
-const TEN_DAYS = 1000 * 60 * 60 * 24 * 10;
-
 const UsersListItem: React.FC<Props> = props => {
   const { users } = useSelector((state: RootState) => state.admin);
   const dispatch = useDispatch();
@@ -46,7 +44,7 @@ const UsersListItem: React.FC<Props> = props => {
     );
   };
 
-  const removeUser = (email: string) => {
+  const deleteUser = (email: string) => {
     dispatch(deleteUserAsync({ email }));
   };
 
@@ -69,7 +67,7 @@ const UsersListItem: React.FC<Props> = props => {
             <VerifiedUserTwoToneIcon color="error" />
           )}
         </IconButton>
-        <IconButton onClick={() => removeUser(user.email)}>
+        <IconButton onClick={() => deleteUser(user.email)}>
           <DeleteIcon color="error" />
         </IconButton>
       </ListItemSecondaryAction>
@@ -93,26 +91,19 @@ const UsersListItem: React.FC<Props> = props => {
   );
 };
 
-const UsersOptionsAdmin: React.FC = () => {
+const ManageUsersAdmin: React.FC = () => {
   const dispatch = useDispatch();
-  const { notification } = useSelector((state: RootState) => state.admin);
 
   useEffect(() => {
     dispatch(fetchUsersAsync());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (notification?.message) {
-      dispatch(setToast('success', notification.message));
-    }
-  }, [notification, dispatch]);
 
   return (
     <Grid container={true} justify="center" style={{ position: 'relative' }}>
       <Grid item={true} xs={12} md={8}>
         <Box mt={4}>
           <Paper>
-            <DialogTitle>{i18next.t('user_options')}</DialogTitle>
+            <DialogTitle>{i18next.t('manage_users')}</DialogTitle>
             <UsersListItem
               subheader="authorized_users"
               filter={user => user.authorized && !user.admin}
@@ -127,13 +118,6 @@ const UsersOptionsAdmin: React.FC = () => {
               subheader="non_verified_users"
               filter={user => !user.verified}
             />
-            <Divider />
-            <UsersListItem
-              subheader="long_time_no_access_users"
-              filter={user =>
-                Date.parse(user.lastAccess) < Date.now() - TEN_DAYS
-              }
-            />
           </Paper>
         </Box>
       </Grid>
@@ -141,4 +125,4 @@ const UsersOptionsAdmin: React.FC = () => {
   );
 };
 
-export default UsersOptionsAdmin;
+export default ManageUsersAdmin;

@@ -21,7 +21,7 @@ const ProtectedRoute: React.FC<Props> = ({
   const { user, loading } = useSelector((state: RootState) => state.auth);
 
   // This allows the user to hit authorized protected routes with no unneeded fallback,
-  //    e.g: http://localhost:3000/admin/users/options is protected,
+  //    e.g: http://localhost:3000/admin/users is protected,
   //    in a case of an admin we should be hitting it by no fallback.
   const UnAuthorizedFallback = () =>
     loading ? <Spinner /> : <Redirect to={fallbackTo} />;

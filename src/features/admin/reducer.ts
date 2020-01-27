@@ -23,7 +23,6 @@ export type State = Readonly<{
   topics: ITopic[];
   users: User[];
   loading: boolean;
-  notification?: { message: string | null };
   error?: any;
 }>;
 
@@ -33,7 +32,6 @@ const initialState: State = {
   uploads: [],
   topics: [],
   users: [],
-  notification: { message: null },
   loading: false,
 };
 
@@ -56,9 +54,6 @@ const reducer = (state = initialState, action: AdminAction): State => {
     case getType(fetchTopics.success):
     case getType(deleteTopic.success):
       return { ...state, topics: action.payload, loading: false };
-
-    case getType(deleteUser.success):
-      return { ...state, notification: action.payload, loading: false };
 
     case getType(authorizeUser.success):
       return {

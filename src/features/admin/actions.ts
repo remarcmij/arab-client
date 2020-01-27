@@ -9,6 +9,7 @@ import uuidv4 from 'uuid/v4';
 import handleAxiosErrors from '../../utils/handleAxiosErrors';
 import { resetContent } from '../content/actions';
 import { User } from '../auth/actions';
+import { setToast } from '../../layout/actions';
 
 export type UploadDisposition = 'success' | 'unchanged' | 'fail';
 
@@ -51,21 +52,21 @@ export const authorizeUserAsync = (data: userUpdateAuthType) => async (
 };
 
 export const deleteUser = createAsyncAction(
-  '@admin/REMOVE_USER_REQUEST',
-  '@admin/REMOVE_USER_SUCCESS',
-  '@admin/REMOVE_USER_FAILURE',
+  '@admin/DELETE_USER_REQUEST',
+  '@admin/DELETE_USER_SUCCESS',
+  '@admin/DELETE_USER_FAILURE',
 )<undefined, { message: string }, any>();
 
-type UserRemoveType = { email: string };
+type deleteUserAsyncType = { email: string };
 
-export const deleteUserAsync = (data: UserRemoveType) => async (
+export const deleteUserAsync = (data: deleteUserAsyncType) => async (
   dispatch: ThunkDispatchAny,
 ) => {
   try {
     dispatch(deleteUser.request());
     const res = await axios.delete(`/api/user`, { data });
     dispatch(fetchUsersAsync());
-    dispatch(deleteUser.success(res.data));
+    dispatch(setToast('success', res.data.message));
   } catch (err) {
     dispatch(deleteUser.failure(err));
     handleAxiosErrors(err, dispatch);
