@@ -108,21 +108,6 @@ const MainDrawer: React.FC<Props> = props => {
           component="nav"
           subheader={
             <ListSubheader component="div">
-              {t('settings_side_menu_header')}
-            </ListSubheader>
-          }
-        >
-          <ListItem button={true} component={Link} to="/voices">
-            <ListItemIcon>
-              <Icon className={'fas fa-fw fa-volume-down'} />
-            </ListItemIcon>
-            <ListItemText primary={t('voice_preferences')} />
-          </ListItem>
-        </List>
-        <List
-          component="nav"
-          subheader={
-            <ListSubheader component="div">
               {t('info_side_menu_header')}
             </ListSubheader>
           }

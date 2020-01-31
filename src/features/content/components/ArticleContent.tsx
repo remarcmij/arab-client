@@ -42,9 +42,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = {
+type Props = Readonly<{
   topic: ITopic;
-};
+}>;
 
 const ArticleContent: React.FC<Props> = ({ topic }) => {
   const classes = useStyles();

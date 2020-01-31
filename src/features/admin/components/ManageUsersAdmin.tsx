@@ -19,7 +19,6 @@ import i18next from 'i18next';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'typesafe-actions';
-import { setToast } from '../../../layout/actions';
 import { User } from '../../auth/actions';
 import {
   authorizeUserAsync,
@@ -27,10 +26,10 @@ import {
   fetchUsersAsync,
 } from '../actions';
 
-type Props = {
+type Props = Readonly<{
   filter: (a: User) => boolean;
   subheader: string;
-};
+}>;
 
 const UsersListItem: React.FC<Props> = props => {
   const { users } = useSelector((state: RootState) => state.admin);
@@ -110,12 +109,12 @@ const ManageUsersAdmin: React.FC = () => {
             />
             <Divider />
             <UsersListItem
-              subheader="non_authorized_users"
+              subheader="unauthorized_users"
               filter={user => !user.authorized && user.verified && !user.admin}
             />
             <Divider />
             <UsersListItem
-              subheader="non_verified_users"
+              subheader="unverified_users"
               filter={user => !user.verified}
             />
           </Paper>

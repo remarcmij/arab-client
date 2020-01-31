@@ -1,7 +1,7 @@
 import ArabicLanguageService from './ArabicLanguageService';
 import DutchLanguageService from './DutchLanguageService';
 import IndonesianLanguageService from './IndonesianLanguageService';
-import { ILanguageService } from './LanguageService';
+import LanguageService, { ILanguageService } from './LanguageService';
 
 const languageServices: { [lang: string]: ILanguageService } = {
   ar: new ArabicLanguageService(),
@@ -11,7 +11,7 @@ const languageServices: { [lang: string]: ILanguageService } = {
 
 export function getLanguageService(lang: string): ILanguageService {
   if (!(lang in languageServices)) {
-    throw new Error(`Unsupported language: ${lang}`);
+    languageServices[lang] = new LanguageService(lang);
   }
   return languageServices[lang];
 }

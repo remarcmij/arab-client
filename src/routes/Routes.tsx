@@ -16,7 +16,6 @@ import ArticleList from '../features/content/components/ArticleList';
 import PublicationList from '../features/content/components/PublicationList';
 import Flashcards from '../features/flashcards/components/Flashcards';
 import SearchPage from '../features/search/components/SearchPage';
-import VoicePreferences from '../features/settings/components/VoicePreferences';
 import AboutPage from '../layout/components/About';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -107,7 +106,6 @@ const Routes: React.FC = () => {
           path="/admin/upload"
           component={ContentUpload}
         />
-        <Route exact={true} path="/voices" component={VoicePreferences} />
         <Route render={() => <div>404</div>} />
       </Switch>
     </section>

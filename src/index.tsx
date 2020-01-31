@@ -3,10 +3,17 @@ import 'normalize.css';
 import React from 'react';
 import 'react-app-polyfill/ie11';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import App from './App';
-import './index.css';
 import './i18n';
+import './index.css';
 import './services/SpeechSynthesizer';
+import store from './store';
 import './utils/axiosDefaults';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root'),
+);

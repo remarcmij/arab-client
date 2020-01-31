@@ -7,6 +7,8 @@ import { RootState } from 'typesafe-actions';
 import Spinner from '../../../layout/components/Spinner';
 import { fetchPublicationsAsync } from '../actions';
 import PublicationListItem from './PublicationListItem';
+import { setTargetLang, openSettings } from '../../settings/actions';
+import { Typography } from '@material-ui/core';
 import { Redirect } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -19,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const PublicationList: React.FC = () => {
   const dispatch = useDispatch();
+  const { targetLang } = useSelector((state: RootState) => state.settings);
   const { publications: topics, loading, error } = useSelector(
     (state: RootState) => state.content,
   );
@@ -33,9 +36,12 @@ const PublicationList: React.FC = () => {
     }
   }, [dispatch, publicationsLoaded]);
 
-  if (loading) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    if (!targetLang && topics.length > 0) {
+      dispatch(setTargetLang(topics[0].foreignLang));
+      dispatch(openSettings());
+    }
+  }, [topics, targetLang, dispatch]);
 
   // this isn't an always response, it must be specific.
   if (user?.isSecured === false) {
@@ -43,17 +49,24 @@ const PublicationList: React.FC = () => {
   }
 
   if (error) {
-    return <p>Error: {error.message}</p>;
+    return <Typography variant="h3">{error.message}</Typography>;
   }
 
   return (
-    <Paper classes={{ root: classes.root }}>
-      <List>
-        {topics.map(topic => (
-          <PublicationListItem key={topic.filename} publication={topic} />
-        ))}
-      </List>
-    </Paper>
+    <React.Fragment>
+      {loading && <Spinner />}
+      {publicationsLoaded && targetLang != null && (
+        <Paper classes={{ root: classes.root }}>
+          <List>
+            {topics
+              .filter(topic => topic.foreignLang === targetLang)
+              .map(topic => (
+                <PublicationListItem key={topic.filename} publication={topic} />
+              ))}
+          </List>
+        </Paper>
+      )}
+    </React.Fragment>
   );
 };
 

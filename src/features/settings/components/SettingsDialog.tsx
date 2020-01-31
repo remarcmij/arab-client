@@ -3,84 +3,139 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormLabel from '@material-ui/core/FormLabel';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
+import { ITopic } from 'Types';
 import { RootState } from 'typesafe-actions';
-import { closeSettings, toggleVocalization } from '../actions';
+import speechSynthesizer from '../../../services/SpeechSynthesizer';
+import {
+  closeSettings,
+  IVoiceInfo,
+  setPreferredVoices,
+  setTargetLang,
+  toggleVocalization,
+} from '../actions';
+import FieldSet from './FieldSet';
+import LanguageSelect from './LanguageSelect';
+import VoiceSelect from './VoiceSelect';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      minWidth: 400,
-      margin: theme.spacing(2),
-    },
-    mt2: {
-      marginTop: theme.spacing(2),
-    },
-  }),
-);
+type LanguagePropName = 'foreignLang' | 'nativeLang';
 
-const FieldSet: React.FC<{ label: string }> = props => (
-  <FormControl component="fieldset" fullWidth={true} style={{ marginTop: 16 }}>
-    <FormLabel component="legend">{props.label}</FormLabel>
-    {props.children}
-  </FormControl>
-);
+const uniqueLanguages = (topics: ITopic[], propName: LanguagePropName) =>
+  Array.from(new Set(topics.map(topic => topic[propName])));
 
 const SettingsDialog: React.FC = () => {
+  const { settingsOpen } = useSelector((state: RootState) => state.settings);
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const { t } = useTranslation();
+
   const dispatch = useDispatch();
-  const { settingsOpen, showVocalization } = useSelector(
+
+  const { targetLang, preferredVoices, showVocalization } = useSelector(
     (state: RootState) => state.settings,
   );
 
-  const { t } = useTranslation();
-  const classes = useStyles();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const { publications: topics } = useSelector(
+    (state: RootState) => state.content,
+  );
 
-  const onClose = () => dispatch(closeSettings());
+  const { pathname } = useLocation();
+  const onMainScreen = () => pathname === '/content';
+
+  const foreignLangs = useMemo(() => uniqueLanguages(topics, 'foreignLang'), [
+    topics,
+  ]);
+
+  const { nativeLang } = topics[0];
+
+  const foreignVoices = speechSynthesizer.getVoices(targetLang!);
+
+  const foreignVoice = preferredVoices
+    .concat(foreignVoices)
+    .find(voice => voice.lang.startsWith(targetLang!));
+
+  const nativeVoices = speechSynthesizer.getVoices(nativeLang);
+
+  const nativeVoice = preferredVoices
+    .concat(nativeVoices)
+    .find(voice => voice.lang.startsWith(nativeLang));
+
+  const setVoice = (lang: string) => (voice: IVoiceInfo) => {
+    const voices = preferredVoices
+      .filter(v => !v.lang.startsWith(lang))
+      .concat({ name: voice.name, lang: voice.lang });
+    dispatch(setPreferredVoices(voices));
+  };
+
+  const handleLangChange = (lang: string) => {
+    dispatch(setTargetLang(lang));
+  };
+
+  const handleVocalizationChange = () => {
+    dispatch(toggleVocalization());
+  };
+
+  const handleClose = () => {
+    dispatch(closeSettings());
+  };
 
   return (
     <Dialog
       fullScreen={fullScreen}
       open={settingsOpen}
-      onClose={onClose}
+      onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
-      classes={{ paper: classes.paper }}
     >
       <DialogTitle id="responsive-dialog-title">
         {t('change_settings')}
       </DialogTitle>
       <DialogContent>
-        <FieldSet label="Vocalization">
-          <FormGroup>
+        <FieldSet label="Target Language">
+          <LanguageSelect
+            languages={foreignLangs}
+            language={targetLang!}
+            onChange={handleLangChange}
+            disabled={!onMainScreen()}
+          />
+        </FieldSet>
+        <FieldSet label="Preferred Voices">
+          <VoiceSelect
+            label={t(targetLang!)}
+            voices={foreignVoices}
+            selectedVoice={foreignVoice}
+            setSelectedVoice={setVoice(targetLang!)}
+          />
+          <VoiceSelect
+            label={t(nativeLang)}
+            voices={nativeVoices}
+            selectedVoice={nativeVoice}
+            setSelectedVoice={setVoice(nativeLang)}
+          />
+        </FieldSet>
+        {targetLang === 'ar' && (
+          <FieldSet label="Arabic Vocalization">
             <FormControlLabel
               control={
                 <Switch
                   checked={showVocalization}
-                  onChange={() => dispatch(toggleVocalization())}
+                  onChange={handleVocalizationChange}
                 />
               }
               label={t('show_vocalization')}
             />
-          </FormGroup>
-        </FieldSet>
+          </FieldSet>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary" autoFocus={true}>
+        <Button onClick={handleClose} variant="contained" color="primary">
           Close
         </Button>
       </DialogActions>

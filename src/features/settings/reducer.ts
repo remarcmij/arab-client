@@ -1,12 +1,13 @@
 import { ActionType, getType } from 'typesafe-actions';
 import { loadState } from '../../utils/persistState';
 import {
+  setTargetLang,
   closeSettings,
   IVoiceInfo,
   loadVoices,
   openSettings,
-  setPreferredVoices,
   toggleVocalization,
+  setPreferredVoices,
 } from './actions';
 
 type SettingsAction = ActionType<typeof import('./actions')>;
@@ -16,6 +17,7 @@ type State = Readonly<{
   settingsOpen: boolean;
   loading: boolean;
   error: Error | null;
+  targetLang: string | null;
   preferredVoices: IVoiceInfo[];
 }>;
 
@@ -24,11 +26,12 @@ const initialState: State = {
   settingsOpen: false,
   loading: false,
   error: null,
+  targetLang: null,
   preferredVoices: [],
   ...loadState().settings,
 };
 
-const updatePreferredVoices = (
+const updateEligibleVoices = (
   preferredVoices: IVoiceInfo[],
   availableVoices: IVoiceInfo[],
 ) => {
@@ -47,6 +50,8 @@ export default (state: State = initialState, action: SettingsAction): State => {
       return { ...state, settingsOpen: true };
     case getType(closeSettings):
       return { ...state, settingsOpen: false };
+    case getType(setTargetLang):
+      return { ...state, targetLang: action.payload };
     case getType(toggleVocalization):
       return { ...state, showVocalization: !state.showVocalization };
     case getType(loadVoices.request):
@@ -57,7 +62,7 @@ export default (state: State = initialState, action: SettingsAction): State => {
         preferredVoices:
           action.payload.length === 0
             ? state.preferredVoices
-            : updatePreferredVoices(state.preferredVoices, action.payload),
+            : updateEligibleVoices(state.preferredVoices, action.payload),
         loading: false,
       };
     case getType(loadVoices.failure):
