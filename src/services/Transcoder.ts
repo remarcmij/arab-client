@@ -6,6 +6,8 @@ type RomanizationStandard = {
   substitutions?: SubstitutionTuple[];
 };
 
+/* eslint-disable @typescript-eslint/camelcase */
+
 // See: https://en.wikipedia.org/wiki/Romanization_of_Arabic
 // Note: source files are encoded with the DIN romanizationStandard standard
 export const romanizationStandards: { [key: string]: RomanizationStandard } = {
@@ -24,7 +26,12 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
   },
   de_moor: {
     name: 'de Moor/van Pel',
-    substitutions: [[/ʾ/g, 'ʼ'], [/ʿ/g, 'ع'], [/ḫ/g, 'ẖ'], [/ǧ/g, 'j']],
+    substitutions: [
+      [/ʾ/g, 'ʼ'],
+      [/ʿ/g, 'ع'],
+      [/ḫ/g, 'ẖ'],
+      [/ǧ/g, 'j'],
+    ],
   },
   din: {
     name: 'DIN',
@@ -68,7 +75,8 @@ export const romanizationStandards: { [key: string]: RomanizationStandard } = {
   },
 };
 
-const tashkeelRegExp = /[\u064c-\u065f\u0640\u0670]/g;
+// eslint-disable-next-line no-misleading-character-class
+const tashkeelRegexp = /[\u064c-\u065f\u0640\u0670]/g;
 
 class Transcoder {
   static applyRomanization(text: string, name: string) {
@@ -83,7 +91,7 @@ class Transcoder {
   }
 
   static stripTashkeel(line: string) {
-    return line.replace(tashkeelRegExp, '');
+    return line.replace(tashkeelRegexp, '');
   }
 }
 

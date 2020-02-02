@@ -1,61 +1,61 @@
+import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
-import { Provider } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import React, { Suspense, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { loadUser } from './actions/auth';
-import Routes from './components/routes/Routes';
-import NavBarContainer from './containers/NavBarContainer';
-import Welcome from './pages/welcome/Welcome';
-import { RootState } from './reducers';
-import store from './store';
-import setAuthToken from './utils/setAuthToken';
-import { getToken } from './utils/storedToken';
+import { RootState } from 'typesafe-actions';
+import { loadUserAsync } from './features/auth/actions';
+import SettingsDialog from './features/settings/components/SettingsDialog';
+import NavBar from './layout/components/NavBar';
+import SnackbarContainer from './layout/components/SnackbarContainer';
+import Spinner from './layout/components/Spinner';
+import Welcome from './layout/components/Welcome';
+import Routes from './routes/Routes';
+import { storeToken } from './utils/token';
 
 // paddingTop emulates the toolbar's minHeight from the default theme
-const styles = createStyles({
-  root: {
-    flexGrow: 1,
-    paddingTop: 56,
-    '@media (min-width:600px)': {
-      paddingTop: 64,
-    },
+const useStyles = makeStyles({
+  container: {
+    padding: 0,
   },
 });
 
-type Props = WithStyles<typeof styles>;
+const App: React.FC<{}> = () => {
+  const dispatch = useDispatch();
+  const { settingsOpen } = useSelector((state: RootState) => state.settings);
+  const [cookies, , removeCookie] = useCookies();
+  const hasMinWidth = useMediaQuery('(min-width:600px)');
+  const classes = useStyles();
+  const { token } = cookies;
+  if (token) {
+    storeToken(token);
+    removeCookie('token');
+  }
 
-// const ProtectedRoute: React.FC<any> = ({ ...props }) => {
-//   return getToken() ? <Route {...props} /> : <Redirect to="/login" />;
-// };
-
-const token = getToken();
-if (token) {
-  setAuthToken(token);
-}
-
-const App: React.FC<Props> = ({ classes }) => {
   useEffect(() => {
-    (store.dispatch as ThunkDispatch<RootState, void, AnyAction>)(loadUser());
-  }, []);
+    dispatch(loadUserAsync());
+  });
 
   return (
-    <Provider store={store}>
+    <Suspense fallback={<Spinner />}>
       <Router>
-        <div className={classes.root}>
-          <NavBarContainer />
-          <Container maxWidth="md">
+        <Box flexGrow={1} pt={hasMinWidth ? 8 : 7}>
+          <NavBar />
+          <SnackbarContainer />
+          <Container maxWidth="md" classes={{ root: classes.container }}>
             <Switch>
               <Route exact={true} path="/welcome" component={Welcome} />
               <Route component={Routes} />
             </Switch>
           </Container>
-        </div>
+        </Box>
+        {settingsOpen && <SettingsDialog />}
       </Router>
-    </Provider>
+    </Suspense>
   );
 };
 
-export default withStyles(styles)(App);
+export default App;
