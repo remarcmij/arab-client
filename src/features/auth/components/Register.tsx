@@ -39,7 +39,6 @@ const Register: React.FC = () => {
   const { name, email, password, password2 } = formData;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
