@@ -81,13 +81,11 @@ class SpeechSynthesizer extends Observable {
     this.utterance.text = message;
     this.utterance.rate = rate;
     this.utterance.voice = voice;
-    this.utterance.addEventListener('end', e => {
-      if (e.utterance === this.utterance) {
-        this.timerId = setTimeout(() => {
-          this.timerId = null;
-          this.notify();
-        }, 2000);
-      }
+    this.utterance.addEventListener('end', () => {
+      this.timerId = setTimeout(() => {
+        this.timerId = null;
+        this.notify();
+      }, 2000);
     });
 
     speechSynthesis.speak(this.utterance);
