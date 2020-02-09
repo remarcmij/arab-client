@@ -19,7 +19,7 @@ export default class ArabicLanguageService extends LanguageService {
   }
 
   formatForSearch(text: string): string {
-    return text.replace(/[^\u0621-\u064a]/g, '');
+    return text.replace(/[^ \u0621-\u064a]/g, '');
   }
 
   get useEnlargedFont() {
